@@ -2,6 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:news_reading/util/constant.dart';
+
+String url = ConstValue().URL;
 
 class ArticleProvider with ChangeNotifier, DiagnosticableTreeMixin {
   String createStatus = "";
@@ -9,7 +12,7 @@ class ArticleProvider with ChangeNotifier, DiagnosticableTreeMixin {
   Future<String> addArticle(String title, String content, int userId) async {
     try {
       final response = await http.post(
-        Uri.parse('http://127.0.0.1:8000/api/articles/'),
+        Uri.parse('http://$url:8000/api/articles/'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
         },

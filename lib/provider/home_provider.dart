@@ -4,7 +4,10 @@ import 'package:news_reading/model/news_model.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:news_reading/model/user_model.dart';
+import 'package:news_reading/util/constant.dart';
 import 'package:news_reading/util/token_decode.dart';
+
+String url = ConstValue().URL;
 
 class HomeProvider with ChangeNotifier, DiagnosticableTreeMixin {
   Future<UserModel>? _futureUser;
@@ -36,7 +39,7 @@ class HomeProvider with ChangeNotifier, DiagnosticableTreeMixin {
     // try {
 
     final response =
-        await http.get(Uri.parse('http://127.0.0.1:8000/api/articles/'));
+        await http.get(Uri.parse('http://$url:8000/api/articles/'));
 
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
@@ -62,7 +65,7 @@ class HomeProvider with ChangeNotifier, DiagnosticableTreeMixin {
       String lastname, String role) async {
     try {
       final response = await http.post(
-        Uri.parse('http://127.0.0.1:8000/api/users/'),
+        Uri.parse('http://$url:8000/api/users/'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -94,7 +97,7 @@ class HomeProvider with ChangeNotifier, DiagnosticableTreeMixin {
   Future<UserModel> postLogin(String userName, String password) async {
     try {
       final response = await http.post(
-        Uri.parse('http://127.0.0.1:8000/api/login/'),
+        Uri.parse('http://$url:8000/api/login/'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -136,7 +139,7 @@ class HomeProvider with ChangeNotifier, DiagnosticableTreeMixin {
   Future<UserModel> postUserInfo(int id) async {
     try {
       final response = await http.get(
-        Uri.parse('http://127.0.0.1:8000/api/users/$id'),
+        Uri.parse('http://$url:8000/api/users/$id'),
       );
 
       if (response.statusCode == 200) {

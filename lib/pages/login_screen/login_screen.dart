@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:news_reading/provider/home_provider.dart';
 import 'package:news_reading/widgets/app_bar/appbar_title.dart';
 import 'package:news_reading/widgets/app_bar/appbar_title_image.dart';
@@ -101,6 +102,7 @@ class _MyAppState extends State<LoginScreen> {
           ),
           body: TabBarView(
             children: [
+              // Login tab
               Align(
                 alignment: Alignment.topCenter,
                 child: SingleChildScrollView(
@@ -156,47 +158,35 @@ class _MyAppState extends State<LoginScreen> {
                                 }),
                             SizedBox(height: 20.v),
                             Align(
-                              alignment: Alignment.center,
-                              child: Padding(
-                                padding: EdgeInsets.only(
-                                  left: 38.h,
-                                  right: 47.h,
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 1.v),
-                                      child: Text(
-                                        "Forgot your password?",
+                                alignment: Alignment.center,
+                                child: Center(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "Forgot your password? ",
                                         style: theme.textTheme.bodyMedium,
                                       ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(left: 30.h),
-                                      child: Text(
+                                      Text(
                                         "Reset here",
                                         style:
                                             CustomTextStyles.bodyMediumPrimary,
                                       ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
+                                    ],
+                                  ),
+                                )),
                             SizedBox(height: 32.v),
-                            Padding(
-                              padding: EdgeInsets.only(left: 120.h),
+                            Center(
                               child: Text(
                                 "Or sign in with".toUpperCase(),
                                 style: CustomTextStyles.bodySmall_1,
                               ),
                             ),
                             SizedBox(height: 17.v),
-                            Align(
-                              alignment: Alignment.center,
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 61.h),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 10, right: 10),
+                              child: Center(
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -240,6 +230,8 @@ class _MyAppState extends State<LoginScreen> {
                   ),
                 ),
               ),
+
+              // Sign up tab
               Align(
                 alignment: Alignment.topCenter,
                 child: SingleChildScrollView(
@@ -317,85 +309,7 @@ class _MyAppState extends State<LoginScreen> {
                                   });
                                 }),
                             Text(context.watch<HomeProvider>().signUpStatus),
-                            SizedBox(height: 20.v),
-                            Align(
-                              alignment: Alignment.center,
-                              child: Padding(
-                                padding: EdgeInsets.only(
-                                  left: 38.h,
-                                  right: 47.h,
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 1.v),
-                                      child: Text(
-                                        "Forgot your password?",
-                                        style: theme.textTheme.bodyMedium,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(left: 30.h),
-                                      child: Text(
-                                        "Reset here",
-                                        style:
-                                            CustomTextStyles.bodyMediumPrimary,
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 32.v),
-                            Padding(
-                              padding: EdgeInsets.only(left: 120.h),
-                              child: Text(
-                                "Or sign in with".toUpperCase(),
-                                style: CustomTextStyles.bodySmall_1,
-                              ),
-                            ),
-                            SizedBox(height: 17.v),
-                            Align(
-                              alignment: Alignment.center,
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 61.h),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    IconButton(
-                                        onPressed: () {},
-                                        icon: CustomImageView(
-                                          width: 36.adaptSize,
-                                          height: 36.adaptSize,
-                                          imagePath: ImageConstant.imgGoogle,
-                                        )),
-                                    Spacer(
-                                      flex: 50,
-                                    ),
-                                    IconButton(
-                                        onPressed: () {},
-                                        icon: CustomImageView(
-                                          width: 36.adaptSize,
-                                          height: 36.adaptSize,
-                                          imagePath: ImageConstant.imgFacebook,
-                                        )),
-                                    Spacer(
-                                      flex: 50,
-                                    ),
-                                    IconButton(
-                                        onPressed: () {},
-                                        icon: CustomImageView(
-                                          width: 36.adaptSize,
-                                          height: 36.adaptSize,
-                                          color: appTheme.blue400,
-                                          imagePath: ImageConstant.imgTrash,
-                                        )),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 39.v)
+                            SizedBox(height: 50.v),
                           ],
                         ),
                       ),
