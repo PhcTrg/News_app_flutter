@@ -44,8 +44,8 @@ class HomeProvider with ChangeNotifier, DiagnosticableTreeMixin {
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
 
-      // List<dynamic> jsonData = json.decode(response.body)['results'];
-      List<dynamic> jsonData = responseData['results'];
+      // List<dynamic> jsonData = responseData['results'];
+      List<dynamic> jsonData = responseData;
 
       _news = jsonData.map((data) => NewsModel.fromJson(data)).toList();
 

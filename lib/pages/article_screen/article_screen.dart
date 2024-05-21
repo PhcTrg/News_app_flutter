@@ -2,12 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:news_reading/model/news_model.dart';
 import 'package:news_reading/pages/argumennt/article_argument.dart';
 import 'package:news_reading/provider/article_provider.dart';
+import 'package:news_reading/widgets/app_bar/appbar_leading_image.dart';
+import 'package:news_reading/widgets/app_bar/appbar_trailing_image.dart';
+import 'package:news_reading/widgets/app_bar/custom_app_bar.dart';
 import '../../core/app_export.dart';
 import '../../widgets/custom_elevated_button.dart';
+import 'package:convex_bottom_bar/convex_bottom_bar.dart';
+
+import 'dart:async';
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter_tts/flutter_tts.dart';
+import 'package:translator/translator.dart';
 
 class ArticleScreen extends StatefulWidget {
-  // final NewsModel news;
-
   const ArticleScreen({Key? key})
       : super(
           key: key,
@@ -24,32 +32,192 @@ class ArticleScreen extends StatefulWidget {
   }
 }
 
+enum TtsState { playing, stopped, paused, continued }
+
 class ArticleScreenState extends State<ArticleScreen> {
+  //text to speech
+  late FlutterTts flutterTts;
+  String? language;
+  String? engine;
+  double volume = 1.0;
+  double pitch = 1.0;
+  double rate = 1.0;
+  bool isCurrentLanguageInstalled = false;
+
+  String? _newVoiceText;
+
+  TtsState ttsState = TtsState.stopped;
+
+  bool get isPlaying => ttsState == TtsState.playing;
+  bool get isStopped => ttsState == TtsState.stopped;
+  bool get isPaused => ttsState == TtsState.paused;
+  bool get isContinued => ttsState == TtsState.continued;
+
+  bool get isIOS => !kIsWeb && Platform.isIOS;
+  bool get isAndroid => !kIsWeb && Platform.isAndroid;
+  bool get isWindows => !kIsWeb && Platform.isWindows;
+  bool get isWeb => kIsWeb;
+
+  final translator = GoogleTranslator();
+
+  var args;
+
   @override
   void initState() {
     super.initState();
+    initTts();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    args = ModalRoute.of(context)!.settings.arguments as ArticleArguments;
+    context.watch<ArticleProvider>().articleContent = args.newsmodel.content;
+    context.watch<ArticleProvider>().contentLanguage = "en-US";
+
+    changeSpeechLanguage(args.newsmodel.content,
+        context.watch<ArticleProvider>().contentLanguage);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    flutterTts.stop();
+  }
+
+  // text to speech
+  void changeSpeechLanguage(String textVal, String language) {
+    setState(() {
+      _newVoiceText = textVal;
+    });
+    flutterTts.setLanguage(language);
+  }
+
+  void translate(String to) {
+    translator
+        .translate(context.read<ArticleProvider>().articleContent, to: to)
+        .then((result) {
+      setState(() {
+        context.read<ArticleProvider>().articleContent = result.text;
+        changeSpeechLanguage(
+            result.text, context.read<ArticleProvider>().contentLanguage);
+        print(context.read<ArticleProvider>().contentLanguage);
+      });
+    });
+  }
+
+  void onClickChangeLanguage() {
+    if (context.read<ArticleProvider>().contentLanguage == "en-US") {
+      context.read<ArticleProvider>().contentLanguage = "vi-VN";
+      translate("vi");
+    } else {
+      context.read<ArticleProvider>().contentLanguage = "en-US";
+      translate("en");
+    }
+  }
+
+  dynamic initTts() {
+    flutterTts = FlutterTts();
+
+    _setAwaitOptions();
+
+    if (isAndroid) {
+      _getDefaultEngine();
+      _getDefaultVoice();
+    }
+
+    flutterTts.setStartHandler(() {
+      setState(() {
+        print("Playing");
+        ttsState = TtsState.playing;
+      });
+    });
+
+    flutterTts.setCompletionHandler(() {
+      setState(() {
+        print("Complete");
+        ttsState = TtsState.stopped;
+      });
+    });
+
+    flutterTts.setCancelHandler(() {
+      setState(() {
+        print("Cancel");
+        ttsState = TtsState.stopped;
+      });
+    });
+
+    flutterTts.setPauseHandler(() {
+      setState(() {
+        print("Paused");
+        ttsState = TtsState.paused;
+      });
+    });
+
+    flutterTts.setContinueHandler(() {
+      setState(() {
+        print("Continued");
+        ttsState = TtsState.continued;
+      });
+    });
+
+    flutterTts.setErrorHandler((msg) {
+      setState(() {
+        print("error: $msg");
+        ttsState = TtsState.stopped;
+      });
+    });
+
+    // flutterTts.setLanguage(language)
+  }
+
+  Future<void> _getDefaultEngine() async {
+    var engine = await flutterTts.getDefaultEngine;
+    if (engine != null) {
+      print(engine);
+    }
+  }
+
+  Future<void> _getDefaultVoice() async {
+    var voice = await flutterTts.getDefaultVoice;
+    if (voice != null) {
+      print(voice);
+    }
+  }
+
+  Future<void> _speak() async {
+    await flutterTts.setVolume(volume);
+    await flutterTts.setSpeechRate(rate);
+    await flutterTts.setPitch(pitch);
+
+    if (_newVoiceText != null) {
+      if (_newVoiceText!.isNotEmpty) {
+        await flutterTts.speak(_newVoiceText!);
+      }
+    }
+  }
+
+  Future<void> _setAwaitOptions() async {
+    await flutterTts.awaitSpeakCompletion(true);
+  }
+
+  Future<void> _stop() async {
+    var result = await flutterTts.stop();
+    if (result == 1) setState(() => ttsState = TtsState.stopped);
+  }
+
+  Future<void> _pause() async {
+    if (isPlaying) {
+      var result = await flutterTts.pause();
+      if (result == 1) setState(() => ttsState = TtsState.paused);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    // var news = widget.news;
-
-    // var news = NewsModel(
-    //   comments: [
-    //     Comment(
-    //         content:
-    //             'This is a great article!This is a great article!This is a great article!This is a great article!This is a great article!This is a great article!This is a great article!This is a great article!This is a great article!',
-    //         user: 'User1'),
-    //     Comment(content: 'I found this very helpful.', user: 'User2'),
-    //     Comment(content: 'Can someone explain this part to me?', user: 'User3'),
-    //   ],
-    // );
-
-    final args = ModalRoute.of(context)!.settings.arguments as ArticleArguments;
-
     return SafeArea(
       child: Scaffold(
-        // appBar: _buildAppBar(context),
+        appBar: _buildAppBar(context),
         body: SizedBox(
           width: double.maxFinite,
           child: Column(
@@ -178,7 +346,9 @@ class ArticleScreenState extends State<ArticleScreen> {
                                   SizedBox(
                                     width: 293.h,
                                     child: Text(
-                                      args.newsmodel.content,
+                                      context
+                                          .read<ArticleProvider>()
+                                          .articleContent,
                                       maxLines: 10,
                                       overflow: TextOverflow.ellipsis,
                                       style: CustomTextStyles
@@ -189,19 +359,8 @@ class ArticleScreenState extends State<ArticleScreen> {
                                     ),
                                   ),
                                   SizedBox(height: 13.v),
-                                  SizedBox(
-                                    width: 293.h,
-                                    child: Text(
-                                      args.newsmodel.content,
-                                      maxLines: 10,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: CustomTextStyles
-                                          .bodyMediumIndigo800_1
-                                          .copyWith(
-                                        height: 1.43,
-                                      ),
-                                    ),
-                                  ),
+                                  // text to speech
+                                  _soundBar(),
                                   SizedBox(height: 13.v),
                                   Container(
                                     width: 293.h,
@@ -219,8 +378,7 @@ class ArticleScreenState extends State<ArticleScreen> {
                                   SizedBox(
                                     width: 293.h,
                                     height:
-                                        (args.newsmodel.comments?.length.v ??
-                                                0) *
+                                        (args.newsmodel.comments?.length ?? 0) *
                                             150.v,
                                     child: ListView.builder(
                                       itemCount:
@@ -246,63 +404,87 @@ class ArticleScreenState extends State<ArticleScreen> {
                     ),
                   ],
                 ),
-              )
+              ),
             ],
           ),
         ),
-        bottomNavigationBar: _buildColumn21k(context),
+        floatingActionButton: Container(
+          decoration: BoxDecoration(
+              color: Colors.blue,
+              borderRadius: BorderRadius.all(const Radius.circular(10))),
+          child: IconButton(
+            icon: Icon(Icons.translate),
+            onPressed: onClickChangeLanguage,
+            color: Colors.white,
+          ),
+        ),
       ),
     );
   }
 
   /// Section Widget
-  // PreferredSizeWidget _buildAppBar(BuildContext context) {
-  //   return CustomAppBar(
-  //     leadingWidth: 72.h,
-  //     leading: AppbarLeadingImage(
-  //       imagePath: ImageConstant.imgChevronLeft,
-  //       margin: EdgeInsets.only(
-  //         left: 40.h,
-  //         top: 12.v,
-  //         bottom: 12.v,
-  //       ),
-  //       onTap: () {
-  //         onTapChevronleftone(context);
-  //       },
-  //     ),
-  //     actions: [
-  //       AppbarTrailingImage(
-  //         imagePath: ImageConstant.imgOverflow,
-  //         margin: EdgeInsets.symmetric(
-  //           horizontal: 40.h,
-  //           vertical: 12.v,
-  //         ),
-  //       )
-  //     ],
-  //   );
-  // }
-
-  /// Section Widget
-  Widget _buildColumn21k(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(
-        left: 224.h,
-        right: 40.h,
-        bottom: 44.v,
+  PreferredSizeWidget _buildAppBar(BuildContext context) {
+    return CustomAppBar(
+      leadingWidth: 72.h,
+      leading: AppbarLeadingImage(
+        imagePath: ImageConstant.imgChevronLeft,
+        margin: EdgeInsets.only(
+          left: 40.h,
+          top: 12.v,
+          bottom: 12.v,
+        ),
+        onTap: () {
+          onTapChevronleftone(context);
+        },
       ),
-      decoration: AppDecoration.gradientGrayToGray,
-      child: CustomElevatedButton(
-        text: "lbl_2_1k".tr,
-        leftIcon: Container(
-          margin: EdgeInsets.only(right: 8.h),
-          child: CustomImageView(
-            imagePath: ImageConstant.imgThumbs,
-            height: 24.adaptSize,
-            width: 24.adaptSize,
+      actions: [
+        AppbarTrailingImage(
+          imagePath: ImageConstant.imgOverflow,
+          margin: EdgeInsets.symmetric(
+            horizontal: 40.h,
+            vertical: 12.v,
           ),
+        )
+      ],
+    );
+  }
+
+  Widget _soundBar() {
+    return Container(
+      padding: const EdgeInsets.all(5.0),
+      decoration: const BoxDecoration(
+        color: Colors.blue,
+        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+      ),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            _buildButtonColumn(Colors.white, Colors.greenAccent,
+                Icons.play_arrow, 'PLAY', _speak),
+            _buildButtonColumn(
+                Colors.white, Colors.redAccent, Icons.stop, 'STOP', _stop),
+            _buildButtonColumn(
+                Colors.white, Colors.blueAccent, Icons.pause, 'PAUSE', _pause),
+          ],
         ),
       ),
     );
+  }
+
+  Column _buildButtonColumn(Color color, Color splashColor, IconData icon,
+      String label, Function func) {
+    return Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          IconButton(
+              icon: Icon(icon, size: 30),
+              color: color,
+              splashColor: splashColor,
+              onPressed: () => func()),
+        ]);
   }
 
   /// Navigates to the previous screen.

@@ -11,12 +11,11 @@ class ListNews extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 200.h,
+      height: MediaQuery.of(context).size.height * 0.6, // Adjust the height
       child: ListView.builder(
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
         itemCount: news.length,
-        // addAutomaticKeepAlives: false,
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
@@ -26,7 +25,9 @@ class ListNews extends StatelessWidget {
             child: Column(
               children: [
                 _post(context, news: news[index]),
-                SizedBox(height: 23.v),
+                SizedBox(
+                    height: MediaQuery.of(context).size.height *
+                        0.03), // Adjust the spacing
               ],
             ),
           );

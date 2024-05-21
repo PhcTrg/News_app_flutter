@@ -8,6 +8,8 @@ String url = ConstValue().URL;
 
 class ArticleProvider with ChangeNotifier, DiagnosticableTreeMixin {
   String createStatus = "";
+  String articleContent = "";
+  String contentLanguage = "en-US";
 
   Future<String> addArticle(String title, String content, int userId) async {
     try {

@@ -75,18 +75,10 @@ class _MyAppState extends State<LoginScreen> {
                     ),
                   ),
                   child: const TabBar(
-                    // indicator: BoxDecoration(
-                    //     // borderRadius: BorderRadius.circular(50),
-                    //     borderRadius: BorderRadius.only(
-                    //       topLeft: Radius.circular(50.0),
-                    //       topRight: Radius.circular(50.0),
-                    //     ),
-                    //     color: Colors.blue),
-                    // indicatorColor: Colors.black,
                     indicatorSize: TabBarIndicatorSize.tab,
                     indicatorColor: Colors.blue,
                     labelStyle: TextStyle(
-                      color: Colors.white, // change the color as needed
+                      color: Colors.white,
                     ),
                     dividerColor: Colors.blue,
                     // dividerHeight: 3,
@@ -98,7 +90,16 @@ class _MyAppState extends State<LoginScreen> {
                 ),
               ),
             ),
-            title: _iconTitle(context),
+            title: AppbarTitle(
+              text: "Account",
+              margin: EdgeInsets.only(left: 40.h),
+            ),
+            actions: [
+              AppbarTrailingImage(
+                imagePath: ImageConstant.imgUser,
+                margin: EdgeInsets.fromLTRB(40.h, 11.v, 40.h, 12.v),
+              )
+            ],
           ),
           body: TabBarView(
             children: [
@@ -323,82 +324,6 @@ class _MyAppState extends State<LoginScreen> {
       ),
     );
   }
-
-  /// Section Widget
-  PreferredSizeWidget _buildAppBar(BuildContext context) {
-    return CustomAppBar(
-      title: AppbarTitle(
-        text: "Login",
-        margin: EdgeInsets.only(left: 40.h),
-      ),
-      actions: [
-        AppbarTrailingImage(
-          imagePath: ImageConstant.imgUser,
-          margin: EdgeInsets.fromLTRB(40.h, 11.v, 40.h, 12.v),
-        )
-      ],
-    );
-  }
-
-  Widget _iconTitle(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(height: 60.v),
-        Container(
-          height: 30.v,
-          width: 102.h,
-          margin: EdgeInsets.only(right: 7.h),
-          child: Stack(
-            alignment: Alignment.centerLeft,
-            children: [
-              Align(
-                alignment: Alignment.topLeft,
-                child: Container(
-                  height: 30.v,
-                  width: 102.h,
-                  decoration: BoxDecoration(
-                    color: appTheme.blue800,
-                    borderRadius: BorderRadius.circular(
-                      6.h,
-                    ),
-                  ),
-                ),
-              ),
-              AppbarTitleImage(
-                imagePath: ImageConstant.imgBlog,
-                margin: EdgeInsets.fromLTRB(5.h, 5.v, 6.h, 5.v),
-              )
-            ],
-          ),
-        ),
-        SizedBox(height: 6.v),
-        AppbarTitleImage(
-          imagePath: ImageConstant.imgClub,
-          margin: EdgeInsets.only(left: 22.h),
-        )
-      ],
-    );
-  }
-
-  // Widget _buildUsername(BuildContext context) {
-  //   return Column(
-  //     crossAxisAlignment: CrossAxisAlignment.start,
-  //     children: [
-  //       Text(
-  //         "Username",
-  //         style: theme.textTheme.bodyMedium,
-  //       ),
-  //       SizedBox(height: 13.v),
-  //       CustomTextFormField(
-  //         controller: userNameController,
-  //         hintText: "Type your user name here...",
-  //         textInputType: TextInputType.emailAddress,
-  //         contentPadding: EdgeInsets.symmetric(horizontal: 1.h),
-  //         borderDecoration: TextFormFieldStyleHelper.underLineGray,
-  //       )
-  //     ],
-  //   );
-  // }
 
   Widget _buildPassword(
       BuildContext context, String title, TextEditingController controller) {

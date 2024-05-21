@@ -59,7 +59,9 @@ class _MyAppState extends State<HomeScreen> {
                                           context, data.data!);
                                     }
 
-                                    return const CircularProgressIndicator();
+                                    return Center(
+                                        child:
+                                            const CircularProgressIndicator());
                                   }),
                             ],
                           ),

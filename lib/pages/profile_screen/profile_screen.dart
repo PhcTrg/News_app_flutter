@@ -53,7 +53,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                   child: SingleChildScrollView(
                     padding: EdgeInsets.only(top: 6.v),
                     child: SizedBox(
-                      height: 739.v,
+                      height: 905.v,
                       width: double.maxFinite,
                       child: Stack(
                         alignment: Alignment.bottomCenter,
@@ -301,7 +301,9 @@ class ProfileScreenState extends State<ProfileScreen> {
                                             context, data.data!);
                                       }
 
-                                      return const CircularProgressIndicator();
+                                      return Center(
+                                          child:
+                                              const CircularProgressIndicator());
                                     },
                                   )
                                 ],
@@ -317,7 +319,7 @@ class ProfileScreenState extends State<ProfileScreen> {
             );
           }
 
-          return const CircularProgressIndicator();
+          return Center(child: const CircularProgressIndicator());
         });
   }
 
