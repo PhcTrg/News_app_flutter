@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:news_reading/provider/article_provider.dart';
 import 'package:news_reading/provider/home_provider.dart';
+import 'package:news_reading/provider/profile_provider.dart';
 import 'core/app_export.dart';
 
 var globalMessengerKey = GlobalKey<ScaffoldMessengerState>();
@@ -31,6 +32,7 @@ void main() {
         providers: [
           ChangeNotifierProvider(create: (context) => HomeProvider()),
           ChangeNotifierProvider(create: (context) => ArticleProvider()),
+          ChangeNotifierProvider(create: (context) => ProfileProvider()),
         ],
         child: MyApp(),
       ),

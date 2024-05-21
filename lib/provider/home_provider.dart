@@ -36,8 +36,6 @@ class HomeProvider with ChangeNotifier, DiagnosticableTreeMixin {
   UserModel get userModel => _userModel;
 
   Future<List<NewsModel>> getNewsData() async {
-    // try {
-
     final response =
         await http.get(Uri.parse('http://$url:8000/api/articles/'));
 
@@ -55,10 +53,6 @@ class HomeProvider with ChangeNotifier, DiagnosticableTreeMixin {
     } else {
       throw Exception('Failed to load');
     }
-    // } catch (e) {
-    //   _loginStatus = "Fetch news data fail: $e";
-    //   rethrow;
-    // }
   }
 
   Future<String> postSignUp(String userName, String password, String firstname,

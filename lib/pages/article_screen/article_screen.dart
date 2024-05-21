@@ -6,8 +6,7 @@ import 'package:news_reading/widgets/app_bar/appbar_leading_image.dart';
 import 'package:news_reading/widgets/app_bar/appbar_trailing_image.dart';
 import 'package:news_reading/widgets/app_bar/custom_app_bar.dart';
 import '../../core/app_export.dart';
-import '../../widgets/custom_elevated_button.dart';
-import 'package:convex_bottom_bar/convex_bottom_bar.dart';
+import 'package:comment_box/comment/comment.dart';
 
 import 'dart:async';
 import 'dart:io' show Platform;
@@ -61,6 +60,8 @@ class ArticleScreenState extends State<ArticleScreen> {
   final translator = GoogleTranslator();
 
   var args;
+  final formKey = GlobalKey<FormState>();
+  final TextEditingController _commentController = TextEditingController();
 
   @override
   void initState() {
@@ -213,199 +214,278 @@ class ArticleScreenState extends State<ArticleScreen> {
     }
   }
 
+  void _handleSubmittedComment() {
+    setState(() {
+      // handle submit
+      var articleProvider =
+          Provider.of<ArticleProvider>(context, listen: false);
+
+      articleProvider.addComment(
+          _commentController.text, args.newsmodel.user, args.newsmodel.id);
+      _commentController.clear(); // Clear the input field
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final bottom = MediaQuery.of(context).viewInsets.bottom;
+
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: _buildAppBar(context),
-        body: SizedBox(
-          width: double.maxFinite,
-          child: Column(
-            children: [
-              SizedBox(height: 13.v),
-              Container(
-                width: 295.h,
-                margin: EdgeInsets.only(
-                  left: 40.h,
-                  right: 39.h,
-                ),
-                child: Text(
-                  "msg_four_things_every".tr,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: theme.textTheme.headlineSmall,
-                ),
-              ),
-              SizedBox(height: 33.v),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 39.h),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      height: 38.adaptSize,
-                      width: 38.adaptSize,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(
-                          12.h,
-                        ),
-                        image: DecorationImage(
-                          image: AssetImage(
-                            ImageConstant.imgPlaceholder38x38,
+        body: SingleChildScrollView(
+          reverse: true,
+          child: Container(
+            padding: EdgeInsets.only(bottom: bottom),
+            child: SizedBox(
+              width: double.maxFinite,
+              child: Column(
+                children: [
+                  SizedBox(height: 13.v),
+                  Container(
+                    width: 295.h,
+                    margin: EdgeInsets.only(
+                      left: 40.h,
+                      right: 39.h,
+                    ),
+                    child: Text(
+                      args.newsmodel.title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.headlineSmall,
+                    ),
+                  ),
+                  SizedBox(height: 33.v),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 39.h),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                              color: Colors.blue,
+                              borderRadius:
+                                  BorderRadius.all(const Radius.circular(10))),
+                          padding: const EdgeInsets.all(12.0),
+                          child: Icon(
+                            Icons.person,
+                            color: Colors.white,
+                            size: 30,
                           ),
-                          fit: BoxFit.cover,
                         ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 16.h),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "lbl_richard_gervain".tr,
-                            style: CustomTextStyles.bodyMediumIndigo800_1,
+                        Padding(
+                          padding: EdgeInsets.only(left: 16.h),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "lbl_richard_gervain".tr,
+                                style: CustomTextStyles.bodyMediumIndigo800_1,
+                              ),
+                              SizedBox(height: 5.v),
+                              Padding(
+                                padding: EdgeInsets.only(left: 3.h),
+                                child: Text(
+                                  "lbl_2m_ago".tr,
+                                  style:
+                                      CustomTextStyles.bodySmallBluegray400_1,
+                                ),
+                              )
+                            ],
                           ),
-                          SizedBox(height: 5.v),
-                          Padding(
-                            padding: EdgeInsets.only(left: 3.h),
-                            child: Text(
-                              "lbl_2m_ago".tr,
-                              style: CustomTextStyles.bodySmallBluegray400_1,
-                            ),
-                          )
-                        ],
-                      ),
+                        ),
+                        Spacer(),
+                        CustomImageView(
+                          imagePath: ImageConstant.imgSend,
+                          height: 24.adaptSize,
+                          width: 24.adaptSize,
+                          margin: EdgeInsets.only(
+                            top: 7.v,
+                            bottom: 8.v,
+                          ),
+                        ),
+                        CustomImageView(
+                          imagePath: ImageConstant.imgBookmark,
+                          height: 24.adaptSize,
+                          width: 24.adaptSize,
+                          margin: EdgeInsets.only(
+                            left: 24.h,
+                            top: 7.v,
+                            bottom: 8.v,
+                          ),
+                        )
+                      ],
                     ),
-                    Spacer(),
-                    CustomImageView(
-                      imagePath: ImageConstant.imgSend,
-                      height: 24.adaptSize,
-                      width: 24.adaptSize,
-                      margin: EdgeInsets.only(
-                        top: 7.v,
-                        bottom: 8.v,
-                      ),
-                    ),
-                    CustomImageView(
-                      imagePath: ImageConstant.imgBookmark,
-                      height: 24.adaptSize,
-                      width: 24.adaptSize,
-                      margin: EdgeInsets.only(
-                        left: 24.h,
-                        top: 7.v,
-                        bottom: 8.v,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              SizedBox(height: 23.v),
-              SizedBox(
-                height: 508.v,
-                width: double.maxFinite,
-                child: Column(
-                  children: [
-                    CustomImageView(
-                      imagePath: ImageConstant.imgImage,
-                      height: 219.v,
-                      width: 375.h,
-                      alignment: Alignment.topCenter,
-                    ),
-                    SizedBox(height: 13.v),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Container(
-                            margin: EdgeInsets.symmetric(horizontal: 40.h),
-                            decoration: AppDecoration.outlineBlueAF.copyWith(
-                              borderRadius: BorderRadiusStyle.customBorderTL28,
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(30.0),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    width: 293.h,
-                                    margin: EdgeInsets.only(right: 84.h),
-                                    child: Text(
-                                      args.newsmodel.title,
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      style:
-                                          theme.textTheme.bodyLarge!.copyWith(
-                                        height: 1.11,
+                  ),
+                  SizedBox(height: 23.v),
+                  SizedBox(
+                    height: 508.v,
+                    width: double.maxFinite,
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: SingleChildScrollView(
+                            child: Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Container(
+                                margin: EdgeInsets.symmetric(horizontal: 20.h),
+                                decoration:
+                                    AppDecoration.outlineBlueAF.copyWith(
+                                  borderRadius:
+                                      BorderRadiusStyle.customBorderTL28,
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(20.0),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      CustomImageView(
+                                        imagePath: ImageConstant.imgImage,
+                                        height: 219.v,
+                                        width: 375.h,
+                                        radius: BorderRadius.circular(8.0),
+                                        alignment: Alignment.topCenter,
                                       ),
-                                    ),
-                                  ),
-                                  SizedBox(height: 13.v),
-                                  SizedBox(
-                                    width: 293.h,
-                                    child: Text(
-                                      context
-                                          .read<ArticleProvider>()
-                                          .articleContent,
-                                      maxLines: 10,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: CustomTextStyles
-                                          .bodyMediumIndigo800_1
-                                          .copyWith(
-                                        height: 1.43,
+                                      SizedBox(height: 13.v),
+                                      Container(
+                                        width: 293.h,
+                                        margin: EdgeInsets.only(right: 84.h),
+                                        child: Text(
+                                          "Content",
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: theme.textTheme.bodyLarge!
+                                              .copyWith(
+                                            height: 1.11,
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                  SizedBox(height: 13.v),
-                                  // text to speech
-                                  _soundBar(),
-                                  SizedBox(height: 13.v),
-                                  Container(
-                                    width: 293.h,
-                                    margin: EdgeInsets.only(right: 84.h),
-                                    child: Text(
-                                      "Comment Section",
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      style:
-                                          theme.textTheme.bodyLarge!.copyWith(
-                                        height: 1.11,
+                                      SizedBox(height: 13.v),
+                                      SizedBox(
+                                        width: 293.h,
+                                        child: Text(
+                                          context
+                                              .read<ArticleProvider>()
+                                              .articleContent,
+                                          maxLines: 10,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: CustomTextStyles
+                                              .bodyMediumIndigo800_1
+                                              .copyWith(
+                                            height: 1.43,
+                                          ),
+                                        ),
                                       ),
-                                    ),
+                                      SizedBox(height: 13.v),
+                                      // text to speech
+                                      _soundBar(),
+                                      SizedBox(height: 13.v),
+
+                                      // comment
+                                      Container(
+                                        width: 293.h,
+                                        margin: EdgeInsets.only(right: 84.h),
+                                        child: Text(
+                                          "Comment Section",
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: theme.textTheme.bodyLarge!
+                                              .copyWith(
+                                            height: 1.11,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(16.0),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              child: TextFormField(
+                                                controller: _commentController,
+                                                decoration: InputDecoration(
+                                                  hintText: 'Add a comment...',
+                                                ),
+                                                onChanged: (newComment) {
+                                                  // Handle user input here (optional)
+                                                  // Store the new comment in a variable (if needed)
+                                                },
+                                              ),
+                                            ),
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          const Radius.circular(
+                                                              10))),
+                                              child: IconButton(
+                                                icon: Icon(Icons.send),
+                                                onPressed:
+                                                    _handleSubmittedComment,
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Center(
+                                        child: Text(context
+                                            .watch<ArticleProvider>()
+                                            .createCommentStatus),
+                                      ),
+                                      SizedBox(
+                                        width: 293.h,
+                                        height:
+                                            (args.newsmodel.comments?.length ??
+                                                    0) *
+                                                150.v,
+                                        child: ListView.builder(
+                                          itemCount:
+                                              args.newsmodel.comments?.length ??
+                                                  0,
+                                          itemBuilder: (context, index) {
+                                            final comment =
+                                                args.newsmodel.comments![index];
+                                            return ListTile(
+                                              leading: Container(
+                                                decoration: BoxDecoration(
+                                                    color: Colors.blue,
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            const Radius
+                                                                .circular(10))),
+                                                padding:
+                                                    const EdgeInsets.all(12.0),
+                                                child: Icon(
+                                                  Icons.person,
+                                                  color: Colors.white,
+                                                  size: 30,
+                                                ),
+                                              ),
+                                              title: Text(
+                                                  '${comment.user.toString()}'),
+                                              subtitle: Text(comment.content),
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  SizedBox(
-                                    width: 293.h,
-                                    height:
-                                        (args.newsmodel.comments?.length ?? 0) *
-                                            150.v,
-                                    child: ListView.builder(
-                                      itemCount:
-                                          args.newsmodel.comments?.length ?? 0,
-                                      itemBuilder: (context, index) {
-                                        final comment =
-                                            args.newsmodel.comments![index];
-                                        return ListTile(
-                                          leading: Icon(Icons.person_2_rounded),
-                                          title: Text(
-                                              '${comment.user.toString()}'),
-                                          subtitle: Text(comment.content),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ],
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
         floatingActionButton: Container(
@@ -422,7 +502,6 @@ class ArticleScreenState extends State<ArticleScreen> {
     );
   }
 
-  /// Section Widget
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
       leadingWidth: 72.h,

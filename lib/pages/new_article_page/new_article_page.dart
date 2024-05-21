@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:news_reading/model/news_model.dart';
+import 'package:news_reading/pages/argumennt/article_argument.dart';
 import 'package:news_reading/provider/article_provider.dart';
 import 'package:news_reading/provider/home_provider.dart';
 import 'package:news_reading/widgets/custom_text_form_field.dart';
@@ -11,6 +13,9 @@ import 'provider/new_article_provider.dart';
 import 'widgets/tags_item_widget.dart'; // ignore_for_file: must_be_immutable
 
 class NewArticlePage extends StatefulWidget {
+  // final NewsModel? news;
+  // NewArticlePage({this.news});
+
   const NewArticlePage({Key? key})
       : super(
           key: key,
@@ -28,16 +33,33 @@ class NewArticlePage extends StatefulWidget {
 }
 
 class NewArticlePageState extends State<NewArticlePage> {
-  TextEditingController articleTitleController = TextEditingController();
+  var args;
+  TextEditingController articleTitleController =
+      TextEditingController(text: '');
   TextEditingController articleContentController = TextEditingController();
   GlobalKey<NavigatorState> navigatorKey = GlobalKey();
+
+  bool isUpdate = false;
 
   // late Future<String> futureStatus;
 
   @override
   void initState() {
     super.initState();
-    // futureStatus = context.read<ArticleProvider>().createStatus;
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    args = ModalRoute.of(context)!.settings.arguments;
+
+    if (args != null) {
+      articleTitleController =
+          TextEditingController(text: args.newsmodel?.title ?? '');
+      articleContentController =
+          TextEditingController(text: args.newsmodel?.content ?? '');
+    }
+    isUpdate = articleTitleController.text == '' ? false : true;
   }
 
   @override
@@ -50,8 +72,9 @@ class NewArticlePageState extends State<NewArticlePage> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Padding(
+      child: Container(
         padding: const EdgeInsets.all(50.0),
+        color: Colors.white,
         child: Scaffold(
           appBar: _buildAppBar(context),
           body: Container(
@@ -112,17 +135,31 @@ class NewArticlePageState extends State<NewArticlePage> {
                     backgroundColor: Colors.blue,
                   ),
                   onPressed: () {
-                    var articleProvider =
-                        Provider.of<ArticleProvider>(context, listen: false);
-                    var homeProvider =
-                        Provider.of<HomeProvider>(context, listen: false);
+                    if (!isUpdate) {
+                      var articleProvider =
+                          Provider.of<ArticleProvider>(context, listen: false);
+                      var homeProvider =
+                          Provider.of<HomeProvider>(context, listen: false);
 
-                    articleProvider.addArticle(
-                        articleTitleController.text,
-                        articleContentController.text,
-                        homeProvider.userModel.id);
+                      articleProvider.addArticle(
+                          articleTitleController.text,
+                          articleContentController.text,
+                          homeProvider.userModel.id);
+                    } else {
+                      var articleProvider =
+                          Provider.of<ArticleProvider>(context, listen: false);
+
+                      articleProvider.updateArticle(
+                          articleTitleController.text,
+                          articleContentController.text,
+                          args.userModel.id,
+                          args.newsmodel.id);
+                    }
                   },
-                  child: Text('Create article'),
+                  child: Text(
+                    'SUBMIT',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 )
                 // Divider(),
               ],
@@ -141,7 +178,7 @@ class NewArticlePageState extends State<NewArticlePage> {
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
       title: AppbarTitle(
-        text: "lbl_new_article".tr,
+        text: "Article Manipulation",
         // margin: EdgeInsets.only(left: 10.h),
       ),
       actions: [

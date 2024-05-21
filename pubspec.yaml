@@ -18,6 +18,7 @@ dependencies:
   convex_bottom_bar: ^3.2.0
   flutter_tts: ^4.0.2
   translator: ^1.0.0
+  comment_box: ^0.0.18
 
 dev_dependencies:
   flutter_test:

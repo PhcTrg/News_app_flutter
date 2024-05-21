@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:news_reading/model/news_model.dart';
 import 'package:news_reading/model/user_model.dart';
 import 'package:news_reading/provider/home_provider.dart';
-import 'package:news_reading/widgets/list_view_post.dart';
+import 'package:news_reading/widgets/list_view_post_update.dart';
 import '../../core/app_export.dart';
 import '../../widgets/app_bar/appbar_title.dart';
 import '../../widgets/app_bar/appbar_trailing_image.dart';
 import '../../widgets/app_bar/custom_app_bar.dart';
-import 'provider/profile_provider.dart';
+import '../../provider/profile_provider.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key})
@@ -36,7 +36,9 @@ class ProfileScreenState extends State<ProfileScreen> {
     futureUser = context
         .read<HomeProvider>()
         .postUserInfo(context.read<HomeProvider>().userModel.id);
-    futureNews = context.read<HomeProvider>().getNewsData();
+    futureNews = context
+        .read<ProfileProvider>()
+        .getNewsData(context.read<HomeProvider>().userModel.id);
   }
 
   @override
@@ -360,7 +362,7 @@ class ProfileScreenState extends State<ProfileScreen> {
               )
             ],
           ),
-          ListNews(news: newsList)
+          ListNewsUpdate(news: newsList)
         ],
       ),
     );
