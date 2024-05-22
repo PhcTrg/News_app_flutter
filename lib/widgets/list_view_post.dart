@@ -65,16 +65,21 @@ Widget _post(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                news.title,
-                style: CustomTextStyles.bodyMediumIndigoA40001,
+              SizedBox(
+                width: 139.h,
+                child: Text(
+                  news.title,
+                  style: CustomTextStyles.bodyMediumIndigoA40001,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
               ),
               SizedBox(height: 6.v),
               SizedBox(
                 width: 139.h,
                 child: Text(
                   news.content,
-                  maxLines: 2,
+                  maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: theme.textTheme.bodyMedium!.copyWith(
                     height: 1.43,

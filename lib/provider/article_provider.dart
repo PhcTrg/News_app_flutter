@@ -13,6 +13,12 @@ class ArticleProvider with ChangeNotifier, DiagnosticableTreeMixin {
 
   String createCommentStatus = "";
 
+  // Future<String>? _futureSummarize;
+  // Future<String>? get futureSummarize => _futureSummarize;
+  // set futureSummarize(Future<String>? value) {
+  //   _futureSummarize = value;
+  // }
+
   Future<String> addArticle(String title, String content, int userId) async {
     try {
       final response = await http.post(
@@ -70,6 +76,32 @@ class ArticleProvider with ChangeNotifier, DiagnosticableTreeMixin {
       }
     } catch (e) {
       createStatus = "update article fail: $e";
+      rethrow;
+    }
+  }
+
+  Future<String> summarizeArticle(String content) async {
+    try {
+      final response = await http.post(
+        Uri.parse('http://$url:8000/api/summary/'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, dynamic>{
+          "text": content,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        notifyListeners();
+
+        return responseData['summary'];
+      } else {
+        throw Exception(response.body);
+      }
+    } catch (e) {
+      createStatus = "Summarize fail: $e";
       rethrow;
     }
   }

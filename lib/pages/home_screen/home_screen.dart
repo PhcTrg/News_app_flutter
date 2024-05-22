@@ -145,22 +145,6 @@ class _MyAppState extends State<HomeScreen> {
 
           Text(dataLength),
           ListNews(news: news)
-          // ListView.builder(
-          //   scrollDirection: Axis.vertical,
-          //   shrinkWrap: true,
-          //   itemCount: news.length,
-          //   itemBuilder: (context, index) {
-          //     return Padding(
-          //         padding: const EdgeInsets.all(8.0),
-          //         child: GestureDetector(
-          //           onTap: () {
-          //             Navigator.pushNamed(context, AppRoutes.articleScreen,
-          //                 arguments: ArticleArguments(news[index]));
-          //           },
-          //           child: ProductCard(news: news[index]),
-          //         ));
-          //   },
-          // ),
         ],
       ),
     );

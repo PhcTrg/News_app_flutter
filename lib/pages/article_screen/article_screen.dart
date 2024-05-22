@@ -6,7 +6,6 @@ import 'package:news_reading/widgets/app_bar/appbar_leading_image.dart';
 import 'package:news_reading/widgets/app_bar/appbar_trailing_image.dart';
 import 'package:news_reading/widgets/app_bar/custom_app_bar.dart';
 import '../../core/app_export.dart';
-import 'package:comment_box/comment/comment.dart';
 
 import 'dart:async';
 import 'dart:io' show Platform;
@@ -62,6 +61,9 @@ class ArticleScreenState extends State<ArticleScreen> {
   var args;
   final formKey = GlobalKey<FormState>();
   final TextEditingController _commentController = TextEditingController();
+
+  Future<String>? _futureSummarize;
+  // String sumData = "";
 
   @override
   void initState() {
@@ -381,6 +383,11 @@ class ArticleScreenState extends State<ArticleScreen> {
                                         ),
                                       ),
                                       SizedBox(height: 13.v),
+
+                                      // summary
+                                      _summarySection(),
+                                      SizedBox(height: 13.v),
+
                                       // text to speech
                                       _soundBar(),
                                       SizedBox(height: 13.v),
@@ -499,6 +506,44 @@ class ArticleScreenState extends State<ArticleScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _summarySection() {
+    return Column(
+      children: [
+        Align(
+          alignment: Alignment.topRight,
+          child: ElevatedButton(
+            onPressed: () {
+              setState(() {
+                _futureSummarize = context
+                    .read<ArticleProvider>()
+                    .summarizeArticle(
+                        context.read<ArticleProvider>().articleContent);
+              });
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Text(
+                'Summarize',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ),
+        ),
+        SizedBox(height: 8), // Add some spacing
+        if (_futureSummarize != null)
+          FutureBuilder<String>(
+            future: _futureSummarize,
+            builder: (context, data) {
+              if (data.hasData) {
+                return Text(data.data!);
+              }
+              return Center(child: const CircularProgressIndicator());
+            },
+          ),
+      ],
     );
   }
 
