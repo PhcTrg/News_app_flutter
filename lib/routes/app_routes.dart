@@ -1,5 +1,3 @@
-import 'dart:js';
-
 import 'package:flutter/material.dart';
 import 'package:news_reading/pages/home_page/home_page.dart';
 import 'package:news_reading/pages/new_article_page/new_article_page.dart';

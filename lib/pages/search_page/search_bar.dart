@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class SearchBar extends StatefulWidget {
+class MySearchBar extends StatefulWidget {
   @override
-  _SearchBarState createState() => _SearchBarState();
+  _MySearchBarState createState() => _MySearchBarState();
 }
 
-class _SearchBarState extends State<SearchBar> {
+class _MySearchBarState extends State<MySearchBar> {
   final TextEditingController _textController = TextEditingController();
 
   @override
@@ -39,7 +39,7 @@ class _SearchBarState extends State<SearchBar> {
                 height: 24,
                 clipBehavior: Clip.antiAlias,
                 decoration: BoxDecoration(),
-                child: FlutterLogo(),
+                child: Icon(Icons.search),
               ),
               SizedBox(width: 8),
               Expanded(

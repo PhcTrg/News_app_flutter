@@ -8,7 +8,6 @@ import 'package:news_reading/pages/onboard/onboarding.dart';
 import 'package:news_reading/pages/profile_screen/profile_screen.dart';
 import 'package:news_reading/pages/search_page/search_page.dart';
 import 'package:news_reading/provider/home_provider.dart';
-import 'package:news_reading/pages/splashscreen_screen/splashscreen_screen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key})
