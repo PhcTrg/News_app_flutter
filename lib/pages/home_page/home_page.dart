@@ -91,8 +91,6 @@ class _HomePageState extends State<HomePage> {
         (context.watch<HomeProvider>().futureUser == null)
             ? LoginScreen()
             : NewArticlePage(),
-        HomeScreen(),
-        HomeScreen(),
       ][currentPageIndex],
     );
   }
