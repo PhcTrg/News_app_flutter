@@ -1,8 +1,12 @@
+import 'dart:js';
+
 import 'package:flutter/material.dart';
 import 'package:news_reading/pages/home_page/home_page.dart';
 import 'package:news_reading/pages/new_article_page/new_article_page.dart';
 import '../pages/article_screen/article_screen.dart';
+import '../pages/onboard/onboarding.dart';
 import '../pages/profile_screen/profile_screen.dart';
+import '../pages/search_page/search_page.dart';
 import '../pages/splashscreen_screen/splashscreen_screen.dart';
 
 class AppRoutes {
@@ -18,12 +22,18 @@ class AppRoutes {
 
   static const String loginRoute = '/login_screen';
 
+  static const String searchRoute = '/search';
+
+  static const String onBoard = '/on_board';
+
   static Map<String, WidgetBuilder> get routes => {
         splashscreenScreen: SplashscreenScreen.builder,
         articleScreen: (context) => ArticleScreen(),
         profileScreen: ProfileScreen.builder,
         newArticlePage: NewArticlePage.builder,
         // loginRoute: LoginScreen.builder,
-        homeRoute: HomePage.builder
+        homeRoute: HomePage.builder,
+        searchRoute: (context) => Search(),
+        onBoard: (context) => OnBoarding()
       };
 }
