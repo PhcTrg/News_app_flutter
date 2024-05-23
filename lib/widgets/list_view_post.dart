@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:news_reading/core/app_export.dart';
 import 'package:news_reading/model/news_model.dart';
 import 'package:news_reading/pages/argumennt/article_argument.dart';
+import 'package:news_reading/provider/home_provider.dart';
 
 class ListNews extends StatelessWidget {
   final List<NewsModel> news;
@@ -10,6 +11,7 @@ class ListNews extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var homeProvider = Provider.of<HomeProvider>(context, listen: false);
     return Container(
       height: MediaQuery.of(context).size.height * 0.6, // Adjust the height
       child: ListView.builder(
@@ -20,7 +22,8 @@ class ListNews extends StatelessWidget {
           return GestureDetector(
             onTap: () {
               Navigator.pushNamed(context, AppRoutes.articleScreen,
-                  arguments: ArticleArguments(news[index]));
+                  arguments:
+                      ArticleArguments(news[index], homeProvider.userModel));
             },
             child: Column(
               children: [

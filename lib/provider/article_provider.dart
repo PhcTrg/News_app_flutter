@@ -1,8 +1,8 @@
 import 'dart:convert';
-import 'dart:ffi';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:news_reading/Services/notifi_service.dart';
 import 'package:news_reading/util/constant.dart';
 
 String url = ConstValue().URL;
@@ -38,6 +38,10 @@ class ArticleProvider with ChangeNotifier, DiagnosticableTreeMixin {
         // final responseData = jsonDecode(response.body);
         createStatus = "Create article successfully";
 
+        NotificationService().showNotification(
+            title: 'Your article is now live',
+            body: 'Your article: $title upload successfully');
+
         notifyListeners();
 
         return createStatus;
@@ -68,6 +72,10 @@ class ArticleProvider with ChangeNotifier, DiagnosticableTreeMixin {
       if (response.statusCode == 200) {
         // final responseData = jsonDecode(response.body);
         createStatus = "update article successfully";
+
+        NotificationService().showNotification(
+            title: 'Your article is update successfully',
+            body: 'Your article: $title update successfully');
 
         notifyListeners();
 

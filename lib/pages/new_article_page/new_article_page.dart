@@ -9,7 +9,7 @@ import '../../widgets/app_bar/custom_app_bar.dart';
 import '../../widgets/custom_bottom_bar.dart';
 import 'models/tags_item_model.dart';
 import 'provider/new_article_provider.dart';
-import 'widgets/tags_item_widget.dart'; // ignore_for_file: must_be_immutable
+import 'widgets/tags_item_widget.dart';
 
 class NewArticlePage extends StatefulWidget {
   const NewArticlePage({Key? key})
@@ -32,7 +32,8 @@ class NewArticlePageState extends State<NewArticlePage> {
   var args;
   TextEditingController articleTitleController =
       TextEditingController(text: '');
-  TextEditingController articleContentController = TextEditingController();
+  TextEditingController articleContentController =
+      TextEditingController(text: '');
   GlobalKey<NavigatorState> navigatorKey = GlobalKey();
 
   bool isUpdate = false;
@@ -47,7 +48,9 @@ class NewArticlePageState extends State<NewArticlePage> {
     super.didChangeDependencies();
     args = ModalRoute.of(context)!.settings.arguments;
 
-    if (args != null) {
+    if (args != null &&
+        articleTitleController.text == '' &&
+        articleContentController.text == '') {
       articleTitleController =
           TextEditingController(text: args.newsmodel?.title ?? '');
       articleContentController =
@@ -65,7 +68,7 @@ class NewArticlePageState extends State<NewArticlePage> {
 
   @override
   Widget build(BuildContext context) {
-    final bottom = MediaQuery.of(context).viewInsets.bottom;
+    // final bottom = MediaQuery.of(context).viewInsets.bottom;
 
     return SafeArea(
       child: Container(
@@ -117,16 +120,7 @@ class NewArticlePageState extends State<NewArticlePage> {
                   ),
                   SizedBox(height: 15.v),
                   Text(context.watch<ArticleProvider>().createStatus),
-                  // FutureBuilder<String>(
-                  //   future: ,
-                  //   builder: (context, data) {
-                  //     if (data.hasData) {
-                  //       return Text(data.data!);
-                  //     }
 
-                  //     return Text("Nothing happened");
-                  //   },
-                  // ),
                   TextButton(
                     style: TextButton.styleFrom(
                       backgroundColor: Colors.blue,
@@ -143,11 +137,6 @@ class NewArticlePageState extends State<NewArticlePage> {
                             articleTitleController.text,
                             articleContentController.text,
                             homeProvider.userModel.id);
-
-                        String title = articleTitleController.text;
-                        NotificationService().showNotification(
-                            title: 'Your article is now live',
-                            body: 'Your article: $title upload successfully');
                       } else {
                         var articleProvider = Provider.of<ArticleProvider>(
                             context,
@@ -158,11 +147,6 @@ class NewArticlePageState extends State<NewArticlePage> {
                             articleContentController.text,
                             args.userModel.id,
                             args.newsmodel.id);
-
-                        String title = articleTitleController.text;
-                        NotificationService().showNotification(
-                            title: 'Your article is update successfully',
-                            body: 'Your article: $title update successfully');
                       }
                     },
                     child: Text(
@@ -175,10 +159,6 @@ class NewArticlePageState extends State<NewArticlePage> {
               ),
             ),
           ),
-          // bottomNavigationBar: Padding(
-          //   padding: EdgeInsets.symmetric(horizontal: 7.h),
-          //   child: _buildBottomBar(context),
-          // ),
         ),
       ),
     );

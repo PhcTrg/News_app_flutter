@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:news_reading/model/news_model.dart';
 import 'package:news_reading/pages/argumennt/article_argument.dart';
 import 'package:news_reading/provider/article_provider.dart';
+import 'package:news_reading/provider/home_provider.dart';
 import 'package:news_reading/widgets/app_bar/appbar_leading_image.dart';
 import 'package:news_reading/widgets/app_bar/appbar_trailing_image.dart';
 import 'package:news_reading/widgets/app_bar/custom_app_bar.dart';
@@ -63,7 +64,6 @@ class ArticleScreenState extends State<ArticleScreen> {
   final TextEditingController _commentController = TextEditingController();
 
   Future<String>? _futureSummarize;
-  // String sumData = "";
 
   @override
   void initState() {
@@ -223,7 +223,7 @@ class ArticleScreenState extends State<ArticleScreen> {
           Provider.of<ArticleProvider>(context, listen: false);
 
       articleProvider.addComment(
-          _commentController.text, args.newsmodel.user, args.newsmodel.id);
+          _commentController.text, args.userModel.id, args.newsmodel.id);
       _commentController.clear(); // Clear the input field
     });
   }
@@ -310,16 +310,6 @@ class ArticleScreenState extends State<ArticleScreen> {
                           color: Colors.blue,
                           onTap: () {},
                         ),
-                        // CustomImageView(
-                        //   imagePath: ImageConstant.imgBookmark,
-                        //   height: 24.adaptSize,
-                        //   width: 24.adaptSize,
-                        //   margin: EdgeInsets.only(
-                        //     left: 24.h,
-                        //     top: 7.v,
-                        //     bottom: 8.v,
-                        //   ),
-                        // )
                       ],
                     ),
                   ),
@@ -408,80 +398,16 @@ class ArticleScreenState extends State<ArticleScreen> {
                                           ),
                                         ),
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(16.0),
-                                        child: Row(
-                                          children: [
-                                            Expanded(
-                                              child: TextFormField(
-                                                controller: _commentController,
-                                                decoration: InputDecoration(
-                                                  hintText: 'Add a comment...',
-                                                ),
-                                                onChanged: (newComment) {
-                                                  // Handle user input here (optional)
-                                                  // Store the new comment in a variable (if needed)
-                                                },
-                                              ),
-                                            ),
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          const Radius.circular(
-                                                              10))),
-                                              child: IconButton(
-                                                icon: Icon(Icons.send),
-                                                onPressed:
-                                                    _handleSubmittedComment,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      Center(
-                                        child: Text(context
-                                            .watch<ArticleProvider>()
-                                            .createCommentStatus),
-                                      ),
-                                      SizedBox(
-                                        width: 293.h,
-                                        height:
-                                            (args.newsmodel.comments?.length ??
-                                                    0) *
-                                                150.v,
-                                        child: ListView.builder(
-                                          itemCount:
-                                              args.newsmodel.comments?.length ??
-                                                  0,
-                                          itemBuilder: (context, index) {
-                                            final comment =
-                                                args.newsmodel.comments![index];
-                                            return ListTile(
-                                              leading: Container(
-                                                decoration: BoxDecoration(
-                                                    color: Colors.blue,
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            const Radius
-                                                                .circular(10))),
-                                                padding:
-                                                    const EdgeInsets.all(12.0),
-                                                child: Icon(
-                                                  Icons.person,
-                                                  color: Colors.white,
-                                                  size: 30,
-                                                ),
-                                              ),
-                                              title: Text(
-                                                  '${comment.user.toString()}'),
-                                              subtitle: Text(comment.content),
-                                            );
-                                          },
-                                        ),
-                                      ),
+
+                                      (args.userModel.id != 0)
+                                          ? (_commentSection())
+                                          : Center(
+                                              child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: (Text(
+                                                  "Please login to comment")),
+                                            )),
                                     ],
                                   ),
                                 ),
@@ -509,6 +435,68 @@ class ArticleScreenState extends State<ArticleScreen> {
         ),
       ),
     );
+  }
+
+  Widget _commentSection() {
+    return Column(children: [
+      Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          children: [
+            Expanded(
+              child: TextFormField(
+                controller: _commentController,
+                decoration: InputDecoration(
+                  hintText: 'Add a comment...',
+                ),
+                onChanged: (newComment) {
+                  // Handle user input here (optional)
+                  // Store the new comment in a variable (if needed)
+                },
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(const Radius.circular(10))),
+              child: IconButton(
+                icon: Icon(Icons.send),
+                onPressed: _handleSubmittedComment,
+                color: Colors.black,
+              ),
+            ),
+          ],
+        ),
+      ),
+      Center(
+        child: Text(context.watch<ArticleProvider>().createCommentStatus),
+      ),
+      SizedBox(
+        width: 293.h,
+        height: (args.newsmodel.comments?.length ?? 0) * 150.v,
+        child: ListView.builder(
+          itemCount: args.newsmodel.comments?.length ?? 0,
+          itemBuilder: (context, index) {
+            final comment = args.newsmodel.comments![index];
+            return ListTile(
+              leading: Container(
+                decoration: BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.all(const Radius.circular(10))),
+                padding: const EdgeInsets.all(12.0),
+                child: Icon(
+                  Icons.person,
+                  color: Colors.white,
+                  size: 30,
+                ),
+              ),
+              title: Text('${comment.user.toString()}'),
+              subtitle: Text(comment.content),
+            );
+          },
+        ),
+      ),
+    ]);
   }
 
   Widget _summarySection() {

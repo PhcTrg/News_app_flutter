@@ -50,46 +50,14 @@ class _HomePageState extends State<HomePage> {
           });
         },
       ),
-      // bottomNavigationBar: NavigationBar(
-      // onDestinationSelected: (int index) {
-      //   setState(() {
-      //     currentPageIndex = index;
-      //   });
-      // },
-      //   indicatorColor: Colors.blue,
-      //   selectedIndex: currentPageIndex,
-      //   destinations: const <Widget>[
-      //     NavigationDestination(
-      //       selectedIcon: Icon(Icons.home),
-      //       icon: Icon(Icons.home_outlined),
-      //       label: 'Home',
-      //     ),
-      //     NavigationDestination(
-      //       selectedIcon: Icon(Icons.person),
-      //       icon: Icon(Icons.person_outlined),
-      //       label: 'Profile',
-      //     ),
-      //     NavigationDestination(
-      //       icon: Badge(child: Icon(Icons.notifications_sharp)),
-      //       label: 'Notifications',
-      //     ),
-      //     // NavigationDestination(
-      //     //   icon: Badge(
-      //     //     label: Text('2'),
-      //     //     child: Icon(Icons.messenger_sharp),
-      //     //   ),
-      //     //   label: 'Messages',
-      //     // ),
-      //   ],
-      // ),
 
       // Pages
       body: <Widget>[
         HomeScreen(),
-        (context.watch<HomeProvider>().futureUser == null)
+        (context.watch<HomeProvider>().isLogin == false)
             ? LoginScreen()
             : ProfileScreen(),
-        (context.watch<HomeProvider>().futureUser == null)
+        (context.watch<HomeProvider>().isLogin == false)
             ? LoginScreen()
             : NewArticlePage(),
         SearchPage(),

@@ -50,14 +50,6 @@ class _SearchPageState extends State<SearchPage> {
     }
 
     Widget _buildColumnMyPosts(BuildContext context) {
-      String dataLength = "";
-
-      if (context.watch<HomeProvider>().news.length == 0) {
-        dataLength = "There is no news";
-      } else {
-        dataLength = "";
-      }
-
       return Container(
         padding: EdgeInsets.symmetric(
           horizontal: 20.h,
@@ -83,10 +75,10 @@ class _SearchPageState extends State<SearchPage> {
               )),
             ),
 
-            // if no articles
-            Text(dataLength),
-            // if has
-            ListNews(news: context.watch<HomeProvider>().news)
+            // articles display
+            (context.watch<HomeProvider>().news.length == 0)
+                ? Text("There is no news")
+                : ListNews(news: context.watch<HomeProvider>().news)
           ],
         ),
       );

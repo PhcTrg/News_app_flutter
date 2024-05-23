@@ -97,14 +97,6 @@ class _MyAppState extends State<HomeScreen> {
 
   /// Section Widget
   Widget _buildColumnMyPosts(BuildContext context, List<NewsModel> news) {
-    String dataLength = "";
-
-    if (news.length == 0) {
-      dataLength = "There is no news";
-    } else {
-      dataLength = "";
-    }
-
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: 40.h,
@@ -141,10 +133,9 @@ class _MyAppState extends State<HomeScreen> {
               )
             ],
           ),
-          // SizedBox(height: 23.v),
 
-          Text(dataLength),
-          ListNews(news: news)
+          // articles display
+          (news.length == 0) ? Text("There is no news") : ListNews(news: news)
         ],
       ),
     );

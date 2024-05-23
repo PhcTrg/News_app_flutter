@@ -133,6 +133,13 @@ class HomeProvider with ChangeNotifier, DiagnosticableTreeMixin {
     }
   }
 
+  void userLogout() {
+    _isLogin = false;
+    _userModel = UserModel(id: 0, firstName: "", lastName: "", role: "");
+
+    notifyListeners();
+  }
+
   Future<UserModel> postUserInfo(int id) async {
     try {
       final response = await http.get(

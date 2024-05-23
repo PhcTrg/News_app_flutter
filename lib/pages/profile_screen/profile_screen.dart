@@ -1,3 +1,4 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:news_reading/model/news_model.dart';
 import 'package:news_reading/model/user_model.dart';
@@ -29,6 +30,8 @@ class ProfileScreen extends StatefulWidget {
 class ProfileScreenState extends State<ProfileScreen> {
   late Future<UserModel> futureUser;
   late Future<List<NewsModel>> futureNews;
+  late Future<String> futureFollowers;
+  late Future<String> futureFollowing;
 
   @override
   void initState() {
@@ -39,6 +42,13 @@ class ProfileScreenState extends State<ProfileScreen> {
     futureNews = context
         .read<ProfileProvider>()
         .getNewsData(context.read<HomeProvider>().userModel.id);
+
+    futureFollowers = context
+        .read<ProfileProvider>()
+        .getFollower(context.read<HomeProvider>().userModel.id);
+    futureFollowing = context
+        .read<ProfileProvider>()
+        .getFollowing(context.read<HomeProvider>().userModel.id);
   }
 
   @override
@@ -245,11 +255,10 @@ class ProfileScreenState extends State<ProfileScreen> {
                                                             child:
                                                                 _buildFollowers(
                                                               context,
-                                                              rating:
-                                                                  "lbl_250".tr,
-                                                              followersCount:
-                                                                  "lbl_following"
-                                                                      .tr,
+                                                              future:
+                                                                  futureFollowers,
+                                                              followString:
+                                                                  "Followers",
                                                             ),
                                                           ),
                                                         ),
@@ -264,11 +273,10 @@ class ProfileScreenState extends State<ProfileScreen> {
                                                             child:
                                                                 _buildFollowers(
                                                               context,
-                                                              rating:
-                                                                  "lbl_4_5k".tr,
-                                                              followersCount:
-                                                                  "lbl_followers"
-                                                                      .tr,
+                                                              future:
+                                                                  futureFollowing,
+                                                              followString:
+                                                                  "Following",
                                                             ),
                                                           ),
                                                         )
@@ -359,25 +367,34 @@ class ProfileScreenState extends State<ProfileScreen> {
 
   Widget _buildFollowers(
     BuildContext context, {
-    required String rating,
-    required String followersCount,
+    required Future<String> future,
+    required String followString,
   }) {
-    return Column(
-      children: [
-        Text(
-          rating,
-          style: theme.textTheme.titleLarge!.copyWith(
-            color: appTheme.whiteA700,
-          ),
-        ),
-        SizedBox(height: 3.v),
-        Text(
-          followersCount,
-          style: CustomTextStyles.bodySmallMulishWhiteA700.copyWith(
-            color: appTheme.whiteA700.withOpacity(0.87),
-          ),
-        )
-      ],
+    return FutureBuilder<String>(
+      future: future,
+      builder: (context, data) {
+        if (data.hasData) {
+          return (Column(
+            children: [
+              Text(
+                data.data!,
+                style: theme.textTheme.titleLarge!.copyWith(
+                  color: appTheme.whiteA700,
+                ),
+              ),
+              SizedBox(height: 3.v),
+              Text(
+                followString,
+                style: CustomTextStyles.bodySmallMulishWhiteA700.copyWith(
+                  color: appTheme.whiteA700.withOpacity(0.87),
+                ),
+              )
+            ],
+          ));
+        }
+
+        return Center(child: const CircularProgressIndicator());
+      },
     );
   }
 
@@ -385,15 +402,112 @@ class ProfileScreenState extends State<ProfileScreen> {
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
       title: AppbarTitle(
-        text: "lbl_profile".tr,
-        margin: EdgeInsets.only(left: 40.h),
+        text: "Profile",
+        margin: EdgeInsets.all(20),
       ),
       actions: [
-        AppbarTrailingImage(
-          imagePath: ImageConstant.imgUser,
-          margin: EdgeInsets.fromLTRB(40.h, 11.v, 40.h, 12.v),
-        )
+        Padding(
+          padding: const EdgeInsets.only(right: 20),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton2(
+              customButton: const Icon(
+                Icons.list,
+                size: 46,
+                color: Colors.black,
+              ),
+              items: [
+                ...MenuItems.firstItems.map(
+                  (item) => DropdownMenuItem<MenuItem>(
+                    value: item,
+                    child: MenuItems.buildItem(item),
+                  ),
+                ),
+                const DropdownMenuItem<Divider>(
+                    enabled: false, child: Divider()),
+                ...MenuItems.secondItems.map(
+                  (item) => DropdownMenuItem<MenuItem>(
+                    value: item,
+                    child: MenuItems.buildItem(item),
+                  ),
+                ),
+              ],
+              onChanged: (value) {
+                MenuItems.onChanged(context, value! as MenuItem);
+              },
+              dropdownStyleData: DropdownStyleData(
+                width: 160,
+                padding: const EdgeInsets.symmetric(vertical: 6),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(4),
+                  color: Colors.grey,
+                ),
+                offset: const Offset(0, 8),
+              ),
+              menuItemStyleData: MenuItemStyleData(
+                customHeights: [
+                  ...List<double>.filled(MenuItems.firstItems.length, 48),
+                  8,
+                  ...List<double>.filled(MenuItems.secondItems.length, 48),
+                ],
+                padding: const EdgeInsets.only(left: 16, right: 16),
+              ),
+            ),
+          ),
+        ),
       ],
     );
+  }
+}
+
+// menu item class
+class MenuItem {
+  const MenuItem({
+    required this.text,
+    required this.icon,
+  });
+
+  final String text;
+  final IconData icon;
+}
+
+abstract class MenuItems {
+  // static const List<MenuItem> firstItems = [home, share, settings];
+  static const List<MenuItem> firstItems = [settings];
+  static const List<MenuItem> secondItems = [logout];
+
+  // static const home = MenuItem(text: 'Home', icon: Icons.home);
+  // static const share = MenuItem(text: 'Share', icon: Icons.share);
+  static const settings = MenuItem(text: 'Settings', icon: Icons.settings);
+  static const logout = MenuItem(text: 'Log Out', icon: Icons.logout);
+
+  static Widget buildItem(MenuItem item) {
+    return Row(
+      children: [
+        Icon(item.icon, color: Colors.white, size: 22),
+        const SizedBox(
+          width: 10,
+        ),
+        Expanded(
+          child: Text(
+            item.text,
+            style: const TextStyle(
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // on change for app bar option click
+  static void onChanged(BuildContext context, MenuItem item) {
+    switch (item) {
+      case MenuItems.settings:
+        //Do something
+        break;
+      case MenuItems.logout:
+        context.read<HomeProvider>().userLogout();
+        break;
+    }
   }
 }
