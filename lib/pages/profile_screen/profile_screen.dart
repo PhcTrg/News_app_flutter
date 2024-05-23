@@ -131,16 +131,6 @@ class ProfileScreenState extends State<ProfileScreen> {
                                                         children: [
                                                           SizedBox(
                                                               height: 15.v),
-                                                          // Text(
-                                                          //   context
-                                                          //       .read<HomeProvider>()
-                                                          //       .userModel
-                                                          //       .firstName,
-                                                          //   style: CustomTextStyles
-                                                          //       .bodyMediumIndigo800,
-                                                          // ),
-                                                          // SizedBox(height: 3.v),
-
                                                           Text(
                                                             data.data!.firstName
                                                                 .toUpperCase(),
@@ -148,7 +138,6 @@ class ProfileScreenState extends State<ProfileScreen> {
                                                                 .textTheme
                                                                 .bodyLarge,
                                                           ),
-
                                                           SizedBox(height: 5.v),
                                                           Text(
                                                             data.data!.role

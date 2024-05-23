@@ -31,7 +31,7 @@ class AppRoutes {
         newArticlePage: NewArticlePage.builder,
         // loginRoute: LoginScreen.builder,
         homeRoute: HomePage.builder,
-        searchRoute: (context) => Search(),
+        // searchRoute: (context) => Search(),
         onBoard: (context) => OnBoarding()
       };
 }

@@ -18,6 +18,9 @@ class HomeProvider with ChangeNotifier, DiagnosticableTreeMixin {
 
   List<NewsModel> _news = [];
   List<NewsModel> get news => _news;
+  set news(List<NewsModel> value) {
+    _news = value;
+  }
 
   bool _isLogin = false;
   bool get isLogin => _isLogin;
@@ -45,11 +48,11 @@ class HomeProvider with ChangeNotifier, DiagnosticableTreeMixin {
       // List<dynamic> jsonData = responseData['results'];
       List<dynamic> jsonData = responseData;
 
-      _news = jsonData.map((data) => NewsModel.fromJson(data)).toList();
+      var news = jsonData.map((data) => NewsModel.fromJson(data)).toList();
 
       notifyListeners();
 
-      return _news;
+      return news;
     } else {
       throw Exception('Failed to load');
     }
@@ -159,6 +162,19 @@ class HomeProvider with ChangeNotifier, DiagnosticableTreeMixin {
 
   void updateLogin(bool v) {
     _isLogin = v;
+    notifyListeners();
+  }
+
+  void searchArticle({required String input}) async {
+    final searchResult = news.where((element) {
+      final newTitle = element.title.toLowerCase();
+      final inputLow = input.toLowerCase();
+
+      return newTitle.contains(inputLow);
+    }).toList();
+
+    news = searchResult;
+
     notifyListeners();
   }
 

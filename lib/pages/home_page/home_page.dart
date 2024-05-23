@@ -92,7 +92,7 @@ class _HomePageState extends State<HomePage> {
         (context.watch<HomeProvider>().futureUser == null)
             ? LoginScreen()
             : NewArticlePage(),
-        Search(),
+        SearchPage(),
         OnBoarding(),
       ][currentPageIndex],
     );

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
@@ -135,4 +136,32 @@ class ArticleProvider with ChangeNotifier, DiagnosticableTreeMixin {
       rethrow;
     }
   }
+
+  // Future<Bool> addFollowers(int userId, int followerId) async {
+  //   try {
+  //     final response = await http.post(
+  //       Uri.parse('http://$url:8000/api/comments/'),
+  //       headers: {
+  //         'Content-Type': 'application/json; charset=UTF-8',
+  //       },
+  //       body: jsonEncode(<String, dynamic>{
+  //         "user": userId,
+  //         "follower": followerId,
+  //       }),
+  //     );
+
+  //     if (response.statusCode == 201) {
+  //       // final responseData = jsonDecode(response.body);
+
+  //       notifyListeners();
+
+  //       return createCommentStatus;
+  //     } else {
+  //       throw Exception(response.body);
+  //     }
+  //   } catch (e) {
+  //     // createCommentStatus = "Create comment fail: $e";
+  //     rethrow;
+  //   }
+  // }
 }

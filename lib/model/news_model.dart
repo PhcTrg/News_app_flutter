@@ -1,37 +1,3 @@
-// class NewsModelDjango {
-//   final int count;
-//   Null next;
-//   Null previous;
-//   List<NewsModel>? results;
-
-//   NewsModelDjango(
-//       {required this.count, this.next, this.previous, this.results});
-
-//   factory NewsModelDjango.fromJson(Map<String, dynamic> json) {
-//     return NewsModelDjango(
-//       count: json['id'] as int,
-//       next: json['id'] as Null,
-//       previous: json['id'] as Null,
-//       results: json['results'] != null
-//           ? (json['results'] as List<dynamic>)
-//               .map((item) => NewsModel.fromJson(item))
-//               .toList()
-//           : null,
-//     );
-//   }
-
-//   Map<String, dynamic> toJson() {
-//     final Map<String, dynamic> data = new Map<String, dynamic>();
-//     data['count'] = this.count;
-//     data['next'] = this.next;
-//     data['previous'] = this.previous;
-//     if (this.results != null) {
-//       data['results'] = this.results!.map((v) => v.toJson()).toList();
-//     }
-//     return data;
-//   }
-// }
-
 class NewsModel {
   final int id;
   final String title;

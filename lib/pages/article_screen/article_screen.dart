@@ -307,17 +307,19 @@ class ArticleScreenState extends State<ArticleScreen> {
                             top: 7.v,
                             bottom: 8.v,
                           ),
+                          color: Colors.blue,
+                          onTap: () {},
                         ),
-                        CustomImageView(
-                          imagePath: ImageConstant.imgBookmark,
-                          height: 24.adaptSize,
-                          width: 24.adaptSize,
-                          margin: EdgeInsets.only(
-                            left: 24.h,
-                            top: 7.v,
-                            bottom: 8.v,
-                          ),
-                        )
+                        // CustomImageView(
+                        //   imagePath: ImageConstant.imgBookmark,
+                        //   height: 24.adaptSize,
+                        //   width: 24.adaptSize,
+                        //   margin: EdgeInsets.only(
+                        //     left: 24.h,
+                        //     top: 7.v,
+                        //     bottom: 8.v,
+                        //   ),
+                        // )
                       ],
                     ),
                   ),

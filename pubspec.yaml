@@ -19,6 +19,8 @@ dependencies:
   flutter_tts: ^4.0.2
   translator: ^1.0.0
   comment_box: ^0.0.18
+  flutter_local_notifications: ^17.1.2
+  cupertino_icons: ^1.0.2
 
 dev_dependencies:
   flutter_test:

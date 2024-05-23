@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:news_reading/model/news_model.dart';
-import 'package:news_reading/pages/argumennt/article_argument.dart';
+import 'package:news_reading/Services/notifi_service.dart';
 import 'package:news_reading/provider/article_provider.dart';
 import 'package:news_reading/provider/home_provider.dart';
 import 'package:news_reading/widgets/custom_text_form_field.dart';
@@ -13,9 +12,6 @@ import 'provider/new_article_provider.dart';
 import 'widgets/tags_item_widget.dart'; // ignore_for_file: must_be_immutable
 
 class NewArticlePage extends StatefulWidget {
-  // final NewsModel? news;
-  // NewArticlePage({this.news});
-
   const NewArticlePage({Key? key})
       : super(
           key: key,
@@ -40,8 +36,6 @@ class NewArticlePageState extends State<NewArticlePage> {
   GlobalKey<NavigatorState> navigatorKey = GlobalKey();
 
   bool isUpdate = false;
-
-  // late Future<String> futureStatus;
 
   @override
   void initState() {
@@ -71,98 +65,114 @@ class NewArticlePageState extends State<NewArticlePage> {
 
   @override
   Widget build(BuildContext context) {
+    final bottom = MediaQuery.of(context).viewInsets.bottom;
+
     return SafeArea(
       child: Container(
         padding: const EdgeInsets.all(50.0),
         color: Colors.white,
         child: Scaffold(
           appBar: _buildAppBar(context),
-          body: Container(
-            // decoration: AppDecoration.gradientWhiteAToGray5002,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Article Title",
-                  style: CustomTextStyles.titleLargeBluegray90022,
-                ),
-                SizedBox(height: 15.v),
-                CustomTextFormField(
-                  controller: articleTitleController,
-                  hintText: "Type your article title here...",
-                  textInputType: TextInputType.emailAddress,
-                  contentPadding: EdgeInsets.symmetric(horizontal: 1.h),
-                  borderDecoration: TextFormFieldStyleHelper.underLineGray,
-                  textStyle: theme.textTheme.bodyLarge,
-                ),
-                SizedBox(height: 30.v),
-                // _buildTags(context),
-                // SizedBox(height: 33.v),
-                Text(
-                  "Article Content",
-                  style: CustomTextStyles.titleMediumBluegray90022,
-                ),
-                SizedBox(height: 15.v),
-                SizedBox(
-                  width: 293.h,
-                  child: CustomTextFormField(
-                    controller: articleContentController,
-                    hintText: "Type your article content here...",
+          resizeToAvoidBottomInset: false,
+          body: SingleChildScrollView(
+            reverse: true,
+            child: Container(
+              // decoration: AppDecoration.gradientWhiteAToGray5002,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Article Title",
+                    style: CustomTextStyles.titleLargeBluegray90022,
+                  ),
+                  SizedBox(height: 15.v),
+                  CustomTextFormField(
+                    controller: articleTitleController,
+                    hintText: "Type your article title here...",
                     textInputType: TextInputType.emailAddress,
                     contentPadding: EdgeInsets.symmetric(horizontal: 1.h),
                     borderDecoration: TextFormFieldStyleHelper.underLineGray,
-                    maxLines: 8,
-                    textStyle: theme.textTheme.bodyMedium!.copyWith(
-                      height: 1.43,
+                    textStyle: theme.textTheme.bodyLarge,
+                  ),
+                  SizedBox(height: 30.v),
+                  Text(
+                    "Article Content",
+                    style: CustomTextStyles.titleMediumBluegray90022,
+                  ),
+                  SizedBox(height: 15.v),
+                  SizedBox(
+                    width: 293.h,
+                    child: CustomTextFormField(
+                      controller: articleContentController,
+                      hintText: "Type your article content here...",
+                      textInputType: TextInputType.emailAddress,
+                      contentPadding: EdgeInsets.symmetric(horizontal: 1.h),
+                      borderDecoration: TextFormFieldStyleHelper.underLineGray,
+                      maxLines: 8,
+                      textStyle: theme.textTheme.bodyMedium!.copyWith(
+                        height: 1.43,
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(height: 15.v),
-                Text(context.watch<ArticleProvider>().createStatus),
-                // FutureBuilder<String>(
-                //   future: ,
-                //   builder: (context, data) {
-                //     if (data.hasData) {
-                //       return Text(data.data!);
-                //     }
+                  SizedBox(height: 15.v),
+                  Text(context.watch<ArticleProvider>().createStatus),
+                  // FutureBuilder<String>(
+                  //   future: ,
+                  //   builder: (context, data) {
+                  //     if (data.hasData) {
+                  //       return Text(data.data!);
+                  //     }
 
-                //     return Text("Nothing happened");
-                //   },
-                // ),
-                TextButton(
-                  style: TextButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                  ),
-                  onPressed: () {
-                    if (!isUpdate) {
-                      var articleProvider =
-                          Provider.of<ArticleProvider>(context, listen: false);
-                      var homeProvider =
-                          Provider.of<HomeProvider>(context, listen: false);
+                  //     return Text("Nothing happened");
+                  //   },
+                  // ),
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                    ),
+                    onPressed: () {
+                      if (!isUpdate) {
+                        var articleProvider = Provider.of<ArticleProvider>(
+                            context,
+                            listen: false);
+                        var homeProvider =
+                            Provider.of<HomeProvider>(context, listen: false);
 
-                      articleProvider.addArticle(
-                          articleTitleController.text,
-                          articleContentController.text,
-                          homeProvider.userModel.id);
-                    } else {
-                      var articleProvider =
-                          Provider.of<ArticleProvider>(context, listen: false);
+                        articleProvider.addArticle(
+                            articleTitleController.text,
+                            articleContentController.text,
+                            homeProvider.userModel.id);
 
-                      articleProvider.updateArticle(
-                          articleTitleController.text,
-                          articleContentController.text,
-                          args.userModel.id,
-                          args.newsmodel.id);
-                    }
-                  },
-                  child: Text(
-                    'SUBMIT',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                )
-                // Divider(),
-              ],
+                        String title = articleTitleController.text;
+                        NotificationService().showNotification(
+                            title: 'Your article is now live',
+                            body: 'Your article: $title upload successfully');
+                      } else {
+                        var articleProvider = Provider.of<ArticleProvider>(
+                            context,
+                            listen: false);
+
+                        articleProvider.updateArticle(
+                            articleTitleController.text,
+                            articleContentController.text,
+                            args.userModel.id,
+                            args.newsmodel.id);
+
+                        String title = articleTitleController.text;
+                        NotificationService().showNotification(
+                            title: 'Your article is update successfully',
+                            body: 'Your article: $title update successfully');
+                      }
+                    },
+                    child: Text(
+                      'SUBMIT',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  )
+                  // Divider(),
+                ],
+              ),
             ),
           ),
           // bottomNavigationBar: Padding(
