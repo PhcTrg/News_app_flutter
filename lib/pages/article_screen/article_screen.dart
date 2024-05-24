@@ -470,6 +470,37 @@ class ArticleScreenState extends State<ArticleScreen> {
       Center(
         child: Text(context.watch<ArticleProvider>().createCommentStatus),
       ),
+
+      // logic: if user add a new comment, this widget will show the new comment without causing the entire page to reload -> improve UX
+      (context.watch<ArticleProvider>().newAddedComment.user != 0)
+          ? SizedBox(
+              width: 293.h,
+              child: (ListTile(
+                leading: Container(
+                  decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius:
+                          BorderRadius.all(const Radius.circular(10))),
+                  padding: const EdgeInsets.all(12.0),
+                  child: Icon(
+                    Icons.person,
+                    color: Colors.white,
+                    size: 30,
+                  ),
+                ),
+
+                // the recently added commennts value
+                title: Text(
+                    '${context.watch<ArticleProvider>().newAddedComment.user.toString()}'),
+                subtitle: Text(
+                    context.watch<ArticleProvider>().newAddedComment.content),
+              )),
+            )
+          : (SizedBox(
+              height: 0,
+            )),
+
+      // the rest of comments
       SizedBox(
         width: 293.h,
         height: (args.newsmodel.comments?.length ?? 0) * 150.v,

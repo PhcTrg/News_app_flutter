@@ -6,7 +6,7 @@ class NewsModel {
   final String updatedAt;
   final String category;
   final int user;
-  final List<Comments>? comments;
+  final List<CommentsModel>? comments;
 
   const NewsModel(
       {required this.id,
@@ -30,7 +30,7 @@ class NewsModel {
       // comments: json['comments'] as List<Comments>
       comments: json['comments'] != null
           ? (json['comments'] as List<dynamic>)
-              .map((item) => Comments.fromJson(item))
+              .map((item) => CommentsModel.fromJson(item))
               .toList()
           : null,
     );
@@ -52,7 +52,7 @@ class NewsModel {
   }
 }
 
-class Comments {
+class CommentsModel {
   final int id;
   final String content;
   final String createdAt;
@@ -60,7 +60,7 @@ class Comments {
   final int user;
   final int article;
 
-  Comments(
+  CommentsModel(
       {required this.id,
       required this.content,
       required this.createdAt,
@@ -68,8 +68,8 @@ class Comments {
       required this.user,
       required this.article});
 
-  factory Comments.fromJson(Map<String, dynamic> json) {
-    return Comments(
+  factory CommentsModel.fromJson(Map<String, dynamic> json) {
+    return CommentsModel(
         id: json['id'],
         content: json['content'],
         createdAt: json['created_at'],

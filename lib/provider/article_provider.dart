@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:news_reading/Services/notifi_service.dart';
 import 'package:news_reading/core/constant.dart';
+import 'package:news_reading/model/news_model.dart';
 
 String url = ConstValue().URL;
 
@@ -13,6 +14,9 @@ class ArticleProvider with ChangeNotifier, DiagnosticableTreeMixin {
   String contentLanguage = "en-US";
 
   String createCommentStatus = "";
+
+  CommentsModel newAddedComment = CommentsModel(
+      id: 0, content: "", createdAt: "", updatedAt: "", user: 0, article: 0);
 
   Future<String> addArticle(String title, String content, int userId) async {
     try {
@@ -109,7 +113,8 @@ class ArticleProvider with ChangeNotifier, DiagnosticableTreeMixin {
     }
   }
 
-  Future<String> addComment(String content, int userId, int articleId) async {
+  Future<CommentsModel> addComment(
+      String content, int userId, int articleId) async {
     try {
       final response = await http.post(
         Uri.parse('http://$url:8000/api/comments/'),
@@ -124,12 +129,14 @@ class ArticleProvider with ChangeNotifier, DiagnosticableTreeMixin {
       );
 
       if (response.statusCode == 201) {
-        // final responseData = jsonDecode(response.body);
+        final responseData = jsonDecode(response.body);
+
+        newAddedComment = CommentsModel.fromJson(responseData);
         createCommentStatus = "Create comment successfully";
 
         notifyListeners();
 
-        return createCommentStatus;
+        return newAddedComment;
       } else {
         throw Exception(response.body);
       }
