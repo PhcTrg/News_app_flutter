@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:news_reading/Services/notifi_service.dart';
 import 'package:news_reading/provider/article_provider.dart';
 import 'package:news_reading/provider/home_provider.dart';
 import 'package:news_reading/widgets/custom_text_form_field.dart';
 import '../../core/app_export.dart';
 import '../../widgets/app_bar/appbar_title.dart';
 import '../../widgets/app_bar/custom_app_bar.dart';
-import '../../widgets/custom_bottom_bar.dart';
-import 'models/tags_item_model.dart';
-import 'provider/new_article_provider.dart';
-import 'widgets/tags_item_widget.dart';
 
 class NewArticlePage extends StatefulWidget {
   const NewArticlePage({Key? key})
@@ -22,7 +17,7 @@ class NewArticlePage extends StatefulWidget {
 
   static Widget builder(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => NewArticleProvider(),
+      create: (context) => HomeProvider(),
       child: NewArticlePage(),
     );
   }
@@ -180,38 +175,6 @@ class NewArticlePageState extends State<NewArticlePage> {
         //   ),
         // )
       ],
-    );
-  }
-
-  /// Section Widget
-  Widget _buildTags(BuildContext context) {
-    return Consumer<NewArticleProvider>(
-      builder: (context, provider, child) {
-        return Wrap(
-          runSpacing: 30.55.v,
-          spacing: 30.55.h,
-          children: List<Widget>.generate(
-            provider.newArticleModelObj.tagsItemList.length,
-            (index) {
-              TagsItemModel model =
-                  provider.newArticleModelObj.tagsItemList[index];
-              return TagsItemWidget(
-                model,
-                onSelectedChipView: (value) {
-                  provider.onSelectedChipView(index, value);
-                },
-              );
-            },
-          ),
-        );
-      },
-    );
-  }
-
-  /// Section Widget
-  Widget _buildBottomBar(BuildContext context) {
-    return CustomBottomBar(
-      onChanged: (BottomBarEnum type) {},
     );
   }
 }

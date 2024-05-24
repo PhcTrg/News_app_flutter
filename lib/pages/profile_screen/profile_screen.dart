@@ -6,7 +6,6 @@ import 'package:news_reading/provider/home_provider.dart';
 import 'package:news_reading/widgets/list_view_post_update.dart';
 import '../../core/app_export.dart';
 import '../../widgets/app_bar/appbar_title.dart';
-import '../../widgets/app_bar/appbar_trailing_image.dart';
 import '../../widgets/app_bar/custom_app_bar.dart';
 import '../../provider/profile_provider.dart';
 
