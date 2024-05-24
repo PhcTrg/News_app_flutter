@@ -30,7 +30,7 @@ class ProfileScreen extends StatefulWidget {
 class ProfileScreenState extends State<ProfileScreen> {
   late Future<UserModel> futureUser;
   late Future<List<NewsModel>> futureNews;
-  // late Future<String> futureFollowers;
+  late Future<String> futureFollowers;
   late Future<String> futureFollowing;
 
   @override
@@ -43,9 +43,9 @@ class ProfileScreenState extends State<ProfileScreen> {
         .read<ProfileProvider>()
         .getNewsData(context.read<HomeProvider>().userModel.id);
 
-    // futureFollowers = context
-    //     .read<ProfileProvider>()
-    //     .getFollower(context.read<HomeProvider>().userModel.id);
+    futureFollowers = context
+        .read<ProfileProvider>()
+        .getFollower(context.read<HomeProvider>().userModel.id);
     futureFollowing = context
         .read<ProfileProvider>()
         .getFollowing(context.read<HomeProvider>().userModel.id);
@@ -244,25 +244,24 @@ class ProfileScreenState extends State<ProfileScreen> {
                                                             ],
                                                           ),
                                                         ),
-                                                        // Expanded(
-                                                        //   child: Padding(
-                                                        //     padding:
-                                                        //         EdgeInsets.only(
-                                                        //       left: 11.h,
-                                                        //       top: 5.v,
-                                                        //       bottom: 5.v,
-                                                        //     ),
-                                                        //     child:
-                                                        //         _buildFollowers(
-                                                        //       context,
-                                                        //       future:
-                                                        //           futureFollowers,
-                                                        //       followString:
-                                                        //           "Followers",
-                                                        //     ),
-                                                        //   ),
-                                                        // ),
-
+                                                        Expanded(
+                                                          child: Padding(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                              left: 11.h,
+                                                              top: 5.v,
+                                                              bottom: 5.v,
+                                                            ),
+                                                            child:
+                                                                _buildFollowers(
+                                                              context,
+                                                              future:
+                                                                  futureFollowers,
+                                                              followString:
+                                                                  "Followers",
+                                                            ),
+                                                          ),
+                                                        ),
                                                         Expanded(
                                                           child: Padding(
                                                             padding:

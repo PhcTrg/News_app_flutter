@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:news_reading/model/followers.dart';
 import 'package:news_reading/model/news_model.dart';
 
 import 'dart:convert';
@@ -58,14 +59,16 @@ class ProfileProvider extends ChangeNotifier {
   }
 
   Future<String> getFollower(int userID) async {
-    final response = await http.get(Uri.parse(''));
+    final response = await http
+        .get(Uri.parse('http://$url:8000/api/followers/?user_id=$userID'));
 
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
 
       List<dynamic> jsonData = responseData;
 
-      var userList = jsonData.map((data) => UserModel.fromJson(data)).toList();
+      var userList =
+          jsonData.map((data) => FollowersModel.fromJson(data)).toList();
 
       notifyListeners();
 
