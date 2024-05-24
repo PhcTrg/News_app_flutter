@@ -14,12 +14,6 @@ class ArticleProvider with ChangeNotifier, DiagnosticableTreeMixin {
 
   String createCommentStatus = "";
 
-  // Future<String>? _futureSummarize;
-  // Future<String>? get futureSummarize => _futureSummarize;
-  // set futureSummarize(Future<String>? value) {
-  //   _futureSummarize = value;
-  // }
-
   Future<String> addArticle(String title, String content, int userId) async {
     try {
       final response = await http.post(

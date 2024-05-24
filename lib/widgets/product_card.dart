@@ -18,7 +18,7 @@ class ProductCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           CustomImageView(
-            imagePath: ImageConstant.imgPlaceholder141x92,
+            imagePath: ImageConstant.imgSport,
             height: 141.v,
             width: 92.h,
             radius: BorderRadius.circular(

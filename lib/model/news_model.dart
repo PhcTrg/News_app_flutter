@@ -4,6 +4,7 @@ class NewsModel {
   final String content;
   final String createdAt;
   final String updatedAt;
+  final String category;
   final int user;
   final List<Comments>? comments;
 
@@ -14,6 +15,7 @@ class NewsModel {
       required this.createdAt,
       required this.updatedAt,
       required this.user,
+      required this.category,
       this.comments});
 
   factory NewsModel.fromJson(Map<String, dynamic> json) {
@@ -24,6 +26,7 @@ class NewsModel {
       createdAt: json['created_at'] as String,
       updatedAt: json['updated_at'] as String,
       user: json['user'] as int,
+      category: json['category'] as String,
       // comments: json['comments'] as List<Comments>
       comments: json['comments'] != null
           ? (json['comments'] as List<dynamic>)
@@ -40,6 +43,7 @@ class NewsModel {
     data['content'] = this.content;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
+    data['category'] = this.category;
     data['user'] = this.user;
     if (this.comments != null) {
       data['comments'] = this.comments!.map((v) => v.toJson()).toList();

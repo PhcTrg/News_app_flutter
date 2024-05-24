@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:news_reading/model/news_model.dart';
 import 'package:news_reading/pages/argumennt/article_argument.dart';
 import 'package:news_reading/provider/article_provider.dart';
-import 'package:news_reading/provider/home_provider.dart';
 import 'package:news_reading/widgets/app_bar/appbar_leading_image.dart';
 import 'package:news_reading/widgets/app_bar/appbar_trailing_image.dart';
 import 'package:news_reading/widgets/app_bar/custom_app_bar.dart';
@@ -522,7 +521,7 @@ class ArticleScreenState extends State<ArticleScreen> {
             ),
           ),
         ),
-        SizedBox(height: 8), // Add some spacing
+        SizedBox(height: 8),
         if (_futureSummarize != null)
           FutureBuilder<String>(
             future: _futureSummarize,

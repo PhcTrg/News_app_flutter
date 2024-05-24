@@ -44,6 +44,25 @@ Widget _post(
   BuildContext context, {
   required NewsModel news,
 }) {
+  String getImagePath(String categories) {
+    switch (categories) {
+      case 'Sports':
+        return ImageConstant.imgSport;
+      case 'Technology':
+        return ImageConstant.imgTech;
+      case 'Entertainment':
+        return ImageConstant.imgEntertain;
+      case 'Politics':
+        return ImageConstant.imgPolitics;
+      case 'Health':
+        return ImageConstant.imgHealth;
+      case 'Education':
+        return ImageConstant.imgEducation;
+      default:
+        return ImageConstant.imgPlaceholder141x92;
+    }
+  }
+
   return Container(
     decoration: AppDecoration.outlineBlueA2000f.copyWith(
       borderRadius: BorderRadiusStyle.roundedBorder16,
@@ -51,8 +70,9 @@ Widget _post(
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
+        // img URL
         CustomImageView(
-          imagePath: ImageConstant.imgPlaceholder141x92,
+          imagePath: getImagePath(news.category),
           height: 141.v,
           width: 92.h,
           radius: BorderRadius.circular(

@@ -86,4 +86,12 @@ class ImageConstant {
   static String imgFacebook = '$imagePath/img_facebook.svg';
 
   static String imgTrash = '$imagePath/img_trash.svg';
+
+  // categories Img
+  static String imgSport = '$imagePath/sport.png';
+  static String imgEducation = '$imagePath/edu.png';
+  static String imgEntertain = '$imagePath/entertain.png';
+  static String imgHealth = '$imagePath/health.png';
+  static String imgPolitics = '$imagePath/Politics.png';
+  static String imgTech = '$imagePath/technology.png';
 }

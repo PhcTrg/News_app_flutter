@@ -39,7 +39,8 @@ class ProfileProvider extends ChangeNotifier {
 
   // follower, following
   Future<String> getFollowing(int userID) async {
-    final response = await http.get(Uri.parse(''));
+    final response = await http
+        .get(Uri.parse('http://$url:8000/api/following/?user_id=$userID'));
 
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
