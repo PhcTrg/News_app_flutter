@@ -65,15 +65,26 @@ class _SearchPageState extends State<SearchPage> {
             TextField(
               controller: searchController,
               decoration: InputDecoration(
-                  prefixIcon: IconButton(
-                icon: Icon(Icons.search),
-                onPressed: () {
-                  context
-                      .read<HomeProvider>()
-                      .searchArticle(input: searchController.text);
-                },
-              )),
+                prefixIcon: IconButton(
+                  icon: Icon(Icons.search),
+                  onPressed: () {
+                    context
+                        .read<HomeProvider>()
+                        .searchArticle(input: searchController.text);
+                  },
+                ),
+                hintText: 'Enter article title',
+                filled: true,
+                fillColor: Colors.white,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                  borderSide: BorderSide.none,
+                ),
+                contentPadding: EdgeInsets.all(15.0),
+              ),
             ),
+
+            SizedBox(height: 10),
 
             // articles display
             (context.watch<HomeProvider>().news.length == 0)
@@ -91,36 +102,39 @@ class _SearchPageState extends State<SearchPage> {
         resizeToAvoidBottomInset: false,
         body: SingleChildScrollView(
           reverse: true,
-          child: Column(
-            children: [
-              Container(
-                width: 375,
-                height: 700,
-                clipBehavior: Clip.antiAlias,
-                decoration: BoxDecoration(color: Colors.white),
-                padding: EdgeInsets.only(bottom: bottom),
-                child: Stack(
-                  children: [
-                    //article here
-                    FutureBuilder<List<NewsModel>>(
-                        future: futureNews,
-                        builder: (context, data) {
-                          if (data.hasData) {
-                            if (!firstUpdate) {
-                              context.watch<HomeProvider>().news = data.data!;
-                              firstUpdate = true;
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              children: [
+                Container(
+                  width: 500,
+                  height: 700,
+                  clipBehavior: Clip.antiAlias,
+                  decoration: BoxDecoration(color: Colors.white),
+                  padding: EdgeInsets.only(bottom: bottom),
+                  child: Stack(
+                    children: [
+                      //article here
+                      FutureBuilder<List<NewsModel>>(
+                          future: futureNews,
+                          builder: (context, data) {
+                            if (data.hasData) {
+                              if (!firstUpdate) {
+                                context.watch<HomeProvider>().news = data.data!;
+                                firstUpdate = true;
+                              }
+
+                              return _buildColumnMyPosts(context);
                             }
 
-                            return _buildColumnMyPosts(context);
-                          }
-
-                          return Center(
-                              child: const CircularProgressIndicator());
-                        }),
-                  ],
+                            return Center(
+                                child: const CircularProgressIndicator());
+                          }),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

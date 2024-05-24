@@ -1,5 +1,6 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:news_reading/argumennt/user_argument.dart';
 import 'package:news_reading/model/news_model.dart';
 import 'package:news_reading/model/user_model.dart';
 import 'package:news_reading/provider/home_provider.dart';
@@ -79,7 +80,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                                 children: [
                                   SizedBox(height: 15.v),
                                   SizedBox(
-                                    height: 318.v,
+                                    height: 200.v,
                                     width: 295.h,
                                     child: Stack(
                                       alignment: Alignment.bottomCenter,
@@ -160,27 +161,6 @@ class ProfileScreenState extends State<ProfileScreen> {
                                                   ],
                                                 ),
                                                 SizedBox(height: 22.v),
-                                                Text(
-                                                  "lbl_about_me".tr,
-                                                  style: CustomTextStyles
-                                                      .bodyLarge16,
-                                                ),
-                                                SizedBox(height: 11.v),
-                                                SizedBox(
-                                                  width: 214.h,
-                                                  child: Text(
-                                                    "msg_madison_blackstone".tr,
-                                                    maxLines: 3,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    style: CustomTextStyles
-                                                        .bodyMediumIndigo800_1
-                                                        .copyWith(
-                                                      height: 1.43,
-                                                    ),
-                                                  ),
-                                                ),
-                                                SizedBox(height: 20.v)
                                               ],
                                             ),
                                           ),
@@ -369,31 +349,27 @@ class ProfileScreenState extends State<ProfileScreen> {
     required Future<String> future,
     required String followString,
   }) {
-    return FutureBuilder<String>(
-      future: future,
-      builder: (context, data) {
-        if (data.hasData) {
-          return (Column(
-            children: [
-              Text(
-                data.data!,
-                style: theme.textTheme.titleLarge!.copyWith(
-                  color: appTheme.whiteA700,
-                ),
+    return Column(
+      children: [
+        FutureBuilder<String>(
+          future: future,
+          builder: (context, data) {
+            return Text(
+              data.hasData ? data.data! : "-",
+              style: theme.textTheme.titleLarge!.copyWith(
+                color: appTheme.whiteA700,
               ),
-              SizedBox(height: 3.v),
-              Text(
-                followString,
-                style: CustomTextStyles.bodySmallMulishWhiteA700.copyWith(
-                  color: appTheme.whiteA700.withOpacity(0.87),
-                ),
-              )
-            ],
-          ));
-        }
-
-        return Center(child: const CircularProgressIndicator());
-      },
+            );
+          },
+        ),
+        SizedBox(height: 3.v),
+        Text(
+          followString,
+          style: CustomTextStyles.bodySmallMulishWhiteA700.copyWith(
+            color: appTheme.whiteA700.withOpacity(0.87),
+          ),
+        )
+      ],
     );
   }
 
@@ -471,12 +447,13 @@ class MenuItem {
 
 abstract class MenuItems {
   // static const List<MenuItem> firstItems = [home, share, settings];
-  static const List<MenuItem> firstItems = [settings];
+  static const List<MenuItem> firstItems = [profileDetails];
   static const List<MenuItem> secondItems = [logout];
 
   // static const home = MenuItem(text: 'Home', icon: Icons.home);
   // static const share = MenuItem(text: 'Share', icon: Icons.share);
-  static const settings = MenuItem(text: 'Settings', icon: Icons.settings);
+  static const profileDetails =
+      MenuItem(text: 'Profile Edit', icon: Icons.settings);
   static const logout = MenuItem(text: 'Log Out', icon: Icons.logout);
 
   static Widget buildItem(MenuItem item) {
@@ -501,8 +478,13 @@ abstract class MenuItems {
   // on change for app bar option click
   static void onChanged(BuildContext context, MenuItem item) {
     switch (item) {
-      case MenuItems.settings:
-        //Do something
+      case MenuItems.profileDetails:
+        {
+          var homeProvider = Provider.of<HomeProvider>(context, listen: false);
+
+          Navigator.pushNamed(context, AppRoutes.profileDetails,
+              arguments: UserArgument(homeProvider.userModel));
+        }
         break;
       case MenuItems.logout:
         context.read<HomeProvider>().userLogout();

@@ -77,4 +77,27 @@ class ProfileProvider extends ChangeNotifier {
       throw Exception('Failed to load');
     }
   }
+
+  Future<bool> isFollowingOrNot(int dangNhapId, int isFollowingId) async {
+    final response = await http
+        .get(Uri.parse('http://$url:8000/api/following/?user_id=$dangNhapId'));
+
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+
+      List<dynamic> jsonData = responseData;
+
+      var userList = jsonData.map((data) => UserModel.fromJson(data)).toList();
+
+      for (UserModel user in userList) {
+        if (user.id == isFollowingId) {
+          return true;
+        }
+      }
+
+      return false;
+    } else {
+      throw Exception('Failed to load');
+    }
+  }
 }

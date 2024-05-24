@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:news_reading/model/news_model.dart';
 import 'package:news_reading/argumennt/article_argument.dart';
 import 'package:news_reading/provider/article_provider.dart';
+import 'package:news_reading/provider/home_provider.dart';
+import 'package:news_reading/provider/profile_provider.dart';
 import 'package:news_reading/widgets/app_bar/appbar_leading_image.dart';
 import 'package:news_reading/widgets/app_bar/appbar_trailing_image.dart';
 import 'package:news_reading/widgets/app_bar/custom_app_bar.dart';
@@ -62,7 +64,11 @@ class ArticleScreenState extends State<ArticleScreen> {
   final formKey = GlobalKey<FormState>();
   final TextEditingController _commentController = TextEditingController();
 
+  // bool isFollow = false;
+
   Future<String>? _futureSummarize;
+
+  // Future<Bool>? futureAddFollowers;
 
   @override
   void initState() {
@@ -298,16 +304,47 @@ class ArticleScreenState extends State<ArticleScreen> {
                           ),
                         ),
                         Spacer(),
-                        CustomImageView(
-                          imagePath: ImageConstant.imgSend,
-                          height: 24.adaptSize,
-                          width: 24.adaptSize,
-                          margin: EdgeInsets.only(
-                            top: 7.v,
-                            bottom: 8.v,
-                          ),
-                          color: Colors.blue,
-                          onTap: () {},
+                        FutureBuilder<bool>(
+                          future: context
+                              .read<ProfileProvider>()
+                              .isFollowingOrNot(
+                                  args.userModel.id, args.newsmodel.user),
+                          builder: (context, data) {
+                            if (data.hasData) {
+                              return ElevatedButton(
+                                style: ButtonStyle(
+                                  // if current login user follow the user writting this article, color is blue
+                                  backgroundColor: MaterialStateProperty.all<
+                                          Color>(
+                                      data.data! ? Colors.blue : Colors.black),
+                                ),
+                                onPressed: () {
+                                  // add followers if is not follow yet
+                                  if (data.data!) {
+                                    // current login user is follower
+                                    // and follow the one that write article
+                                    if (args.userModel.id != 0)
+                                      context
+                                          .read<ArticleProvider>()
+                                          .addFollowers(args.newsmodel.user,
+                                              args.userModel.id);
+                                  }
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    'Follow',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              );
+                            }
+
+                            return OutlinedButton(
+                              onPressed: null,
+                              child: Text('Follow'),
+                            );
+                          },
                         ),
                       ],
                     ),

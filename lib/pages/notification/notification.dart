@@ -24,10 +24,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    print("call");
-    futureNotify = context
-        .read<HomeProvider>()
-        .getNotifications(context.watch<HomeProvider>().userModel.id);
+
+    if (context.watch<HomeProvider>().isLogin)
+      futureNotify = context
+          .read<HomeProvider>()
+          .getNotifications(context.watch<HomeProvider>().userModel.id);
   }
 
   @override
@@ -38,24 +39,26 @@ class _NotificationScreenState extends State<NotificationScreen> {
         appBar: AppBar(
           title: Text('Notification'),
         ),
-        body: FutureBuilder<List<NotificationModel>>(
-          future: futureNotify,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return ListView.builder(
-                itemCount: snapshot.data!.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    leading: Icon(Icons.notifications_active),
-                    title: Text('${snapshot.data![index].message}'),
-                  );
-                },
-              );
-            }
+        body: (!context.watch<HomeProvider>().isLogin)
+            ? Text("Please Login")
+            : FutureBuilder<List<NotificationModel>>(
+                future: futureNotify,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return ListView.builder(
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          leading: Icon(Icons.notifications_active),
+                          title: Text('${snapshot.data![index].message}'),
+                        );
+                      },
+                    );
+                  }
 
-            return Center(child: const CircularProgressIndicator());
-          },
-        ),
+                  return Center(child: const CircularProgressIndicator());
+                },
+              ),
       ),
     );
   }

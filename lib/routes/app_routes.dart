@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:news_reading/pages/home_page/home_page.dart';
 import 'package:news_reading/pages/new_article_page/new_article_page.dart';
+import 'package:news_reading/pages/update_user_page/update_user_page.dart';
 import '../pages/article_screen/article_screen.dart';
 import '../pages/onboard/onboarding.dart';
 import '../pages/profile_screen/profile_screen.dart';
@@ -14,12 +15,14 @@ class AppRoutes {
   static const String loginRoute = '/login_screen';
   static const String searchRoute = '/search';
   static const String onBoard = '/on_board';
+  static const String profileDetails = '/profile_details';
 
   static Map<String, WidgetBuilder> get routes => {
         articleScreen: (context) => ArticleScreen(),
         profileScreen: ProfileScreen.builder,
         newArticlePage: NewArticlePage.builder,
         homeRoute: HomePage.builder,
-        onBoard: (context) => OnBoarding()
+        onBoard: (context) => OnBoarding(),
+        profileDetails: (context) => ProfileDetails(),
       };
 }

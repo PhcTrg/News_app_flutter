@@ -6,6 +6,16 @@ import '../../core/app_export.dart';
 import '../../widgets/app_bar/appbar_title.dart';
 import '../../widgets/app_bar/custom_app_bar.dart';
 
+var categoris = [
+  'Sports',
+  'Technology',
+  'Entertainment',
+  'Politics',
+  'Health',
+  'Education',
+  'Uncategorized'
+];
+
 class NewArticlePage extends StatefulWidget {
   const NewArticlePage({Key? key})
       : super(
@@ -32,6 +42,7 @@ class NewArticlePageState extends State<NewArticlePage> {
   GlobalKey<NavigatorState> navigatorKey = GlobalKey();
 
   bool isUpdate = false;
+  String cateVal = categoris[0];
 
   @override
   void initState() {
@@ -50,6 +61,7 @@ class NewArticlePageState extends State<NewArticlePage> {
           TextEditingController(text: args.newsmodel?.title ?? '');
       articleContentController =
           TextEditingController(text: args.newsmodel?.content ?? '');
+      cateVal = args.newsmodel?.category ?? categoris[0];
     }
     isUpdate = articleTitleController.text == '' ? false : true;
   }
@@ -64,6 +76,15 @@ class NewArticlePageState extends State<NewArticlePage> {
   @override
   Widget build(BuildContext context) {
     // final bottom = MediaQuery.of(context).viewInsets.bottom;
+    void dropdownCallback(String? selectedVal) {
+      if (selectedVal is String) {
+        setState(() {
+          cateVal = selectedVal;
+        });
+      }
+    }
+
+    print(isUpdate);
 
     return SafeArea(
       child: Container(
@@ -114,6 +135,19 @@ class NewArticlePageState extends State<NewArticlePage> {
                     ),
                   ),
                   SizedBox(height: 15.v),
+
+                  DropdownButton(
+                    value: cateVal,
+                    icon: const Icon(Icons.keyboard_arrow_down),
+                    items: categoris.map((String items) {
+                      return DropdownMenuItem(
+                        value: items,
+                        child: Text(items),
+                      );
+                    }).toList(),
+                    onChanged: dropdownCallback,
+                  ),
+                  SizedBox(height: 15.v),
                   Text(context.watch<ArticleProvider>().createStatus),
 
                   TextButton(
@@ -131,6 +165,7 @@ class NewArticlePageState extends State<NewArticlePage> {
                         articleProvider.addArticle(
                             articleTitleController.text,
                             articleContentController.text,
+                            cateVal,
                             homeProvider.userModel.id);
                       } else {
                         var articleProvider = Provider.of<ArticleProvider>(
@@ -141,6 +176,7 @@ class NewArticlePageState extends State<NewArticlePage> {
                             articleTitleController.text,
                             articleContentController.text,
                             args.userModel.id,
+                            cateVal,
                             args.newsmodel.id);
                       }
                     },

@@ -15,10 +15,19 @@ class ArticleProvider with ChangeNotifier, DiagnosticableTreeMixin {
 
   String createCommentStatus = "";
 
+  // bool _isFollow = false;
+
+  // set isFollow(bool value) {
+  //   isFollow = value;
+  // }
+
+  // bool get isFollow => _isFollow;
+
   CommentsModel newAddedComment = CommentsModel(
       id: 0, content: "", createdAt: "", updatedAt: "", user: 0, article: 0);
 
-  Future<String> addArticle(String title, String content, int userId) async {
+  Future<String> addArticle(
+      String title, String content, String category, int userId) async {
     try {
       final response = await http.post(
         Uri.parse('http://$url:8000/api/articles/'),
@@ -28,6 +37,7 @@ class ArticleProvider with ChangeNotifier, DiagnosticableTreeMixin {
         body: jsonEncode(<String, dynamic>{
           "title": title,
           "content": content,
+          "category": category,
           "user": userId
         }),
       );
@@ -52,8 +62,8 @@ class ArticleProvider with ChangeNotifier, DiagnosticableTreeMixin {
     }
   }
 
-  Future<String> updateArticle(
-      String title, String content, int userId, int articleId) async {
+  Future<String> updateArticle(String title, String content, int userId,
+      String category, int articleId) async {
     try {
       final response = await http.put(
         Uri.parse('http://$url:8000/api/articles/$articleId/'),
@@ -63,6 +73,7 @@ class ArticleProvider with ChangeNotifier, DiagnosticableTreeMixin {
         body: jsonEncode(<String, dynamic>{
           "title": title,
           "content": content,
+          "category": category,
           "user": userId
         }),
       );
@@ -146,31 +157,35 @@ class ArticleProvider with ChangeNotifier, DiagnosticableTreeMixin {
     }
   }
 
-  // Future<Bool> addFollowers(int userId, int followerId) async {
-  //   try {
-  //     final response = await http.post(
-  //       Uri.parse('http://$url:8000/api/comments/'),
-  //       headers: {
-  //         'Content-Type': 'application/json; charset=UTF-8',
-  //       },
-  //       body: jsonEncode(<String, dynamic>{
-  //         "user": userId,
-  //         "follower": followerId,
-  //       }),
-  //     );
+  Future<bool> addFollowers(int userId, int followerId) async {
+    try {
+      final response = await http.post(
+        Uri.parse('http://$url:8000/api/followers/'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, dynamic>{
+          "user": userId,
+          "follower": followerId,
+        }),
+      );
 
-  //     if (response.statusCode == 201) {
-  //       // final responseData = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        // final responseData = jsonDecode(response.body);
 
-  //       notifyListeners();
+        NotificationService().showNotification(
+            title: 'You are now follower!!!',
+            body: 'Check out your notification when new post added.');
 
-  //       return createCommentStatus;
-  //     } else {
-  //       throw Exception(response.body);
-  //     }
-  //   } catch (e) {
-  //     // createCommentStatus = "Create comment fail: $e";
-  //     rethrow;
-  //   }
-  // }
+        notifyListeners();
+
+        return true;
+      } else {
+        throw Exception(response.body);
+      }
+    } catch (e) {
+      // createCommentStatus = "Create comment fail: $e";
+      rethrow;
+    }
+  }
 }
