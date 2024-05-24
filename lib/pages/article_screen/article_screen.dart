@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:news_reading/model/news_model.dart';
-import 'package:news_reading/pages/argumennt/article_argument.dart';
+import 'package:news_reading/argumennt/article_argument.dart';
 import 'package:news_reading/provider/article_provider.dart';
 import 'package:news_reading/widgets/app_bar/appbar_leading_image.dart';
 import 'package:news_reading/widgets/app_bar/appbar_trailing_image.dart';

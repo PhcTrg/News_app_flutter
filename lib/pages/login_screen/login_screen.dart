@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:news_reading/provider/home_provider.dart';
 import 'package:news_reading/widgets/app_bar/appbar_title.dart';
-import 'package:news_reading/widgets/app_bar/appbar_title_image.dart';
 import 'package:news_reading/widgets/app_bar/appbar_trailing_image.dart';
-import 'package:news_reading/widgets/app_bar/custom_app_bar.dart';
 import 'package:news_reading/widgets/custom_text_form_field.dart';
 import '../../core/app_export.dart';
 import '../../widgets/custom_elevated_button.dart';
@@ -33,7 +31,7 @@ class _MyAppState extends State<LoginScreen> {
   TextEditingController lastnameController = TextEditingController();
   String roleVal = items[0];
 
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  // GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {

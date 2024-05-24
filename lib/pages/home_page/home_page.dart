@@ -5,7 +5,6 @@ import 'package:news_reading/pages/home_screen/home_screen.dart';
 import 'package:news_reading/pages/login_screen/login_screen.dart';
 import 'package:news_reading/pages/new_article_page/new_article_page.dart';
 import 'package:news_reading/pages/notification/notification.dart';
-import 'package:news_reading/pages/onboard/onboarding.dart';
 import 'package:news_reading/pages/profile_screen/profile_screen.dart';
 import 'package:news_reading/pages/search_page/search_page.dart';
 import 'package:news_reading/provider/home_provider.dart';

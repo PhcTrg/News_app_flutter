@@ -7,19 +7,12 @@ import '../pages/profile_screen/profile_screen.dart';
 
 class AppRoutes {
   static const String splashscreenScreen = '/splashscreen_screen';
-
   static const String articleScreen = '/article_screen';
-
   static const String profileScreen = '/profile_screen';
-
   static const String newArticlePage = '/new_article_page';
-
   static const String homeRoute = '/home_page';
-
   static const String loginRoute = '/login_screen';
-
   static const String searchRoute = '/search';
-
   static const String onBoard = '/on_board';
 
   static Map<String, WidgetBuilder> get routes => {

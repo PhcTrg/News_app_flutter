@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:news_reading/core/app_export.dart';
 import 'package:news_reading/model/news_model.dart';
-import 'package:news_reading/pages/argumennt/article_argument.dart';
+import 'package:news_reading/argumennt/article_argument.dart';
 import 'package:news_reading/provider/home_provider.dart';
 
 class ListNewsUpdate extends StatelessWidget {

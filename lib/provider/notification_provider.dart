@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:news_reading/model/notification_model.dart';
-import 'package:news_reading/util/constant.dart';
+import 'package:news_reading/core/constant.dart';
 import 'package:http/http.dart' as http;
 
 String url = ConstValue().URL;

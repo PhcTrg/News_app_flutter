@@ -5,42 +5,65 @@ import 'package:news_reading/model/news_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:news_reading/model/notification_model.dart';
 import 'package:news_reading/model/user_model.dart';
-import 'package:news_reading/util/constant.dart';
-import 'package:news_reading/util/token_decode.dart';
+import 'package:news_reading/core/constant.dart';
+import 'package:news_reading/core/token_decode.dart';
 
 String url = ConstValue().URL;
 
 class HomeProvider with ChangeNotifier, DiagnosticableTreeMixin {
+  bool _isLogin = false;
+  String _loginStatus = '';
+  String _signUpStatus = '';
+  UserModel _userModel =
+      UserModel(id: 0, firstName: "", lastName: "", role: "");
+  List<NotificationModel> _notification = [];
+  List<NewsModel> _news = [];
   Future<UserModel>? _futureUser;
-  Future<UserModel>? get futureUser => _futureUser;
+
   set futureUser(Future<UserModel>? value) {
     _futureUser = value;
   }
 
-  List<NewsModel> _news = [];
-  List<NewsModel> get news => _news;
   set news(List<NewsModel> value) {
     _news = value;
   }
 
-  bool _isLogin = false;
-  bool get isLogin => _isLogin;
-
-  String _loginStatus = '';
-  String get loginStatus => _loginStatus;
-
-  String _signUpStatus = '';
-  String get signUpStatus => _signUpStatus;
   set signUpStatus(String value) {
     _signUpStatus = value;
   }
 
-  UserModel _userModel =
-      UserModel(id: 0, firstName: "", lastName: "", role: "");
+  bool get isLogin => _isLogin;
+  String get loginStatus => _loginStatus;
+  String get signUpStatus => _signUpStatus;
   UserModel get userModel => _userModel;
-
-  List<NotificationModel> _notification = [];
+  List<NewsModel> get news => _news;
   List<NotificationModel> get notification => _notification;
+  Future<UserModel>? get futureUser => _futureUser;
+
+  void userLogout() {
+    _isLogin = false;
+    _userModel = UserModel(id: 0, firstName: "", lastName: "", role: "");
+
+    notifyListeners();
+  }
+
+  void updateLogin(bool v) {
+    _isLogin = v;
+    notifyListeners();
+  }
+
+  void searchArticle({required String input}) async {
+    final searchResult = news.where((element) {
+      final newTitle = element.title.toLowerCase();
+      final inputLow = input.toLowerCase();
+
+      return newTitle.contains(inputLow);
+    }).toList();
+
+    news = searchResult;
+
+    notifyListeners();
+  }
 
   Future<List<NewsModel>> getNewsData() async {
     final response =
@@ -139,13 +162,6 @@ class HomeProvider with ChangeNotifier, DiagnosticableTreeMixin {
     }
   }
 
-  void userLogout() {
-    _isLogin = false;
-    _userModel = UserModel(id: 0, firstName: "", lastName: "", role: "");
-
-    notifyListeners();
-  }
-
   Future<UserModel> postUserInfo(int id) async {
     try {
       final response = await http.get(
@@ -193,33 +209,8 @@ class HomeProvider with ChangeNotifier, DiagnosticableTreeMixin {
     }
   }
 
-  void updateLogin(bool v) {
-    _isLogin = v;
-    notifyListeners();
-  }
-
-  void searchArticle({required String input}) async {
-    final searchResult = news.where((element) {
-      final newTitle = element.title.toLowerCase();
-      final inputLow = input.toLowerCase();
-
-      return newTitle.contains(inputLow);
-    }).toList();
-
-    news = searchResult;
-
-    notifyListeners();
-  }
-
   @override
   void dispose() {
     super.dispose();
   }
-
-  // @override
-  // void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-  //   super.debugFillProperties(properties);
-  //   properties.add(IterableProperty('news', news));
-  //   // properties.add(BoolProperty('isLogin', isLogin));
-  // }
 }

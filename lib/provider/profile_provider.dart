@@ -5,7 +5,7 @@ import 'package:news_reading/model/news_model.dart';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:news_reading/model/user_model.dart';
-import 'package:news_reading/util/constant.dart';
+import 'package:news_reading/core/constant.dart';
 import 'package:http/http.dart' as http;
 
 String url = ConstValue().URL;

@@ -6,9 +6,7 @@ import 'en_us/en_us_translations.dart';
 extension LocalizationExtension on String {
   String get tr => AppLocalization.of().getString(this);
 }
-// ignore_for_file: must_be_immutable
 
-// ignore_for_file: must_be_immutable
 class AppLocalization {
   AppLocalization(this.locale);
 
