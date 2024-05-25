@@ -156,72 +156,72 @@ class _MyAppState extends State<LoginScreen> {
                                   });
                                 }),
                             SizedBox(height: 20.v),
-                            Align(
-                                alignment: Alignment.center,
-                                child: Center(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        "Forgot your password? ",
-                                        style: theme.textTheme.bodyMedium,
-                                      ),
-                                      Text(
-                                        "Reset here",
-                                        style:
-                                            CustomTextStyles.bodyMediumPrimary,
-                                      ),
-                                    ],
-                                  ),
-                                )),
+                            // Align(
+                            //     alignment: Alignment.center,
+                            //     child: Center(
+                            //       child: Row(
+                            //         mainAxisAlignment: MainAxisAlignment.center,
+                            //         children: [
+                            //           Text(
+                            //             "Forgot your password? ",
+                            //             style: theme.textTheme.bodyMedium,
+                            //           ),
+                            //           Text(
+                            //             "Reset here",
+                            //             style:
+                            //                 CustomTextStyles.bodyMediumPrimary,
+                            //           ),
+                            //         ],
+                            //       ),
+                            //     )),
                             SizedBox(height: 32.v),
-                            Center(
-                              child: Text(
-                                "Or sign in with".toUpperCase(),
-                                style: CustomTextStyles.bodySmall_1,
-                              ),
-                            ),
-                            SizedBox(height: 17.v),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 10, right: 10),
-                              child: Center(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    IconButton(
-                                        onPressed: () {},
-                                        icon: CustomImageView(
-                                          width: 36.adaptSize,
-                                          height: 36.adaptSize,
-                                          imagePath: ImageConstant.imgGoogle,
-                                        )),
-                                    Spacer(
-                                      flex: 50,
-                                    ),
-                                    IconButton(
-                                        onPressed: () {},
-                                        icon: CustomImageView(
-                                          width: 36.adaptSize,
-                                          height: 36.adaptSize,
-                                          imagePath: ImageConstant.imgFacebook,
-                                        )),
-                                    Spacer(
-                                      flex: 50,
-                                    ),
-                                    IconButton(
-                                        onPressed: () {},
-                                        icon: CustomImageView(
-                                          width: 36.adaptSize,
-                                          height: 36.adaptSize,
-                                          color: appTheme.blue400,
-                                          imagePath: ImageConstant.imgTrash,
-                                        )),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 39.v)
+                            // Center(
+                            //   child: Text(
+                            //     "Or sign in with".toUpperCase(),
+                            //     style: CustomTextStyles.bodySmall_1,
+                            //   ),
+                            // ),
+                            // SizedBox(height: 17.v),
+                            // Padding(
+                            //   padding:
+                            //       const EdgeInsets.only(left: 10, right: 10),
+                            //   child: Center(
+                            //     child: Row(
+                            //       mainAxisAlignment: MainAxisAlignment.center,
+                            //       children: [
+                            //         IconButton(
+                            //             onPressed: () {},
+                            //             icon: CustomImageView(
+                            //               width: 36.adaptSize,
+                            //               height: 36.adaptSize,
+                            //               imagePath: ImageConstant.imgGoogle,
+                            //             )),
+                            //         Spacer(
+                            //           flex: 50,
+                            //         ),
+                            //         IconButton(
+                            //             onPressed: () {},
+                            //             icon: CustomImageView(
+                            //               width: 36.adaptSize,
+                            //               height: 36.adaptSize,
+                            //               imagePath: ImageConstant.imgFacebook,
+                            //             )),
+                            //         Spacer(
+                            //           flex: 50,
+                            //         ),
+                            //         IconButton(
+                            //             onPressed: () {},
+                            //             icon: CustomImageView(
+                            //               width: 36.adaptSize,
+                            //               height: 36.adaptSize,
+                            //               color: appTheme.blue400,
+                            //               imagePath: ImageConstant.imgTrash,
+                            //             )),
+                            //       ],
+                            //     ),
+                            //   ),
+                            // ),
+                            SizedBox(height: 150.v)
                           ],
                         ),
                       ),

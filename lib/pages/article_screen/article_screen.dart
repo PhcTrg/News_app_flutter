@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:news_reading/argumennt/user_argument.dart';
 import 'package:news_reading/argumennt/userid_argument.dart';
 import 'package:news_reading/model/news_model.dart';
 import 'package:news_reading/argumennt/article_argument.dart';
 import 'package:news_reading/provider/article_provider.dart';
-import 'package:news_reading/provider/home_provider.dart';
 import 'package:news_reading/provider/profile_provider.dart';
 import 'package:news_reading/widgets/app_bar/appbar_leading_image.dart';
 import 'package:news_reading/widgets/app_bar/appbar_trailing_image.dart';
@@ -76,6 +74,16 @@ class ArticleScreenState extends State<ArticleScreen> {
   void initState() {
     super.initState();
     initTts();
+
+    context.read<ArticleProvider>().newAddedComment = CommentsModel(
+        id: 0,
+        content: "",
+        createdAt: "",
+        updatedAt: "",
+        user: 0,
+        article: 0,
+        username: "");
+    context.read<ArticleProvider>().createCommentStatus = "";
   }
 
   @override
@@ -550,7 +558,7 @@ class ArticleScreenState extends State<ArticleScreen> {
               height: 0,
             )),
 
-      // the rest of comments
+      // the rest of comments that display dynamicly
       SizedBox(
         width: 293.h,
         height: (args.newsmodel.comments?.length ?? 0) * 150.v,

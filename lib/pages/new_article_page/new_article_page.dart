@@ -63,8 +63,8 @@ class NewArticlePageState extends State<NewArticlePage> {
       articleContentController =
           TextEditingController(text: args.newsmodel?.content ?? '');
       cateVal = args.newsmodel?.category ?? categoris[0];
+      isUpdate = articleTitleController.text == '' ? false : true;
     }
-    isUpdate = articleTitleController.text == '' ? false : true;
   }
 
   @override
