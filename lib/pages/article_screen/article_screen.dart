@@ -310,7 +310,9 @@ class ArticleScreenState extends State<ArticleScreen> {
                               .isFollowingOrNot(
                                   args.userModel.id, args.newsmodel.user),
                           builder: (context, data) {
-                            if (data.hasData) {
+                            // if fetch data successful and not the owner of that article
+                            if (data.hasData &&
+                                (args.newsmodel.user != args.userModel.id)) {
                               return ElevatedButton(
                                 style: ButtonStyle(
                                   // if current login user follow the user writting this article, color is blue
@@ -320,7 +322,7 @@ class ArticleScreenState extends State<ArticleScreen> {
                                 ),
                                 onPressed: () {
                                   // add followers if is not follow yet
-                                  if (data.data!) {
+                                  if (!data.data!) {
                                     // current login user is follower
                                     // and follow the one that write article
                                     if (args.userModel.id != 0)
@@ -557,7 +559,7 @@ class ArticleScreenState extends State<ArticleScreen> {
                   size: 30,
                 ),
               ),
-              title: Text('${comment.user.toString()}'),
+              title: Text('${comment.username}'),
               subtitle: Text(comment.content),
             );
           },

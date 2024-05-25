@@ -54,6 +54,7 @@ class NewsModel {
 
 class CommentsModel {
   final int id;
+  final String username;
   final String content;
   final String createdAt;
   final String updatedAt;
@@ -62,6 +63,7 @@ class CommentsModel {
 
   CommentsModel(
       {required this.id,
+      required this.username,
       required this.content,
       required this.createdAt,
       required this.updatedAt,
@@ -71,6 +73,7 @@ class CommentsModel {
   factory CommentsModel.fromJson(Map<String, dynamic> json) {
     return CommentsModel(
         id: json['id'],
+        username: json['username'],
         content: json['content'],
         createdAt: json['created_at'],
         updatedAt: json['updated_at'],
@@ -81,6 +84,7 @@ class CommentsModel {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
+    data['username'] = this.username;
     data['content'] = this.content;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;

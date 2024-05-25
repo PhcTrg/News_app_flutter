@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:news_reading/provider/article_provider.dart';
 import 'package:news_reading/provider/home_provider.dart';
+import 'package:news_reading/widgets/custom_elevated_button.dart';
 import 'package:news_reading/widgets/custom_text_form_field.dart';
 import '../../core/app_export.dart';
 import '../../widgets/app_bar/appbar_title.dart';
@@ -135,7 +136,10 @@ class NewArticlePageState extends State<NewArticlePage> {
                     ),
                   ),
                   SizedBox(height: 15.v),
-
+                  Text(
+                    "Categoris",
+                    style: CustomTextStyles.titleMediumBluegray90022,
+                  ),
                   DropdownButton(
                     value: cateVal,
                     icon: const Icon(Icons.keyboard_arrow_down),
@@ -149,11 +153,10 @@ class NewArticlePageState extends State<NewArticlePage> {
                   ),
                   SizedBox(height: 15.v),
                   Text(context.watch<ArticleProvider>().createStatus),
-
-                  TextButton(
-                    style: TextButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                    ),
+                  SizedBox(height: 15.v),
+                  CustomElevatedButton(
+                    text: "Submit".toUpperCase(),
+                    buttonTextStyle: CustomTextStyles.bodyLargeWhiteA700,
                     onPressed: () {
                       if (!isUpdate) {
                         var articleProvider = Provider.of<ArticleProvider>(
@@ -180,12 +183,16 @@ class NewArticlePageState extends State<NewArticlePage> {
                             args.newsmodel.id);
                       }
                     },
-                    child: Text(
-                      'SUBMIT',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  )
-                  // Divider(),
+                  ),
+                  SizedBox(height: 15.v),
+                  isUpdate
+                      ? CustomElevatedButton(
+                          text: "Go back to home Page".toUpperCase(),
+                          buttonTextStyle: CustomTextStyles.bodyLargeWhiteA700,
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          })
+                      : (SizedBox())
                 ],
               ),
             ),

@@ -24,7 +24,13 @@ class ArticleProvider with ChangeNotifier, DiagnosticableTreeMixin {
   // bool get isFollow => _isFollow;
 
   CommentsModel newAddedComment = CommentsModel(
-      id: 0, content: "", createdAt: "", updatedAt: "", user: 0, article: 0);
+      id: 0,
+      content: "",
+      createdAt: "",
+      updatedAt: "",
+      user: 0,
+      article: 0,
+      username: "");
 
   Future<String> addArticle(
       String title, String content, String category, int userId) async {
@@ -170,7 +176,7 @@ class ArticleProvider with ChangeNotifier, DiagnosticableTreeMixin {
         }),
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         // final responseData = jsonDecode(response.body);
 
         NotificationService().showNotification(
@@ -181,7 +187,9 @@ class ArticleProvider with ChangeNotifier, DiagnosticableTreeMixin {
 
         return true;
       } else {
-        throw Exception(response.body);
+        // throw Exception(response.body);
+
+        return false;
       }
     } catch (e) {
       // createCommentStatus = "Create comment fail: $e";
