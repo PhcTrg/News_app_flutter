@@ -116,30 +116,30 @@ Widget _post(
                     width: 118.h,
                     child: Row(
                       children: [
-                        CustomImageView(
-                          imagePath: ImageConstant.imgThumbsIndigo800,
-                          height: 16.adaptSize,
-                          width: 16.adaptSize,
-                          margin: EdgeInsets.only(bottom: 1.v),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                            left: 6.h,
-                            bottom: 1.v,
-                          ),
-                          child: Text(
-                            "lbl_2_1k".tr,
-                            style: CustomTextStyles.bodySmallIndigo800,
-                          ),
-                        ),
+                        // CustomImageView(
+                        //   imagePath: ImageConstant.imgThumbsIndigo800,
+                        //   height: 16.adaptSize,
+                        //   width: 16.adaptSize,
+                        //   margin: EdgeInsets.only(bottom: 1.v),
+                        // ),
+                        // Padding(
+                        //   padding: EdgeInsets.only(
+                        //     left: 6.h,
+                        //     bottom: 1.v,
+                        //   ),
+                        //   child: Text(
+                        //     "lbl_2_1k".tr,
+                        //     style: CustomTextStyles.bodySmallIndigo800,
+                        //   ),
+                        // ),
                         CustomImageView(
                           imagePath: ImageConstant.imgTime,
                           height: 16.adaptSize,
                           width: 16.adaptSize,
-                          margin: EdgeInsets.only(
-                            left: 19.h,
-                            bottom: 1.v,
-                          ),
+                          // margin: EdgeInsets.only(
+                          //   left: 1.h,
+                          //   bottom: 1.v,
+                          // ),
                         ),
                         Padding(
                           padding: EdgeInsets.only(left: 6.h),

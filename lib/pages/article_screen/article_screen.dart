@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:news_reading/argumennt/user_argument.dart';
+import 'package:news_reading/argumennt/userid_argument.dart';
 import 'package:news_reading/model/news_model.dart';
 import 'package:news_reading/argumennt/article_argument.dart';
 import 'package:news_reading/provider/article_provider.dart';
@@ -276,10 +278,19 @@ class ArticleScreenState extends State<ArticleScreen> {
                               borderRadius:
                                   BorderRadius.all(const Radius.circular(10))),
                           padding: const EdgeInsets.all(12.0),
-                          child: Icon(
-                            Icons.person,
-                            color: Colors.white,
-                            size: 30,
+                          child: IconButton(
+                            onPressed: (() {
+                              // nav uer profile
+                              Navigator.pushNamed(
+                                  context, AppRoutes.userProfile,
+                                  arguments:
+                                      UserIdArgument(args.newsmodel.user));
+                            }),
+                            icon: Icon(
+                              Icons.person,
+                              color: Colors.white,
+                              size: 30,
+                            ),
                           ),
                         ),
                         Padding(

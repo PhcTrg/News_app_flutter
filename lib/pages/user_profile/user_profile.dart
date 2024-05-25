@@ -1,54 +1,48 @@
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:news_reading/argumennt/user_argument.dart';
-import 'package:news_reading/model/news_model.dart';
+import 'package:news_reading/argumennt/userid_argument.dart';
+import 'package:news_reading/core/app_export.dart';
 import 'package:news_reading/model/user_model.dart';
+import 'package:news_reading/provider/article_provider.dart';
 import 'package:news_reading/provider/home_provider.dart';
-import 'package:news_reading/widgets/list_view_post_update.dart';
-import '../../core/app_export.dart';
-import '../../widgets/app_bar/appbar_title.dart';
-import '../../widgets/app_bar/custom_app_bar.dart';
-import '../../provider/profile_provider.dart';
+import 'package:news_reading/provider/profile_provider.dart';
+import 'package:news_reading/widgets/app_bar/appbar_leading_image.dart';
+import 'package:news_reading/widgets/app_bar/appbar_title.dart';
+import 'package:news_reading/widgets/app_bar/custom_app_bar.dart';
 
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key})
-      : super(
-          key: key,
-        );
+class UserProfile extends StatefulWidget {
+  const UserProfile({super.key});
 
   @override
-  ProfileScreenState createState() => ProfileScreenState();
+  State<UserProfile> createState() => _UserProfileState();
 
   static Widget builder(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => ProfileProvider(),
-      child: ProfileScreen(),
+      create: (context) => ArticleProvider(),
+      child: UserProfile(),
     );
   }
 }
 
-class ProfileScreenState extends State<ProfileScreen> {
+class _UserProfileState extends State<UserProfile> {
+  var args;
   late Future<UserModel> futureUser;
-  late Future<List<NewsModel>> futureNews;
   late Future<String> futureFollowers;
   late Future<String> futureFollowing;
 
   @override
   void initState() {
     super.initState();
-    futureUser = context
-        .read<HomeProvider>()
-        .postUserInfo(context.read<HomeProvider>().userModel.id);
-    futureNews = context
-        .read<ProfileProvider>()
-        .getNewsData(context.read<HomeProvider>().userModel.id);
+  }
 
-    futureFollowers = context
-        .read<ProfileProvider>()
-        .getFollower(context.read<HomeProvider>().userModel.id);
-    futureFollowing = context
-        .read<ProfileProvider>()
-        .getFollowing(context.read<HomeProvider>().userModel.id);
+  @override
+  void didChangeDependencies() {
+    args = ModalRoute.of(context)!.settings.arguments as UserIdArgument;
+    futureUser = context.read<HomeProvider>().postUserInfo(args.userId);
+
+    futureFollowers = context.read<ProfileProvider>().getFollower(args.userId);
+    futureFollowing = context.read<ProfileProvider>().getFollowing(args.userId);
+
+    super.didChangeDependencies();
   }
 
   @override
@@ -236,19 +230,19 @@ class ProfileScreenState extends State<ProfileScreen> {
                                   SizedBox(height: 15.v),
 
                                   // articles
-                                  FutureBuilder<List<NewsModel>>(
-                                    future: futureNews,
-                                    builder: (context, data) {
-                                      if (data.hasData) {
-                                        return _buildColumnMyPosts(
-                                            context, data.data!);
-                                      }
+                                  // FutureBuilder<List<NewsModel>>(
+                                  //   future: futureNews,
+                                  //   builder: (context, data) {
+                                  //     if (data.hasData) {
+                                  //       return _buildColumnMyPosts(
+                                  //           context, data.data!);
+                                  //     }
 
-                                      return Center(
-                                          child:
-                                              const CircularProgressIndicator());
-                                    },
-                                  )
+                                  //     return Center(
+                                  //         child:
+                                  //             const CircularProgressIndicator());
+                                  //   },
+                                  // )
                                 ],
                               ),
                             ),
@@ -264,49 +258,10 @@ class ProfileScreenState extends State<ProfileScreen> {
 
           return Center(child: const CircularProgressIndicator());
         });
-  }
 
-  Widget _buildColumnMyPosts(BuildContext context, List<NewsModel> newsList) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: 40.h,
-        vertical: 20.v,
-      ),
-      decoration: AppDecoration.outlineBlueA2000f1.copyWith(
-        borderRadius: BorderRadiusStyle.customBorderTL28,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "lbl_my_posts".tr,
-                style: CustomTextStyles.titleLargeBluegray900,
-              ),
-              Spacer(),
-              CustomImageView(
-                imagePath: ImageConstant.imgGrid,
-                height: 24.adaptSize,
-                width: 24.adaptSize,
-                margin: EdgeInsets.only(bottom: 3.v),
-              ),
-              CustomImageView(
-                imagePath: ImageConstant.imgMegaphone,
-                height: 24.adaptSize,
-                width: 24.adaptSize,
-                margin: EdgeInsets.only(
-                  left: 24.h,
-                  bottom: 3.v,
-                ),
-              )
-            ],
-          ),
-          ListNewsUpdate(news: newsList)
-        ],
-      ),
-    );
+    // SafeArea(
+    //   child: Scaffold(body: Text(args.userId.toString())),
+    // );
   }
 
   Widget _buildFollowers(
@@ -338,122 +293,26 @@ class ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  /// Section Widget
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
-      title: AppbarTitle(
-        text: "Profile",
-        margin: EdgeInsets.all(20),
+      leadingWidth: 100.h,
+      leading: Row(
+        children: [
+          IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            color: Colors.black,
+          ),
+          SizedBox(width: 10),
+          Text(
+            "Profile",
+            style: theme.textTheme.bodyLarge,
+          )
+        ],
       ),
-      actions: [
-        Padding(
-          padding: const EdgeInsets.only(right: 20),
-          child: DropdownButtonHideUnderline(
-            child: DropdownButton2(
-              customButton: const Icon(
-                Icons.list,
-                size: 46,
-                color: Colors.black,
-              ),
-              items: [
-                ...MenuItems.firstItems.map(
-                  (item) => DropdownMenuItem<MenuItem>(
-                    value: item,
-                    child: MenuItems.buildItem(item),
-                  ),
-                ),
-                const DropdownMenuItem<Divider>(
-                    enabled: false, child: Divider()),
-                ...MenuItems.secondItems.map(
-                  (item) => DropdownMenuItem<MenuItem>(
-                    value: item,
-                    child: MenuItems.buildItem(item),
-                  ),
-                ),
-              ],
-              onChanged: (value) {
-                MenuItems.onChanged(context, value! as MenuItem);
-              },
-              dropdownStyleData: DropdownStyleData(
-                width: 160,
-                padding: const EdgeInsets.symmetric(vertical: 6),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(4),
-                  color: Colors.grey,
-                ),
-                offset: const Offset(0, 8),
-              ),
-              menuItemStyleData: MenuItemStyleData(
-                customHeights: [
-                  ...List<double>.filled(MenuItems.firstItems.length, 48),
-                  8,
-                  ...List<double>.filled(MenuItems.secondItems.length, 48),
-                ],
-                padding: const EdgeInsets.only(left: 16, right: 16),
-              ),
-            ),
-          ),
-        ),
-      ],
+      // actions: [],
     );
-  }
-}
-
-// menu item class
-class MenuItem {
-  const MenuItem({
-    required this.text,
-    required this.icon,
-  });
-
-  final String text;
-  final IconData icon;
-}
-
-abstract class MenuItems {
-  // static const List<MenuItem> firstItems = [home, share, settings];
-  static const List<MenuItem> firstItems = [profileDetails];
-  static const List<MenuItem> secondItems = [logout];
-
-  // static const home = MenuItem(text: 'Home', icon: Icons.home);
-  // static const share = MenuItem(text: 'Share', icon: Icons.share);
-  static const profileDetails =
-      MenuItem(text: 'Profile Edit', icon: Icons.settings);
-  static const logout = MenuItem(text: 'Log Out', icon: Icons.logout);
-
-  static Widget buildItem(MenuItem item) {
-    return Row(
-      children: [
-        Icon(item.icon, color: Colors.white, size: 22),
-        const SizedBox(
-          width: 10,
-        ),
-        Expanded(
-          child: Text(
-            item.text,
-            style: const TextStyle(
-              color: Colors.white,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  // on change for app bar option click
-  static void onChanged(BuildContext context, MenuItem item) {
-    switch (item) {
-      case MenuItems.profileDetails:
-        {
-          var homeProvider = Provider.of<HomeProvider>(context, listen: false);
-
-          Navigator.pushNamed(context, AppRoutes.profileDetails,
-              arguments: UserArgument(homeProvider.userModel));
-        }
-        break;
-      case MenuItems.logout:
-        context.read<HomeProvider>().userLogout();
-        break;
-    }
   }
 }
