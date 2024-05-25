@@ -28,8 +28,8 @@ class ArticleProvider with ChangeNotifier, DiagnosticableTreeMixin {
       content: "",
       createdAt: "",
       updatedAt: "",
-      user: 0,
-      article: 0,
+      user_id: 0,
+      // article: 0,
       username: "");
 
   Future<String> addArticle(
@@ -166,7 +166,7 @@ class ArticleProvider with ChangeNotifier, DiagnosticableTreeMixin {
   Future<bool> addFollowers(int userId, int followerId) async {
     try {
       final response = await http.post(
-        Uri.parse('http://$url:8000/api/followers/'),
+        Uri.parse('http://$url:8000/api/follower/'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
         },

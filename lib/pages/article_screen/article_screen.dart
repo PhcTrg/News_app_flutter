@@ -80,8 +80,8 @@ class ArticleScreenState extends State<ArticleScreen> {
         content: "",
         createdAt: "",
         updatedAt: "",
-        user: 0,
-        article: 0,
+        user_id: 0,
+        // article: 0,
         username: "");
     context.read<ArticleProvider>().createCommentStatus = "";
   }
@@ -307,18 +307,18 @@ class ArticleScreenState extends State<ArticleScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "lbl_richard_gervain".tr,
+                                args.newsmodel.username,
                                 style: CustomTextStyles.bodyMediumIndigo800_1,
                               ),
                               SizedBox(height: 5.v),
-                              Padding(
-                                padding: EdgeInsets.only(left: 3.h),
-                                child: Text(
-                                  "lbl_2m_ago".tr,
-                                  style:
-                                      CustomTextStyles.bodySmallBluegray400_1,
-                                ),
-                              )
+                              // Padding(
+                              //   padding: EdgeInsets.only(left: 3.h),
+                              //   child: Text(
+                              //     "lbl_2m_ago".tr,
+                              //     style:
+                              //         CustomTextStyles.bodySmallBluegray400_1,
+                              //   ),
+                              // )
                             ],
                           ),
                         ),
@@ -530,7 +530,7 @@ class ArticleScreenState extends State<ArticleScreen> {
       ),
 
       // logic: if user add a new comment, this widget will show the new comment without causing the entire page to reload -> improve UX
-      (context.watch<ArticleProvider>().newAddedComment.user != 0)
+      (context.watch<ArticleProvider>().newAddedComment.user_id != 0)
           ? SizedBox(
               width: 293.h,
               child: (ListTile(
@@ -549,7 +549,7 @@ class ArticleScreenState extends State<ArticleScreen> {
 
                 // the recently added commennts value
                 title: Text(
-                    '${context.watch<ArticleProvider>().newAddedComment.user.toString()}'),
+                    '${context.watch<ArticleProvider>().newAddedComment.user_id.toString()}'),
                 subtitle: Text(
                     context.watch<ArticleProvider>().newAddedComment.content),
               )),
