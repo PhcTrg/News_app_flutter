@@ -26,6 +26,10 @@ class _SearchPageState extends State<SearchPage> {
   @override
   void initState() {
     super.initState();
+    fetchData();
+  }
+
+  void fetchData() {
     futureNews = context.read<HomeProvider>().getNewsData();
     firstUpdate = false;
   }
@@ -58,39 +62,44 @@ class _SearchPageState extends State<SearchPage> {
         decoration: AppDecoration.outlineBlueA2000f1.copyWith(
           borderRadius: BorderRadiusStyle.customBorderTL28,
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // search bar
-            TextField(
-              controller: searchController,
-              decoration: InputDecoration(
-                prefixIcon: IconButton(
-                  icon: Icon(Icons.search),
-                  onPressed: () {
-                    context
-                        .read<HomeProvider>()
-                        .searchArticle(input: searchController.text);
-                  },
+        child: RefreshIndicator(
+          onRefresh: () async {
+            fetchData();
+          },
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // search bar
+              TextField(
+                controller: searchController,
+                decoration: InputDecoration(
+                  prefixIcon: IconButton(
+                    icon: Icon(Icons.search),
+                    onPressed: () {
+                      context
+                          .read<HomeProvider>()
+                          .searchArticle(input: searchController.text);
+                    },
+                  ),
+                  hintText: 'Enter article title',
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    borderSide: BorderSide.none,
+                  ),
+                  contentPadding: EdgeInsets.all(15.0),
                 ),
-                hintText: 'Enter article title',
-                filled: true,
-                fillColor: Colors.white,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                  borderSide: BorderSide.none,
-                ),
-                contentPadding: EdgeInsets.all(15.0),
               ),
-            ),
 
-            SizedBox(height: 10),
+              SizedBox(height: 10),
 
-            // articles display
-            (context.watch<HomeProvider>().news.length == 0)
-                ? Text("There is no news")
-                : ListNews(news: context.watch<HomeProvider>().news)
-          ],
+              // articles display
+              (context.watch<HomeProvider>().news.length == 0)
+                  ? Text("There is no news")
+                  : ListNews(news: context.watch<HomeProvider>().news)
+            ],
+          ),
         ),
       );
     }
@@ -115,6 +124,7 @@ class _SearchPageState extends State<SearchPage> {
                   child: Stack(
                     children: [
                       //article here
+
                       FutureBuilder<List<NewsModel>>(
                           future: futureNews,
                           builder: (context, data) {

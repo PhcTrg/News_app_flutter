@@ -29,9 +29,31 @@ class _MyAppState extends State<LoginScreen> {
   TextEditingController retypePasswordController = TextEditingController();
   TextEditingController firstnameController = TextEditingController();
   TextEditingController lastnameController = TextEditingController();
+  TextEditingController codeController = TextEditingController();
   String roleVal = items[0];
+  bool isCodeSended = false;
+  bool firstUpdate = false;
 
+  // late Future<String>? codeFuture;
   // GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    isCodeSended = false;
+    firstUpdate = false;
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+
+    if (!firstUpdate) {
+      context.watch<HomeProvider>().forgotpassStatus = "";
+    }
+  }
 
   @override
   void dispose() {
@@ -40,6 +62,7 @@ class _MyAppState extends State<LoginScreen> {
     retypePasswordController.dispose();
     firstnameController.dispose();
     lastnameController.dispose();
+    codeController.dispose();
     roleVal = items[0];
     super.dispose();
   }
@@ -54,13 +77,19 @@ class _MyAppState extends State<LoginScreen> {
       }
     }
 
+    // void compareCode() {
+    //   if (codeController.text == context.watch<HomeProvider>().validateCode) {
+    //     // codeCorrect = true;
+    //   }
+    // }
+
     return SafeArea(
       child: DefaultTabController(
-        length: 2,
+        length: 3,
         child: Scaffold(
           appBar: AppBar(
             bottom: PreferredSize(
-              preferredSize: const Size.fromHeight(50),
+              preferredSize: const Size.fromHeight(70),
               child: Align(
                 alignment: Alignment.topCenter,
                 child: Container(
@@ -72,18 +101,22 @@ class _MyAppState extends State<LoginScreen> {
                       topRight: Radius.circular(28.0),
                     ),
                   ),
-                  child: const TabBar(
-                    indicatorSize: TabBarIndicatorSize.tab,
-                    indicatorColor: Colors.blue,
-                    labelStyle: TextStyle(
-                      color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: const TabBar(
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      indicatorColor: Colors.blue,
+                      labelStyle: TextStyle(
+                        color: Colors.white,
+                      ),
+                      dividerColor: Colors.blue,
+                      // dividerHeight: 3,
+                      tabs: [
+                        Tab(text: "Login"),
+                        Tab(text: "Sign up"),
+                        Tab(text: "   Forgot\nPassword"),
+                      ],
                     ),
-                    dividerColor: Colors.blue,
-                    // dividerHeight: 3,
-                    tabs: [
-                      Tab(text: "Login"),
-                      Tab(text: "Sign up"),
-                    ],
                   ),
                 ),
               ),
@@ -156,24 +189,24 @@ class _MyAppState extends State<LoginScreen> {
                                   });
                                 }),
                             SizedBox(height: 20.v),
-                            // Align(
-                            //     alignment: Alignment.center,
-                            //     child: Center(
-                            //       child: Row(
-                            //         mainAxisAlignment: MainAxisAlignment.center,
-                            //         children: [
-                            //           Text(
-                            //             "Forgot your password? ",
-                            //             style: theme.textTheme.bodyMedium,
-                            //           ),
-                            //           Text(
-                            //             "Reset here",
-                            //             style:
-                            //                 CustomTextStyles.bodyMediumPrimary,
-                            //           ),
-                            //         ],
-                            //       ),
-                            //     )),
+                            Align(
+                                alignment: Alignment.center,
+                                child: Center(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "Forgot your password? ",
+                                        style: theme.textTheme.bodyMedium,
+                                      ),
+                                      Text(
+                                        "Reset here",
+                                        style:
+                                            CustomTextStyles.bodyMediumPrimary,
+                                      ),
+                                    ],
+                                  ),
+                                )),
                             SizedBox(height: 32.v),
                             // Center(
                             //   child: Text(
@@ -309,6 +342,119 @@ class _MyAppState extends State<LoginScreen> {
                                 }),
                             Text(context.watch<HomeProvider>().signUpStatus),
                             SizedBox(height: 50.v),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+              // forgot password
+              Align(
+                alignment: Alignment.topCenter,
+                child: SingleChildScrollView(
+                  child: Container(
+                    color: Colors.blue,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 50.h,
+                          vertical: 50.v,
+                        ),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(25),
+                            color: Colors.white),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Forgot password",
+                              style: theme.textTheme.headlineSmall,
+                            ),
+                            SizedBox(height: 14.v),
+
+                            // new pass
+                            (!isCodeSended)
+                                ? (Column(
+                                    children: [
+                                      userInput(
+                                          context,
+                                          "Email",
+                                          "Type your email here...",
+                                          userNameController),
+                                      SizedBox(height: 20.v),
+                                      CustomElevatedButton(
+                                          text: "OK".toUpperCase(),
+                                          buttonTextStyle: CustomTextStyles
+                                              .bodyLargeWhiteA700,
+                                          onPressed: () {
+                                            setState(() {
+                                              firstUpdate = true;
+                                              var homeProvider =
+                                                  Provider.of<HomeProvider>(
+                                                      context,
+                                                      listen: false);
+
+                                              homeProvider.codeFuture =
+                                                  homeProvider.getCodeForgot(
+                                                      userNameController.text);
+                                              isCodeSended = true;
+                                            });
+                                          }),
+                                      SizedBox(height: 20.v),
+                                    ],
+                                  ))
+                                : (FutureBuilder(
+                                    future: context
+                                        .watch<HomeProvider>()
+                                        .codeFuture,
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        return Column(children: [
+                                          _buildPassword(
+                                              context,
+                                              "New password",
+                                              passwordController),
+                                          SizedBox(height: 30.v),
+                                          userInput(context, "Code",
+                                              "CODE here...", codeController),
+                                          SizedBox(height: 30.v),
+                                          CustomElevatedButton(
+                                              text: "OK".toUpperCase(),
+                                              buttonTextStyle: CustomTextStyles
+                                                  .bodyLargeWhiteA700,
+                                              onPressed: () {
+                                                setState(() {
+                                                  var homeProvider =
+                                                      Provider.of<HomeProvider>(
+                                                          context,
+                                                          listen: false);
+
+                                                  homeProvider.resetPassword(
+                                                      userNameController.text,
+                                                      codeController.text,
+                                                      passwordController.text);
+                                                });
+                                              }),
+                                        ]);
+                                      }
+
+                                      return Center(
+                                          child:
+                                              const CircularProgressIndicator());
+                                    },
+                                  )),
+
+                            Center(
+                              child: Text(context
+                                  .watch<HomeProvider>()
+                                  .forgotpassStatus),
+                            ),
+
+                            SizedBox(height: 280.v)
                           ],
                         ),
                       ),

@@ -36,6 +36,10 @@ class ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
+    fetchData();
+  }
+
+  void fetchData() {
     futureUser = context
         .read<HomeProvider>()
         .postUserInfo(context.read<HomeProvider>().userModel.id);
@@ -67,193 +71,205 @@ class ProfileScreenState extends State<ProfileScreen> {
                     child: SizedBox(
                       height: 905.v,
                       width: double.maxFinite,
-                      child: Stack(
-                        alignment: Alignment.bottomCenter,
-                        children: [
-                          Align(
-                            alignment: Alignment.topCenter,
-                            child: Container(
-                              decoration:
-                                  AppDecoration.gradientWhiteAToGray5002,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  // user infomation
-                                  SizedBox(height: 15.v),
-                                  SizedBox(
-                                    height: 200.v,
-                                    width: 295.h,
-                                    child: Stack(
-                                      alignment: Alignment.bottomCenter,
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.topCenter,
-                                          child: Container(
-                                            padding: EdgeInsets.all(32.h),
-                                            decoration: AppDecoration
-                                                .outlineBlueA2000f
-                                                .copyWith(
-                                              borderRadius: BorderRadiusStyle
-                                                  .roundedBorder16,
+                      child: RefreshIndicator(
+                        onRefresh: () async {
+                          fetchData();
+                        },
+                        child: Stack(
+                          alignment: Alignment.bottomCenter,
+                          children: [
+                            Align(
+                              alignment: Alignment.topCenter,
+                              child: Container(
+                                decoration:
+                                    AppDecoration.gradientWhiteAToGray5002,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    // user infomation
+                                    SizedBox(height: 15.v),
+                                    SizedBox(
+                                      height: 200.v,
+                                      width: 295.h,
+                                      child: Stack(
+                                        alignment: Alignment.bottomCenter,
+                                        children: [
+                                          Align(
+                                            alignment: Alignment.topCenter,
+                                            child: Container(
+                                              padding: EdgeInsets.all(32.h),
+                                              decoration: AppDecoration
+                                                  .outlineBlueA2000f
+                                                  .copyWith(
+                                                borderRadius: BorderRadiusStyle
+                                                    .roundedBorder16,
+                                              ),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Container(
+                                                        height: 84.adaptSize,
+                                                        width: 84.adaptSize,
+                                                        padding:
+                                                            EdgeInsets.all(6.h),
+                                                        decoration:
+                                                            AppDecoration
+                                                                .outline
+                                                                .copyWith(
+                                                          borderRadius:
+                                                              BorderRadiusStyle
+                                                                  .roundedBorder28,
+                                                        ),
+                                                        child: CustomImageView(
+                                                          imagePath: ImageConstant
+                                                              .imgPlaceholder,
+                                                          height: 66.adaptSize,
+                                                          width: 66.adaptSize,
+                                                          radius: BorderRadius
+                                                              .circular(
+                                                            22.h,
+                                                          ),
+                                                          alignment:
+                                                              Alignment.center,
+                                                        ),
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                          left: 24.h,
+                                                          bottom: 6.v,
+                                                        ),
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            SizedBox(
+                                                                height: 15.v),
+                                                            Text(
+                                                              data.data!
+                                                                  .firstName
+                                                                  .toUpperCase(),
+                                                              style: theme
+                                                                  .textTheme
+                                                                  .bodyLarge,
+                                                            ),
+                                                            SizedBox(
+                                                                height: 5.v),
+                                                            Text(
+                                                              data.data!.role
+                                                                  .toUpperCase(),
+                                                              style: CustomTextStyles
+                                                                  .bodyLargeIndigoA40001,
+                                                            )
+                                                          ],
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                  SizedBox(height: 22.v),
+                                                ],
+                                              ),
                                             ),
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Container(
-                                                      height: 84.adaptSize,
-                                                      width: 84.adaptSize,
-                                                      padding:
-                                                          EdgeInsets.all(6.h),
+                                          ),
+                                          Align(
+                                            alignment: Alignment.bottomCenter,
+                                            child: SizedBox(
+                                              height: 68.v,
+                                              width: 231.h,
+                                              child: Stack(
+                                                alignment: Alignment.center,
+                                                children: [
+                                                  Align(
+                                                    alignment: Alignment.center,
+                                                    child: Container(
                                                       decoration: AppDecoration
-                                                          .outline
+                                                          .fillIndigoA
                                                           .copyWith(
                                                         borderRadius:
                                                             BorderRadiusStyle
-                                                                .roundedBorder28,
+                                                                .roundedBorder12,
                                                       ),
-                                                      child: CustomImageView(
-                                                        imagePath: ImageConstant
-                                                            .imgPlaceholder,
-                                                        height: 66.adaptSize,
-                                                        width: 66.adaptSize,
-                                                        radius: BorderRadius
-                                                            .circular(
-                                                          22.h,
-                                                        ),
-                                                        alignment:
-                                                            Alignment.center,
-                                                      ),
-                                                    ),
-                                                    Padding(
-                                                      padding: EdgeInsets.only(
-                                                        left: 24.h,
-                                                        bottom: 6.v,
-                                                      ),
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
+                                                      child: Row(
                                                         children: [
-                                                          SizedBox(
-                                                              height: 15.v),
-                                                          Text(
-                                                            data.data!.firstName
-                                                                .toUpperCase(),
-                                                            style: theme
-                                                                .textTheme
-                                                                .bodyLarge,
+                                                          Expanded(
+                                                            child: Padding(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .only(
+                                                                left: 11.h,
+                                                                top: 5.v,
+                                                                bottom: 5.v,
+                                                              ),
+                                                              child:
+                                                                  _buildFollowers(
+                                                                context,
+                                                                future:
+                                                                    futureFollowers,
+                                                                followString:
+                                                                    "Followers",
+                                                              ),
+                                                            ),
                                                           ),
-                                                          SizedBox(height: 5.v),
-                                                          Text(
-                                                            data.data!.role
-                                                                .toUpperCase(),
-                                                            style: CustomTextStyles
-                                                                .bodyLargeIndigoA40001,
+                                                          Expanded(
+                                                            child: Padding(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .only(
+                                                                left: 11.h,
+                                                                top: 5.v,
+                                                                bottom: 5.v,
+                                                              ),
+                                                              child:
+                                                                  _buildFollowers(
+                                                                context,
+                                                                future:
+                                                                    futureFollowing,
+                                                                followString:
+                                                                    "Following",
+                                                              ),
+                                                            ),
                                                           )
                                                         ],
                                                       ),
-                                                    )
-                                                  ],
-                                                ),
-                                                SizedBox(height: 22.v),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        Align(
-                                          alignment: Alignment.bottomCenter,
-                                          child: SizedBox(
-                                            height: 68.v,
-                                            width: 231.h,
-                                            child: Stack(
-                                              alignment: Alignment.center,
-                                              children: [
-                                                Align(
-                                                  alignment: Alignment.center,
-                                                  child: Container(
-                                                    decoration: AppDecoration
-                                                        .fillIndigoA
-                                                        .copyWith(
-                                                      borderRadius:
-                                                          BorderRadiusStyle
-                                                              .roundedBorder12,
                                                     ),
-                                                    child: Row(
-                                                      children: [
-                                                        Expanded(
-                                                          child: Padding(
-                                                            padding:
-                                                                EdgeInsets.only(
-                                                              left: 11.h,
-                                                              top: 5.v,
-                                                              bottom: 5.v,
-                                                            ),
-                                                            child:
-                                                                _buildFollowers(
-                                                              context,
-                                                              future:
-                                                                  futureFollowers,
-                                                              followString:
-                                                                  "Followers",
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        Expanded(
-                                                          child: Padding(
-                                                            padding:
-                                                                EdgeInsets.only(
-                                                              left: 11.h,
-                                                              top: 5.v,
-                                                              bottom: 5.v,
-                                                            ),
-                                                            child:
-                                                                _buildFollowers(
-                                                              context,
-                                                              future:
-                                                                  futureFollowing,
-                                                              followString:
-                                                                  "Following",
-                                                            ),
-                                                          ),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                )
-                                              ],
+                                                  )
+                                                ],
+                                              ),
                                             ),
-                                          ),
-                                        )
-                                      ],
+                                          )
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(height: 15.v),
+                                    SizedBox(height: 15.v),
 
-                                  // articles
-                                  FutureBuilder<List<NewsModel>>(
-                                    future: futureNews,
-                                    builder: (context, data) {
-                                      if (data.hasData) {
-                                        return _buildColumnMyPosts(
-                                            context, data.data!);
-                                      }
+                                    // articles
+                                    FutureBuilder<List<NewsModel>>(
+                                      future: futureNews,
+                                      builder: (context, data) {
+                                        if (data.hasData) {
+                                          return _buildColumnMyPosts(
+                                              context, data.data!);
+                                        }
 
-                                      return Center(
-                                          child:
-                                              const CircularProgressIndicator());
-                                    },
-                                  )
-                                ],
+                                        return Center(
+                                            child:
+                                                const CircularProgressIndicator());
+                                      },
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -379,7 +395,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                 padding: const EdgeInsets.symmetric(vertical: 6),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(4),
-                  color: Colors.grey,
+                  color: Colors.white,
                 ),
                 offset: const Offset(0, 8),
               ),
@@ -418,13 +434,13 @@ abstract class MenuItems {
   // static const home = MenuItem(text: 'Home', icon: Icons.home);
   // static const share = MenuItem(text: 'Share', icon: Icons.share);
   static const profileDetails =
-      MenuItem(text: 'Profile Edit', icon: Icons.settings);
+      MenuItem(text: 'Profile Edit', icon: Icons.person);
   static const logout = MenuItem(text: 'Log Out', icon: Icons.logout);
 
   static Widget buildItem(MenuItem item) {
     return Row(
       children: [
-        Icon(item.icon, color: Colors.white, size: 22),
+        Icon(item.icon, color: Colors.blue, size: 22),
         const SizedBox(
           width: 10,
         ),
@@ -432,7 +448,7 @@ abstract class MenuItems {
           child: Text(
             item.text,
             style: const TextStyle(
-              color: Colors.white,
+              color: Colors.black,
             ),
           ),
         ),

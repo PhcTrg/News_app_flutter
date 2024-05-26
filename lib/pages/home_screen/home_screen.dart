@@ -23,6 +23,10 @@ class _MyAppState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    fetchData();
+  }
+
+  void fetchData() {
     futureNews = context.read<HomeProvider>().getNewsData();
   }
 
@@ -51,18 +55,25 @@ class _MyAppState extends State<HomeScreen> {
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              FutureBuilder<List<NewsModel>>(
-                                  future: futureNews,
-                                  builder: (context, data) {
-                                    if (data.hasData) {
-                                      return _buildColumnMyPosts(
-                                          context, data.data!);
-                                    }
+                              RefreshIndicator(
+                                onRefresh: () async {
+                                  setState(() {
+                                    fetchData();
+                                  });
+                                },
+                                child: FutureBuilder<List<NewsModel>>(
+                                    future: futureNews,
+                                    builder: (context, data) {
+                                      if (data.hasData) {
+                                        return _buildColumnMyPosts(
+                                            context, data.data!);
+                                      }
 
-                                    return Center(
-                                        child:
-                                            const CircularProgressIndicator());
-                                  }),
+                                      return Center(
+                                          child:
+                                              const CircularProgressIndicator());
+                                    }),
+                              ),
                             ],
                           ),
                         ),

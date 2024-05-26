@@ -23,31 +23,58 @@ class ProfileDetails extends StatefulWidget {
 }
 
 class _ProfileDetailsState extends State<ProfileDetails> {
-  // TextEditingController userNameController = TextEditingController();
   TextEditingController firstnameController = TextEditingController();
   TextEditingController lastnameController = TextEditingController();
   String roleVal = items[0];
+  bool isFirstTime = true;
 
   var args;
-
   @override
   void initState() {
     // args = ModalRoute.of(context)!.settings.arguments as UserArgument;
     super.initState();
+    isFirstTime = true;
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    args = ModalRoute.of(context)!.settings.arguments as UserArgument;
-    // userNameController = TextEditingController(text: args.userModel.firstName);
-    firstnameController = TextEditingController(text: args.userModel.firstName);
-    lastnameController = TextEditingController(text: args.userModel.lastName);
-    roleVal = args.userModel.role;
+
+    if (isFirstTime) {
+      args = ModalRoute.of(context)!.settings.arguments as UserArgument;
+      firstnameController =
+          TextEditingController(text: args.userModel.firstName);
+      lastnameController = TextEditingController(text: args.userModel.lastName);
+      roleVal = args.userModel.role;
+
+      context.watch<HomeProvider>().updateStatus = "";
+      isFirstTime = false;
+    }
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    void onSubmit() {
+      // update user
+      isFirstTime = false;
+
+      if (firstnameController.text != "" &&
+          lastnameController.text != "" &&
+          roleVal != "") {
+        context.read<HomeProvider>().updateUser(firstnameController.text,
+            lastnameController.text, roleVal, args.userModel.id);
+      } else {
+        context.watch<HomeProvider>().updateStatus =
+            "Please fill in input field";
+      }
+    }
+
     void dropdownCallback(String? selectedVal) {
       if (selectedVal is String) {
         setState(() {
@@ -138,25 +165,20 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                     }).toList(),
                     onChanged: dropdownCallback,
                   ),
-                  SizedBox(height: 30.v),
+                  SizedBox(height: 10.v),
+                  Center(
+                    child: Text(
+                      context.watch<HomeProvider>().updateStatus,
+                      style: theme.textTheme.titleLarge!.copyWith(
+                        color: appTheme.black900,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10.v),
                   CustomElevatedButton(
                       text: "Submit".toUpperCase(),
                       buttonTextStyle: CustomTextStyles.bodyLargeWhiteA700,
-                      onPressed: () {
-                        setState(() {
-                          // update user
-
-                          // var homeProvider =
-                          //     Provider.of<HomeProvider>(context,
-                          //         listen: false);
-                          // homeProvider.postSignUp(
-                          //     userNameController.text,
-                          //     passwordController.text,
-                          //     firstnameController.text,
-                          //     lastnameController.text,
-                          //     roleVal);
-                        });
-                      }),
+                      onPressed: () => onSubmit()),
                   Text(context.watch<HomeProvider>().signUpStatus),
                   CustomElevatedButton(
                       text: "Go back to home Page".toUpperCase(),
