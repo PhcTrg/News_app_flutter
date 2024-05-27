@@ -256,7 +256,9 @@ class _UserProfileState extends State<UserProfile> {
             );
           }
 
-          return Center(child: const CircularProgressIndicator());
+          return Center(
+              child: const CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.blue)));
         });
 
     // SafeArea(

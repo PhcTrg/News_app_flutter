@@ -80,20 +80,6 @@ class AppDecoration {
           )
         ],
       );
-  static BoxDecoration get outlineBlueAF => BoxDecoration(
-        color: appTheme.whiteA700,
-        boxShadow: [
-          BoxShadow(
-            color: appTheme.blueA2000f,
-            spreadRadius: 2.h,
-            blurRadius: 2.h,
-            offset: Offset(
-              0,
-              -6,
-            ),
-          )
-        ],
-      );
 
   // Outline decorations
   static BoxDecoration get outlineSecondaryContainer => BoxDecoration(

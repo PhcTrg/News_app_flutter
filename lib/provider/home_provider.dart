@@ -281,8 +281,9 @@ class HomeProvider with ChangeNotifier, DiagnosticableTreeMixin {
 
   Future<String> resetPassword(
       String username, String reset_code, String new_password) async {
+    print(username + " " + reset_code + " " + new_password);
     final response = await http.post(
-      Uri.parse('http://$url:8000/api/forgot-password/'),
+      Uri.parse('http://$url:8000/api/reset-password/'),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
       },

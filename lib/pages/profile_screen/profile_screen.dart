@@ -261,7 +261,11 @@ class ProfileScreenState extends State<ProfileScreen> {
 
                                         return Center(
                                             child:
-                                                const CircularProgressIndicator());
+                                                const CircularProgressIndicator(
+                                                    valueColor:
+                                                        AlwaysStoppedAnimation<
+                                                                Color>(
+                                                            Colors.blue)));
                                       },
                                     )
                                   ],
@@ -278,7 +282,9 @@ class ProfileScreenState extends State<ProfileScreen> {
             );
           }
 
-          return Center(child: const CircularProgressIndicator());
+          return Center(
+              child: const CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.blue)));
         });
   }
 

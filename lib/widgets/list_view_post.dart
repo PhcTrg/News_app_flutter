@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:news_reading/core/app_export.dart';
+import 'package:news_reading/core/utils/date_time_utils.dart';
 import 'package:news_reading/model/news_model.dart';
 import 'package:news_reading/argumennt/article_argument.dart';
 import 'package:news_reading/provider/home_provider.dart';
@@ -7,7 +8,7 @@ import 'package:news_reading/provider/home_provider.dart';
 class ListNews extends StatelessWidget {
   final List<NewsModel> news;
 
-  ListNews({required this.news});
+  ListNews({super.key, required this.news});
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +64,10 @@ Widget _post(
     }
   }
 
+  String timestamp = news.updatedAt;
+  DateTime date = DateTime.parse(timestamp).toLocal();
+  String timeAgoString = timeAgo(date);
+
   return Container(
     decoration: AppDecoration.outlineBlueA2000f.copyWith(
       borderRadius: BorderRadiusStyle.roundedBorder16,
@@ -116,35 +121,15 @@ Widget _post(
                     width: 118.h,
                     child: Row(
                       children: [
-                        // CustomImageView(
-                        //   imagePath: ImageConstant.imgThumbsIndigo800,
-                        //   height: 16.adaptSize,
-                        //   width: 16.adaptSize,
-                        //   margin: EdgeInsets.only(bottom: 1.v),
-                        // ),
-                        // Padding(
-                        //   padding: EdgeInsets.only(
-                        //     left: 6.h,
-                        //     bottom: 1.v,
-                        //   ),
-                        //   child: Text(
-                        //     "lbl_2_1k".tr,
-                        //     style: CustomTextStyles.bodySmallIndigo800,
-                        //   ),
-                        // ),
                         CustomImageView(
                           imagePath: ImageConstant.imgTime,
                           height: 16.adaptSize,
                           width: 16.adaptSize,
-                          // margin: EdgeInsets.only(
-                          //   left: 1.h,
-                          //   bottom: 1.v,
-                          // ),
                         ),
                         Padding(
                           padding: EdgeInsets.only(left: 6.h),
                           child: Text(
-                            "lbl_1hr_ago".tr,
+                            timeAgoString,
                             style: CustomTextStyles.bodySmallIndigo800,
                           ),
                         )

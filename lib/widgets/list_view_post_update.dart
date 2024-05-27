@@ -7,7 +7,7 @@ import 'package:news_reading/provider/home_provider.dart';
 class ListNewsUpdate extends StatelessWidget {
   final List<NewsModel> news;
 
-  ListNewsUpdate({required this.news});
+  ListNewsUpdate({super.key, required this.news});
 
   @override
   Widget build(BuildContext context) {

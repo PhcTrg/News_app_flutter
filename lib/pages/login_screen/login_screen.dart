@@ -33,6 +33,7 @@ class _MyAppState extends State<LoginScreen> {
   String roleVal = items[0];
   bool isCodeSended = false;
   bool firstUpdate = false;
+  bool _buttonEnabled = true;
 
   // late Future<String>? codeFuture;
   // GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -423,28 +424,40 @@ class _MyAppState extends State<LoginScreen> {
                                               "CODE here...", codeController),
                                           SizedBox(height: 30.v),
                                           CustomElevatedButton(
-                                              text: "OK".toUpperCase(),
-                                              buttonTextStyle: CustomTextStyles
-                                                  .bodyLargeWhiteA700,
-                                              onPressed: () {
-                                                setState(() {
-                                                  var homeProvider =
-                                                      Provider.of<HomeProvider>(
-                                                          context,
-                                                          listen: false);
-
-                                                  homeProvider.resetPassword(
-                                                      userNameController.text,
-                                                      codeController.text,
-                                                      passwordController.text);
-                                                });
-                                              }),
+                                            text: "OK".toUpperCase(),
+                                            buttonTextStyle: CustomTextStyles
+                                                .bodyLargeWhiteA700,
+                                            onPressed: _buttonEnabled
+                                                ? () {
+                                                    setState(() {
+                                                      var homeProvider =
+                                                          Provider.of<
+                                                                  HomeProvider>(
+                                                              context,
+                                                              listen: false);
+                                                      homeProvider
+                                                          .resetPassword(
+                                                              userNameController
+                                                                  .text,
+                                                              codeController
+                                                                  .text,
+                                                              passwordController
+                                                                  .text);
+                                                      _buttonEnabled =
+                                                          false; // disable the button
+                                                    });
+                                                  }
+                                                : null, // disable the button when _buttonEnabled is false
+                                          ),
                                         ]);
                                       }
 
                                       return Center(
                                           child:
-                                              const CircularProgressIndicator());
+                                              const CircularProgressIndicator(
+                                                  valueColor:
+                                                      AlwaysStoppedAnimation<
+                                                          Color>(Colors.blue)));
                                     },
                                   )),
 

@@ -138,7 +138,9 @@ class _SearchPageState extends State<SearchPage> {
                             }
 
                             return Center(
-                                child: const CircularProgressIndicator());
+                                child: const CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.blue)));
                           }),
                     ],
                   ),

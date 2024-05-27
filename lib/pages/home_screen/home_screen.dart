@@ -71,7 +71,10 @@ class _MyAppState extends State<HomeScreen> {
 
                                       return Center(
                                           child:
-                                              const CircularProgressIndicator());
+                                              const CircularProgressIndicator(
+                                                  valueColor:
+                                                      AlwaysStoppedAnimation<
+                                                          Color>(Colors.blue)));
                                     }),
                               ),
                             ],

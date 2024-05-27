@@ -50,33 +50,39 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return Sizer(
-      builder: (context, orientation, deviceType) {
-        return ChangeNotifierProvider<ThemeProvider>(
-          create: (context) => ThemeProvider(),
-          child: Consumer<ThemeProvider>(
-            builder: (context, provider, child) {
-              return MaterialApp(
-                title: 'news_reading',
-                debugShowCheckedModeBanner: false,
-                theme: theme,
-                scrollBehavior:
-                    NoThumbScrollBehavior().copyWith(scrollbars: false),
-                navigatorKey: NavigatorService.navigatorKey,
-                localizationsDelegates: [
-                  AppLocalizationDelegate(),
-                  GlobalMaterialLocalizations.delegate,
-                  GlobalWidgetsLocalizations.delegate,
-                  GlobalCupertinoLocalizations.delegate
-                ],
-                supportedLocales: [Locale('en', '')],
-                initialRoute: AppRoutes.homeRoute,
-                routes: AppRoutes.routes,
-              );
-            },
+    return MaterialApp(
+      theme: ThemeData(
+          primaryColor:
+              Colors.blue // This sets the primary color to a specific color.
           ),
-        );
-      },
+      home: Sizer(
+        builder: (context, orientation, deviceType) {
+          return ChangeNotifierProvider<ThemeProvider>(
+            create: (context) => ThemeProvider(),
+            child: Consumer<ThemeProvider>(
+              builder: (context, provider, child) {
+                return MaterialApp(
+                  title: 'news_reading',
+                  debugShowCheckedModeBanner: false,
+                  theme: theme,
+                  scrollBehavior:
+                      NoThumbScrollBehavior().copyWith(scrollbars: false),
+                  navigatorKey: NavigatorService.navigatorKey,
+                  localizationsDelegates: [
+                    AppLocalizationDelegate(),
+                    GlobalMaterialLocalizations.delegate,
+                    GlobalWidgetsLocalizations.delegate,
+                    GlobalCupertinoLocalizations.delegate
+                  ],
+                  supportedLocales: [Locale('en', '')],
+                  initialRoute: AppRoutes.homeRoute,
+                  routes: AppRoutes.routes,
+                );
+              },
+            ),
+          );
+        },
+      ),
     );
   }
 }
