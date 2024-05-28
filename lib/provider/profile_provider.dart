@@ -26,7 +26,7 @@ class ProfileProvider extends ChangeNotifier {
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
 
-      List<dynamic> jsonData = responseData;
+      List<dynamic> jsonData = responseData['result'];
 
       _news = jsonData.map((data) => NewsModel.fromJson(data)).toList();
 

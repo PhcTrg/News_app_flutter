@@ -18,6 +18,7 @@ import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:translator/translator.dart';
+import 'package:image/image.dart' as img;
 
 class ArticleScreen extends StatefulWidget {
   const ArticleScreen({Key? key})
@@ -255,6 +256,16 @@ class ArticleScreenState extends State<ArticleScreen> {
     });
   }
 
+  bool isValidImage(String base64Image) {
+    try {
+      final bytes = base64Decode(base64Image);
+      final image = img.decodeImage(bytes);
+      return image != null;
+    } catch (e) {
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final bottom = MediaQuery.of(context).viewInsets.bottom;
@@ -381,7 +392,8 @@ class ArticleScreenState extends State<ArticleScreen> {
                   ),
 
                   // image
-                  if (args.newsmodel.image != null)
+                  if (args.newsmodel.image != null &&
+                      isValidImage(args.newsmodel.image))
                     Column(
                       children: [
                         ClipRRect(

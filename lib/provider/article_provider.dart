@@ -34,71 +34,29 @@ class ArticleProvider with ChangeNotifier, DiagnosticableTreeMixin {
       // article: 0,
       username: "");
 
-  // Future<String> addArticle(
-  //     String title, String content, String category, int userId) async {
-  //   try {
-  //     final response = await http.post(
-  //       Uri.parse('http://$url:8000/api/articles/'),
-  //       headers: {
-  //         'Content-Type': 'application/json; charset=UTF-8',
-  //       },
-  //       body: jsonEncode(<String, dynamic>{
-  //         "title": title,
-  //         "content": content,
-  //         "category": category,
-  //         "user": userId
-  //       }),
-  //     );
-
-  //     if (response.statusCode == 201) {
-  //       // final responseData = jsonDecode(response.body);
-  //       createStatus = "Create article successfully";
-
-  //       NotificationService().showNotification(
-  //           title: 'Your article is now live',
-  //           body: 'Your article: $title upload successfully');
-
-  //       notifyListeners();
-
-  //       return createStatus;
-  //     } else {
-  //       throw Exception(response.body);
-  //     }
-  //   } catch (e) {
-  //     createStatus = "Create article fail: $e";
-  //     rethrow;
-  //   }
-  // }
-
   Future<String> addArticle(String title, String content, String category,
-      int userId, File? imageFile) async {
+      int userId, File? imgFile) async {
     try {
-      // Create a multipart request
-      var request = http.MultipartRequest(
-          'POST', Uri.parse('http://$url:8000/api/articles/'));
+      // Convert image file to base64
+      List<int> imageBytes = imgFile!.readAsBytesSync();
+      String base64Image = base64Encode(imageBytes);
 
-      // Add text fields to the request
-      request.fields.addAll(<String, String>{
-        "title": title,
-        "content": content,
-        "category": category,
-        "user": userId.toString(),
-      });
+      final response = await http.post(
+        Uri.parse('http://$url:8000/api/articles/'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, dynamic>{
+          "title": title,
+          "content": content,
+          "category": category,
+          "user": userId,
+          "image": base64Image,
+        }),
+      );
 
-      // Add the file to the multipart request
-      request.files.add(http.MultipartFile(
-        'image', // consider 'image' as a field name
-        imageFile!.readAsBytes().asStream(),
-        imageFile.lengthSync(),
-        filename: 'upload.jpg', // the name of file on server
-        contentType: MediaType('image', 'jpeg'),
-      ));
-
-      // Send the request
-      var response = await request.send();
-
-      // Check the status of the response
       if (response.statusCode == 201) {
+        // final responseData = jsonDecode(response.body);
         createStatus = "Create article successfully";
 
         NotificationService().showNotification(
@@ -109,7 +67,7 @@ class ArticleProvider with ChangeNotifier, DiagnosticableTreeMixin {
 
         return createStatus;
       } else {
-        throw Exception('Image upload failed');
+        throw Exception(response.body);
       }
     } catch (e) {
       createStatus = "Create article fail: $e";

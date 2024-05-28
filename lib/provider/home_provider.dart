@@ -11,6 +11,7 @@ import 'package:news_reading/core/token_decode.dart';
 String url = ConstValue().URL;
 
 class HomeProvider with ChangeNotifier, DiagnosticableTreeMixin {
+  int _page = 1;
   bool _isLogin = false;
   String _validateCode = "";
   String _loginStatus = '';
@@ -86,21 +87,28 @@ class HomeProvider with ChangeNotifier, DiagnosticableTreeMixin {
 
   Future<List<NewsModel>> getNewsData() async {
     final response =
-        await http.get(Uri.parse('http://$url:8000/api/articles/'));
+        await http.get(Uri.parse('http://$url:8000/api/articles/?page=$_page'));
 
     if (response.statusCode == 200) {
-      final responseData = json.decode(response.body);
+      final Map<String, dynamic> responseData = json.decode(response.body);
 
-      // List<dynamic> jsonData = responseData['results'];
-      List<dynamic> jsonData = responseData;
+      List<dynamic> jsonData = responseData['results'];
 
-      var news = jsonData.map((data) => NewsModel.fromJson(data)).toList();
+      List<NewsModel> newItem =
+          jsonData.map((data) => NewsModel.fromJson(data)).toList();
+
+      _news.addAll(newItem);
+
+      if (_news.length < responseData['count']) {
+        _page++;
+      }
 
       notifyListeners();
 
-      return news;
+      return newItem;
     } else {
-      throw Exception('Failed to load');
+      // throw Exception('Failed to load');
+      return _news;
     }
   }
 

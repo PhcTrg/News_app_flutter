@@ -11,6 +11,7 @@ import 'package:news_reading/widgets/custom_text_form_field.dart';
 import '../../core/app_export.dart';
 import '../../widgets/app_bar/appbar_title.dart';
 import '../../widgets/app_bar/custom_app_bar.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 var categoris = [
   'Sports',
@@ -231,8 +232,17 @@ class NewArticlePageState extends State<NewArticlePage> {
 
     if (returnImg == null) return;
 
+    final filePath = returnImg.path;
+    // Compress the image
+    final compressedImage = await FlutterImageCompress.compressAndGetFile(
+      filePath,
+      filePath + "_compressed.jpg",
+      quality: 88, // You can adjust the compression quality here
+    );
+
     setState(() {
-      _selectImage = File(returnImg.path);
+      _selectImage =
+          compressedImage != null ? File(compressedImage.path) : null;
     });
   }
 
