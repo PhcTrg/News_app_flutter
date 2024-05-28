@@ -285,7 +285,6 @@ class ArticleScreenState extends State<ArticleScreen> {
                       ],
                     ),
                   ),
-                  SpacePaddingHeight(),
 
                   // user
                   ContentCard(
@@ -380,13 +379,18 @@ class ArticleScreenState extends State<ArticleScreen> {
                       ],
                     ),
                   ),
-                  SpacePaddingHeight(),
 
                   // image
-                  ClipRRect(
-                      borderRadius: BorderRadius.circular(16.0),
-                      child: Image.memory(base64Decode(args.newsmodel.image))),
-                  SpacePaddingHeight(),
+                  if (args.newsmodel.image != null)
+                    Column(
+                      children: [
+                        ClipRRect(
+                            borderRadius: BorderRadius.circular(16.0),
+                            child: Image.memory(
+                                base64Decode(args.newsmodel.image))),
+                        SpacePaddingHeight(),
+                      ],
+                    ),
 
                   // article
                   ContentCard(
@@ -652,7 +656,7 @@ class ArticleScreenState extends State<ArticleScreen> {
     return Container(
       padding: const EdgeInsets.all(3.0),
       decoration: const BoxDecoration(
-        color: Colors.black,
+        color: Colors.blue,
         borderRadius: BorderRadius.all(Radius.circular(16.0)),
       ),
       child: SingleChildScrollView(

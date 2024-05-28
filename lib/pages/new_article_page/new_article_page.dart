@@ -1,6 +1,11 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:news_reading/provider/article_provider.dart';
 import 'package:news_reading/provider/home_provider.dart';
+import 'package:news_reading/widgets/button.dart';
 import 'package:news_reading/widgets/custom_elevated_button.dart';
 import 'package:news_reading/widgets/custom_text_form_field.dart';
 import '../../core/app_export.dart';
@@ -41,6 +46,8 @@ class NewArticlePageState extends State<NewArticlePage> {
   TextEditingController articleContentController =
       TextEditingController(text: '');
   GlobalKey<NavigatorState> navigatorKey = GlobalKey();
+
+  File? _selectImage;
 
   bool isUpdate = false;
   String cateVal = categoris[0];
@@ -152,6 +159,21 @@ class NewArticlePageState extends State<NewArticlePage> {
                     onChanged: dropdownCallback,
                   ),
                   SizedBox(height: 15.v),
+                  // Image picker
+                  MainButton(
+                    onPressedFunc: _pickImgFromGalery,
+                    btnText: "Select Img",
+                    icon: Icon(
+                      Icons.image_rounded,
+                      color: Colors.white,
+                    ),
+                  ),
+
+                  (_selectImage != null)
+                      ? Image.file(_selectImage!)
+                      : Text("Please select image"),
+
+                  SizedBox(height: 15.v),
                   Text(context.watch<ArticleProvider>().createStatus),
                   SizedBox(height: 15.v),
                   CustomElevatedButton(
@@ -169,7 +191,8 @@ class NewArticlePageState extends State<NewArticlePage> {
                             articleTitleController.text,
                             articleContentController.text,
                             cateVal,
-                            homeProvider.userModel.id);
+                            homeProvider.userModel.id,
+                            _selectImage);
                       } else {
                         var articleProvider = Provider.of<ArticleProvider>(
                             context,
@@ -200,6 +223,17 @@ class NewArticlePageState extends State<NewArticlePage> {
         ),
       ),
     );
+  }
+
+  Future _pickImgFromGalery() async {
+    final returnImg =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    if (returnImg == null) return;
+
+    setState(() {
+      _selectImage = File(returnImg.path);
+    });
   }
 
   /// Section Widget
