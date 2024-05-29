@@ -1,3 +1,3 @@
 class ConstValue {
-  final URL = '192.168.1.2';
+  final URL = '10.0.28.189';
 }

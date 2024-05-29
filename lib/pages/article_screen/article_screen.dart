@@ -420,18 +420,13 @@ class ArticleScreenState extends State<ArticleScreen> {
                         ],
                       ),
                       SizedBox(height: 5),
-                      Row(
-                        children: [
-                          Text(
-                            context.read<ArticleProvider>().articleContent,
-                            maxLines: 10,
-                            overflow: TextOverflow.ellipsis,
-                            style:
-                                CustomTextStyles.bodyMediumIndigo800_1.copyWith(
-                              height: 1.43,
-                            ),
-                          ),
-                        ],
+                      Text(
+                        context.read<ArticleProvider>().articleContent,
+                        maxLines: 50,
+                        overflow: TextOverflow.ellipsis,
+                        style: CustomTextStyles.bodyMediumIndigo800_1.copyWith(
+                          height: 1.43,
+                        ),
                       ),
                       SpacePaddingHeight(),
 
@@ -612,24 +607,20 @@ class ArticleScreenState extends State<ArticleScreen> {
         SizedBox(height: 5),
 
         // content
-        Row(
-          children: [
-            (_futureSummarize != null)
-                ? FutureBuilder<String>(
-                    future: _futureSummarize,
-                    builder: (context, data) {
-                      if (data.hasData) {
-                        return Text(data.data!);
-                      }
-                      return Center(
-                          child: const CircularProgressIndicator(
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(Colors.blue)));
-                    },
-                  )
-                : Text("Want a shorter content, try this out!!"),
-          ],
-        ),
+        (_futureSummarize != null)
+            ? FutureBuilder<String>(
+                future: _futureSummarize,
+                builder: (context, data) {
+                  if (data.hasData) {
+                    return Text(data.data!);
+                  }
+                  return Center(
+                      child: const CircularProgressIndicator(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.blue)));
+                },
+              )
+            : Text("Want a shorter content, try this out!!"),
         SpacePaddingHeight(),
 
         // button
