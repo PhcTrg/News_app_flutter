@@ -392,17 +392,17 @@ class ArticleScreenState extends State<ArticleScreen> {
                   ),
 
                   // image
-                  if (args.newsmodel.image != null &&
-                      isValidImage(args.newsmodel.image))
-                    Column(
-                      children: [
-                        ClipRRect(
-                            borderRadius: BorderRadius.circular(16.0),
-                            child: Image.memory(
-                                base64Decode(args.newsmodel.image))),
-                        SpacePaddingHeight(),
-                      ],
-                    ),
+                  // if (args.newsmodel.image != null &&
+                  //     isValidImage(args.newsmodel.image))
+                  //   Column(
+                  //     children: [
+                  //       ClipRRect(
+                  //           borderRadius: BorderRadius.circular(16.0),
+                  //           child: Image.memory(
+                  //               base64Decode(args.newsmodel.image))),
+                  //       SpacePaddingHeight(),
+                  //     ],
+                  //   ),
 
                   // article
                   ContentCard(

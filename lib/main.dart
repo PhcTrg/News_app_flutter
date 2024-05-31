@@ -51,10 +51,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-          primaryColor:
-              Colors.blue // This sets the primary color to a specific color.
-          ),
+      theme: ThemeData(primaryColor: Colors.blue),
       home: Sizer(
         builder: (context, orientation, deviceType) {
           return ChangeNotifierProvider<ThemeProvider>(

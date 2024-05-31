@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:mockito/mockito.dart';
-import 'package:news_reading/model/news_model.dart';
 import 'package:mockito/annotations.dart';
 import 'package:news_reading/model/user_model.dart';
 
