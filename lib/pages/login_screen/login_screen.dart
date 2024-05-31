@@ -35,12 +35,10 @@ class _MyAppState extends State<LoginScreen> {
   bool firstUpdate = false;
   bool _buttonEnabled = true;
 
-  // late Future<String>? codeFuture;
   // GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     isCodeSended = false;
     firstUpdate = false;
@@ -48,7 +46,6 @@ class _MyAppState extends State<LoginScreen> {
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
 
     if (!firstUpdate) {
@@ -77,12 +74,6 @@ class _MyAppState extends State<LoginScreen> {
         });
       }
     }
-
-    // void compareCode() {
-    //   if (codeController.text == context.watch<HomeProvider>().validateCode) {
-    //     // codeCorrect = true;
-    //   }
-    // }
 
     return SafeArea(
       child: DefaultTabController(
@@ -167,12 +158,13 @@ class _MyAppState extends State<LoginScreen> {
                             SizedBox(height: 35.v),
                             userInput(
                                 context,
-                                "Username",
-                                "Type your user name here...",
+                                "Email",
+                                "Type your email name here...",
+                                'email',
                                 userNameController),
                             SizedBox(height: 20.v),
-                            _buildPassword(
-                                context, "Password", passwordController),
+                            _buildPassword(context, "Password", 'password',
+                                passwordController),
                             SizedBox(height: 30.v),
                             CustomElevatedButton(
                                 text: "Login".toUpperCase(),
@@ -208,54 +200,7 @@ class _MyAppState extends State<LoginScreen> {
                                     ],
                                   ),
                                 )),
-                            SizedBox(height: 32.v),
-                            // Center(
-                            //   child: Text(
-                            //     "Or sign in with".toUpperCase(),
-                            //     style: CustomTextStyles.bodySmall_1,
-                            //   ),
-                            // ),
-                            // SizedBox(height: 17.v),
-                            // Padding(
-                            //   padding:
-                            //       const EdgeInsets.only(left: 10, right: 10),
-                            //   child: Center(
-                            //     child: Row(
-                            //       mainAxisAlignment: MainAxisAlignment.center,
-                            //       children: [
-                            //         IconButton(
-                            //             onPressed: () {},
-                            //             icon: CustomImageView(
-                            //               width: 36.adaptSize,
-                            //               height: 36.adaptSize,
-                            //               imagePath: ImageConstant.imgGoogle,
-                            //             )),
-                            //         Spacer(
-                            //           flex: 50,
-                            //         ),
-                            //         IconButton(
-                            //             onPressed: () {},
-                            //             icon: CustomImageView(
-                            //               width: 36.adaptSize,
-                            //               height: 36.adaptSize,
-                            //               imagePath: ImageConstant.imgFacebook,
-                            //             )),
-                            //         Spacer(
-                            //           flex: 50,
-                            //         ),
-                            //         IconButton(
-                            //             onPressed: () {},
-                            //             icon: CustomImageView(
-                            //               width: 36.adaptSize,
-                            //               height: 36.adaptSize,
-                            //               color: appTheme.blue400,
-                            //               imagePath: ImageConstant.imgTrash,
-                            //             )),
-                            //       ],
-                            //     ),
-                            //   ),
-                            // ),
-                            SizedBox(height: 150.v)
+                            SizedBox(height: 180.v)
                           ],
                         ),
                       ),
@@ -296,21 +241,26 @@ class _MyAppState extends State<LoginScreen> {
                             SizedBox(height: 35.v),
                             userInput(
                                 context,
-                                "Username",
-                                "Type your user name here...",
+                                "Email",
+                                "Type your email here...",
+                                'email',
                                 userNameController),
                             SizedBox(height: 20.v),
-                            _buildPassword(
-                                context, "Password", passwordController),
+                            _buildPassword(context, "Password", 'password',
+                                passwordController),
                             SizedBox(height: 20.v),
                             _buildPassword(context, "Type your password again",
-                                retypePasswordController),
+                                'password', retypePasswordController),
                             SizedBox(height: 20.v),
-                            userInput(context, "First name",
-                                "Your first name...", firstnameController),
+                            userInput(
+                                context,
+                                "First name",
+                                "Your first name...",
+                                'firstName',
+                                firstnameController),
                             SizedBox(height: 20.v),
                             userInput(context, "Last name", "Your last name...",
-                                lastnameController),
+                                'lastName', lastnameController),
                             SizedBox(height: 20.v),
                             DropdownButton(
                               value: roleVal,
@@ -385,6 +335,7 @@ class _MyAppState extends State<LoginScreen> {
                                           context,
                                           "Email",
                                           "Type your email here...",
+                                          'email',
                                           userNameController),
                                       SizedBox(height: 20.v),
                                       CustomElevatedButton(
@@ -418,10 +369,15 @@ class _MyAppState extends State<LoginScreen> {
                                           _buildPassword(
                                               context,
                                               "New password",
+                                              'password',
                                               passwordController),
                                           SizedBox(height: 30.v),
-                                          userInput(context, "Code",
-                                              "CODE here...", codeController),
+                                          userInput(
+                                              context,
+                                              "Code",
+                                              "CODE here...",
+                                              'code',
+                                              codeController),
                                           SizedBox(height: 30.v),
                                           CustomElevatedButton(
                                             text: "OK".toUpperCase(),
@@ -483,7 +439,11 @@ class _MyAppState extends State<LoginScreen> {
   }
 
   Widget _buildPassword(
-      BuildContext context, String title, TextEditingController controller) {
+    BuildContext context,
+    String title,
+    String keyString,
+    TextEditingController controller,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -493,6 +453,7 @@ class _MyAppState extends State<LoginScreen> {
         ),
         SizedBox(height: 12.v),
         CustomTextFormField(
+          key: Key(keyString),
           controller: controller,
           hintText: "••••••••",
           textInputAction: TextInputAction.done,
@@ -503,8 +464,13 @@ class _MyAppState extends State<LoginScreen> {
     );
   }
 
-  Widget userInput(BuildContext context, String title, String hintText,
-      TextEditingController controller) {
+  Widget userInput(
+    BuildContext context,
+    String title,
+    String hintText,
+    String keyString,
+    TextEditingController controller,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -514,6 +480,7 @@ class _MyAppState extends State<LoginScreen> {
         ),
         SizedBox(height: 12.v),
         CustomTextFormField(
+          key: Key(keyString),
           controller: controller,
           hintText: hintText,
           textInputType: TextInputType.emailAddress,

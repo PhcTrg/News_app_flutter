@@ -6,6 +6,7 @@ import 'package:news_reading/widgets/app_bar/appbar_title.dart';
 import 'package:news_reading/widgets/app_bar/appbar_trailing_image.dart';
 import 'package:news_reading/widgets/app_bar/custom_app_bar.dart';
 import 'package:news_reading/widgets/list_view_post.dart';
+import 'package:http/http.dart' as http;
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key})
@@ -30,7 +31,7 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   void fetchData() {
-    futureNews = context.read<HomeProvider>().getNewsData();
+    futureNews = context.read<HomeProvider>().getNewsData(http.Client());
     firstUpdate = false;
   }
 

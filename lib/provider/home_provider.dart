@@ -85,9 +85,9 @@ class HomeProvider with ChangeNotifier, DiagnosticableTreeMixin {
     notifyListeners();
   }
 
-  Future<List<NewsModel>> getNewsData() async {
-    final response =
-        await http.get(Uri.parse('http://$url:8000/api/articles/?page=$_page'));
+  Future<List<NewsModel>> getNewsData(http.Client client) async {
+    final response = await client
+        .get(Uri.parse('http://$url:8000/api/articles/?page=$_page'));
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseData = json.decode(response.body);
@@ -130,7 +130,6 @@ class HomeProvider with ChangeNotifier, DiagnosticableTreeMixin {
       );
 
       if (response.statusCode == 201) {
-        // final responseData = json.decode(response.body);
         _signUpStatus = "Sign up successfully";
 
         notifyListeners();
@@ -164,11 +163,6 @@ class HomeProvider with ChangeNotifier, DiagnosticableTreeMixin {
     if (response.statusCode == 200) {
       _isLogin = true;
       _loginStatus = "Login Successful";
-
-      // save token to localstorage
-      // final storage = FlutterSecureStorage();
-      // await storage.write(key: 'access_token', value: responseData['access']);
-      // final accessToken = await storage.read(key: 'access_token');
 
       // decode token
       final userId =

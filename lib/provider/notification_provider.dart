@@ -19,7 +19,7 @@ class NotificationProvider extends ChangeNotifier {
 
   Future<List<NotificationModel>> getNotifications(int userID) async {
     final response = await http.get(
-        Uri.parse('http://$url:8000/api/user_notifications/?user_id=5$userID'));
+        Uri.parse('http://$url:8000/api/user_notifications/?user_id=$userID'));
 
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);

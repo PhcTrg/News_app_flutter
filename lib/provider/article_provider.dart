@@ -6,7 +6,6 @@ import 'package:http/http.dart' as http;
 import 'package:news_reading/Services/notifi_service.dart';
 import 'package:news_reading/core/constant.dart';
 import 'package:news_reading/model/news_model.dart';
-import 'package:http_parser/http_parser.dart';
 
 String url = ConstValue().URL;
 

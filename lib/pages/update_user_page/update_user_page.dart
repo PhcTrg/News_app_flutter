@@ -1,6 +1,4 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:news_reading/argumennt/user_argument.dart';
 import 'package:news_reading/core/app_export.dart';
 import 'package:news_reading/provider/home_provider.dart';

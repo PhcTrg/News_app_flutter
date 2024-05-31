@@ -5,8 +5,6 @@ import 'package:news_reading/model/user_model.dart';
 import 'package:news_reading/provider/article_provider.dart';
 import 'package:news_reading/provider/home_provider.dart';
 import 'package:news_reading/provider/profile_provider.dart';
-import 'package:news_reading/widgets/app_bar/appbar_leading_image.dart';
-import 'package:news_reading/widgets/app_bar/appbar_title.dart';
 import 'package:news_reading/widgets/app_bar/custom_app_bar.dart';
 
 class UserProfile extends StatefulWidget {

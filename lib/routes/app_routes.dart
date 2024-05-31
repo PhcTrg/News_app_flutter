@@ -4,7 +4,6 @@ import 'package:news_reading/pages/new_article_page/new_article_page.dart';
 import 'package:news_reading/pages/update_user_page/update_user_page.dart';
 import 'package:news_reading/pages/user_profile/user_profile.dart';
 import '../pages/article_screen/article_screen.dart';
-import '../pages/onboard/onboarding.dart';
 import '../pages/profile_screen/profile_screen.dart';
 
 class AppRoutes {
@@ -24,7 +23,6 @@ class AppRoutes {
         profileScreen: ProfileScreen.builder,
         newArticlePage: NewArticlePage.builder,
         homeRoute: HomePage.builder,
-        onBoard: (context) => OnBoarding(),
         profileDetails: (context) => ProfileDetails(),
         userProfile: (context) => UserProfile()
       };

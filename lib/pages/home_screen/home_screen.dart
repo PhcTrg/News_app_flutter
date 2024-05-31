@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:news_reading/argumennt/article_argument.dart';
 import 'package:news_reading/core/utils/date_time_utils.dart';
 import 'package:news_reading/model/news_model.dart';
 import 'package:news_reading/provider/home_provider.dart';
-import 'package:news_reading/widgets/list_view_post.dart';
 import '../../core/app_export.dart';
 import '../../widgets/app_bar/appbar_title.dart';
 import '../../widgets/app_bar/appbar_trailing_image.dart';
 import '../../widgets/app_bar/custom_app_bar.dart';
+import 'package:http/http.dart' as http;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key})
@@ -27,8 +26,7 @@ class _MyAppState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    // fetchData();
-    futureNews = context.read<HomeProvider>().getNewsData();
+    futureNews = context.read<HomeProvider>().getNewsData(http.Client());
     _scrollController.addListener(_scrollListener);
   }
 
@@ -46,8 +44,8 @@ class _MyAppState extends State<HomeScreen> {
   }
 
   Future<void> fetchData() async {
-    await context.read<HomeProvider>().getNewsData();
-    setState(() {});
+    await context.read<HomeProvider>().getNewsData(http.Client());
+    // setState(() {});
   }
 
   @override
@@ -63,66 +61,56 @@ class _MyAppState extends State<HomeScreen> {
             padding: const EdgeInsets.all(20.0),
             child: Column(
               children: [
-                // RefreshIndicator(
-                //   onRefresh: () async {
-                //     setState(() {
-                //       fetchData();
-                //     });
-                //   },
-                //   child:
+                RefreshIndicator(
+                  onRefresh: () async {
+                    setState(() {
+                      fetchData();
+                    });
+                  },
+                  child: FutureBuilder<List<NewsModel>>(
+                      future: futureNews,
+                      builder: (context, data) {
+                        if (data.hasData) {
+                          //  data.data!
+                          return Column(
+                            children: [
+                              ...homeProvider.news.asMap().entries.map((e) {
+                                int index = e.key;
+                                NewsModel item = e.value;
 
-                FutureBuilder<List<NewsModel>>(
-                    future: futureNews,
-                    builder: (context, data) {
-                      if (data.hasData) {
-                        //  data.data!
-                        return Column(
-                          children: [
-                            ...homeProvider.news.asMap().entries.map((e) {
-                              int index = e.key;
-                              NewsModel item = e.value;
+                                if (index < homeProvider.news.length - 1) {
+                                  return GestureDetector(
+                                    onTap: () {
+                                      Navigator.pushNamed(
+                                          context, AppRoutes.articleScreen,
+                                          arguments: ArticleArguments(
+                                              item, homeProvider.userModel));
+                                    },
+                                    child: Column(
+                                      children: [
+                                        _post(context, news: item),
+                                        SizedBox(
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.03),
+                                      ],
+                                    ),
+                                  );
+                                } else {
+                                  return Center(child: Text("Loading..."));
+                                }
+                              }),
+                            ],
+                          );
+                        }
 
-                              if (index < homeProvider.news.length - 1) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    // SchedulerBinding.instance
-                                    //     .addPostFrameCallback((_) {
-
-                                    Navigator.pushNamed(
-                                        context, AppRoutes.articleScreen,
-                                        arguments: ArticleArguments(
-                                            item, homeProvider.userModel));
-
-                                    // });
-                                  },
-                                  child: Column(
-                                    children: [
-                                      _post(context, news: item),
-                                      SizedBox(
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.03),
-                                    ],
-                                  ),
-                                );
-                              } else {
-                                return const Center(
-                                    child: CircularProgressIndicator(
-                                        valueColor:
-                                            AlwaysStoppedAnimation<Color>(
-                                                Colors.blue)));
-                              }
-                            }),
-                          ],
-                        );
-                      }
-
-                      return Center(
-                          child: const CircularProgressIndicator(
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(Colors.blue)));
-                    }),
+                        return Center(
+                            child: const CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    Colors.blue)));
+                      }),
+                ),
               ],
             ),
           ),
@@ -255,52 +243,6 @@ class _MyAppState extends State<HomeScreen> {
           margin: EdgeInsets.fromLTRB(40.h, 11.v, 40.h, 12.v),
         )
       ],
-    );
-  }
-
-  /// Section Widget
-  Widget _buildColumnMyPosts(BuildContext context, List<NewsModel> news) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: 40.h,
-        vertical: 32.v,
-      ),
-      decoration: AppDecoration.outlineBlueA2000f1.copyWith(
-        borderRadius: BorderRadiusStyle.customBorderTL28,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "All Posts",
-                style: CustomTextStyles.titleLargeBluegray900,
-              ),
-              Spacer(),
-              CustomImageView(
-                imagePath: ImageConstant.imgGrid,
-                height: 24.adaptSize,
-                width: 24.adaptSize,
-                margin: EdgeInsets.only(bottom: 3.v),
-              ),
-              CustomImageView(
-                imagePath: ImageConstant.imgMegaphone,
-                height: 24.adaptSize,
-                width: 24.adaptSize,
-                margin: EdgeInsets.only(
-                  left: 24.h,
-                  bottom: 3.v,
-                ),
-              )
-            ],
-          ),
-
-          // articles display
-          (news.length == 0) ? Text("There is no news") : ListNews(news: news)
-        ],
-      ),
     );
   }
 }
