@@ -25,10 +25,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    if (context.watch<HomeProvider>().isLogin)
-      futureNotify = context
-          .read<HomeProvider>()
-          .getNotifications(context.watch<HomeProvider>().userModel.id);
+    // if (context.watch<HomeProvider>().isLogin)
+    //   futureNotify = context
+    //       .read<HomeProvider>()
+    //       .getNotifications(context.watch<HomeProvider>().userModel.id);
   }
 
   @override
@@ -36,33 +36,35 @@ class _NotificationScreenState extends State<NotificationScreen> {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Scaffold(
-        appBar: AppBar(
-          title: Text('Notification'),
-        ),
-        body: (!context.watch<HomeProvider>().isLogin)
-            ? Text("Please Login")
-            : FutureBuilder<List<NotificationModel>>(
-                future: futureNotify,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return ListView.builder(
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          leading: Icon(Icons.notifications_active),
-                          title: Text('${snapshot.data![index].message}'),
-                        );
-                      },
-                    );
-                  }
+          appBar: AppBar(
+            title: Text('Notification'),
+          ),
+          body: Text("Please Login")
 
-                  return Center(
-                      child: const CircularProgressIndicator(
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(Colors.blue)));
-                },
-              ),
-      ),
+          // (!context.watch<HomeProvider>().isLogin)
+          //     ?
+          //     : FutureBuilder<List<NotificationModel>>(
+          //         future: futureNotify,
+          //         builder: (context, snapshot) {
+          //           if (snapshot.hasData) {
+          //             return ListView.builder(
+          //               itemCount: snapshot.data!.length,
+          //               itemBuilder: (context, index) {
+          //                 return ListTile(
+          //                   leading: Icon(Icons.notifications_active),
+          //                   title: Text('${snapshot.data![index].message}'),
+          //                 );
+          //               },
+          //             );
+          //           }
+
+          //           return Center(
+          //               child: const CircularProgressIndicator(
+          //                   valueColor:
+          //                       AlwaysStoppedAnimation<Color>(Colors.blue)));
+          //         },
+          //       ),
+          ),
     );
   }
 }

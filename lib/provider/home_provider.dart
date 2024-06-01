@@ -6,21 +6,21 @@ import 'package:http/http.dart' as http;
 import 'package:news_reading/model/notification_model.dart';
 import 'package:news_reading/model/user_model.dart';
 import 'package:news_reading/core/constant.dart';
-import 'package:news_reading/core/token_decode.dart';
 
 String url = ConstValue().URL;
 
 class HomeProvider with ChangeNotifier, DiagnosticableTreeMixin {
-  bool _isLogin = false;
+  bool isLogin = false;
+  List<NewsModel> _news = [];
+  // int userID = -1; // user is not login yet
+  late UserModel userModel;
+
   String _validateCode = "";
-  String _loginStatus = '';
   String _signUpStatus = '';
   String _updateStatus = '';
   String _forgotpassStatus = '';
-  UserModel _userModel =
-      UserModel(id: 0, firstName: "", lastName: "", role: "");
+
   List<NotificationModel> _notification = [];
-  List<NewsModel> _news = [];
   Future<UserModel>? _futureUser;
   Future<String>? codeFuture;
 
@@ -28,9 +28,9 @@ class HomeProvider with ChangeNotifier, DiagnosticableTreeMixin {
     _futureUser = value;
   }
 
-  set news(List<NewsModel> value) {
-    _news = value;
-  }
+  // set news(List<NewsModel> value) {
+  //   _news = value;
+  // }
 
   set signUpStatus(String value) {
     _signUpStatus = value;
@@ -48,28 +48,38 @@ class HomeProvider with ChangeNotifier, DiagnosticableTreeMixin {
     _forgotpassStatus = value;
   }
 
-  bool get isLogin => _isLogin;
-  String get loginStatus => _loginStatus;
   String get signUpStatus => _signUpStatus;
   String get updateStatus => _updateStatus;
   String get validateCode => _validateCode;
   String get forgotpassStatus => _forgotpassStatus;
-  UserModel get userModel => _userModel;
   List<NewsModel> get news => _news;
   List<NotificationModel> get notification => _notification;
   Future<UserModel>? get futureUser => _futureUser;
 
+  void initArticleData(List<NewsModel> newArticleList) {
+    _news = newArticleList;
+  }
+
+  void setLoginStatus(bool v) {
+    isLogin = v;
+  }
+
   void userLogout() {
-    _isLogin = false;
-    _userModel = UserModel(id: 0, firstName: "", lastName: "", role: "");
+    isLogin = false;
+    userModel = UserModel(id: 0, firstName: "", lastName: "", role: "");
 
     notifyListeners();
   }
 
-  void updateLogin(bool v) {
-    _isLogin = v;
-    notifyListeners();
+  void setUserModel(int id, String firstName, String lastName, String role) {
+    userModel =
+        UserModel(id: id, firstName: firstName, lastName: lastName, role: role);
   }
+
+  // void updateLogin(bool v) {
+  //   _isLogin = v;
+  //   notifyListeners();
+  // }
 
   void searchArticle({required String input}) async {
     final searchResult = news.where((element) {
@@ -79,20 +89,17 @@ class HomeProvider with ChangeNotifier, DiagnosticableTreeMixin {
       return newTitle.contains(inputLow);
     }).toList();
 
-    news = searchResult;
+    _news = searchResult;
 
     notifyListeners();
   }
 
   Future<List<NewsModel>> getNewsData() async {
-    final response =
-        await http.get(Uri.parse('http://$url:8000/api/articles/'));
+    final response = await http.get(Uri.parse('http://$url/api/articles/'));
 
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
-
-      // List<dynamic> jsonData = responseData['results'];
-      List<dynamic> jsonData = responseData;
+      List<dynamic> jsonData = responseData['results'];
 
       var news = jsonData.map((data) => NewsModel.fromJson(data)).toList();
 
@@ -108,7 +115,7 @@ class HomeProvider with ChangeNotifier, DiagnosticableTreeMixin {
       String lastname, String role) async {
     try {
       final response = await http.post(
-        Uri.parse('http://$url:8000/api/users/'),
+        Uri.parse('http://$url/api/users/'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -132,91 +139,19 @@ class HomeProvider with ChangeNotifier, DiagnosticableTreeMixin {
         throw Exception(response.body);
       }
     } catch (e) {
-      _loginStatus = "Sign up fail: $e";
-      rethrow;
-    }
-  }
-
-  Future<UserModel> postLogin(String userName, String password) async {
-    final response = await http.post(
-      Uri.parse('http://$url:8000/api/login/'),
-      headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: json.encode(<String, dynamic>{
-        "username": userName,
-        "password": password,
-      }),
-    );
-
-    print(userName + " " + password);
-
-    final responseData = json.decode(response.body);
-
-    if (response.statusCode == 200) {
-      _isLogin = true;
-      _loginStatus = "Login Successful";
-
-      // save token to localstorage
-      // final storage = FlutterSecureStorage();
-      // await storage.write(key: 'access_token', value: responseData['access']);
-      // final accessToken = await storage.read(key: 'access_token');
-
-      // decode token
-      final userId =
-          TokenDecode().parseJwtPayLoad(responseData['access'])['user_id'];
-
-      // retrive user data
-      _userModel = await postUserInfo(userId);
-
-      notifyListeners();
-
-      print(userModel.id);
-
-      return _userModel;
-    } else {
-      print(response.statusCode);
-      _loginStatus = "Invalid user name or password";
-
-      return UserModel(id: 0, firstName: "", lastName: "", role: "");
-    }
-  }
-
-  Future<UserModel> postUserInfo(int id) async {
-    try {
-      final response = await http.get(
-        Uri.parse('http://$url:8000/api/users/$id'),
-      );
-
-      if (response.statusCode == 200) {
-        final responseData = json.decode(response.body);
-
-        _userModel = UserModel(
-            id: responseData['id'],
-            firstName: responseData['first_name'],
-            lastName: responseData['last_name'],
-            role: responseData['role']);
-
-        notifyListeners();
-
-        return _userModel;
-      } else {
-        throw Exception(response.body);
-      }
-    } catch (e) {
-      _loginStatus = "Login fail: $e";
+      // _loginStatus = "Sign up fail: $e";
       rethrow;
     }
   }
 
   Future<List<NotificationModel>> getNotifications(int userID) async {
-    final response = await http.get(
-        Uri.parse('http://$url:8000/api/user_notifications/?user_id=$userID'));
+    final response = await http
+        .get(Uri.parse('http://$url/api/user_notifications/?user_id=$userID'));
 
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
 
-      List<dynamic> jsonData = responseData;
+      List<dynamic> jsonData = responseData['results'];
 
       var _notification =
           jsonData.map((data) => NotificationModel.fromJson(data)).toList();
@@ -232,7 +167,7 @@ class HomeProvider with ChangeNotifier, DiagnosticableTreeMixin {
   Future<String> updateUser(
       String firstname, String lastname, String role, int userId) async {
     final response = await http.put(
-      Uri.parse('http://$url:8000/api/users/$userId/'),
+      Uri.parse('http://$url/api/users/$userId/'),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -256,7 +191,7 @@ class HomeProvider with ChangeNotifier, DiagnosticableTreeMixin {
 
   Future<String> getCodeForgot(String username) async {
     final response = await http.post(
-      Uri.parse('http://$url:8000/api/forgot-password/'),
+      Uri.parse('http://$url/api/forgot-password/'),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -283,7 +218,7 @@ class HomeProvider with ChangeNotifier, DiagnosticableTreeMixin {
       String username, String reset_code, String new_password) async {
     print(username + " " + reset_code + " " + new_password);
     final response = await http.post(
-      Uri.parse('http://$url:8000/api/reset-password/'),
+      Uri.parse('http://$url/api/reset-password/'),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
       },

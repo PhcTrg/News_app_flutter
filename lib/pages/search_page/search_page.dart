@@ -21,7 +21,7 @@ class _SearchPageState extends State<SearchPage> {
   late Future<List<NewsModel>> futureNews;
   TextEditingController searchController = TextEditingController();
 
-  bool firstUpdate = false;
+  // bool firstUpdate = false;
 
   @override
   void initState() {
@@ -31,7 +31,7 @@ class _SearchPageState extends State<SearchPage> {
 
   void fetchData() {
     futureNews = context.read<HomeProvider>().getNewsData();
-    firstUpdate = false;
+    // firstUpdate = false;
   }
 
   @override
@@ -76,9 +76,7 @@ class _SearchPageState extends State<SearchPage> {
                   prefixIcon: IconButton(
                     icon: Icon(Icons.search),
                     onPressed: () {
-                      context
-                          .read<HomeProvider>()
-                          .searchArticle(input: searchController.text);
+                      // searchFunc
                     },
                   ),
                   hintText: 'Enter article title',
@@ -129,10 +127,9 @@ class _SearchPageState extends State<SearchPage> {
                           future: futureNews,
                           builder: (context, data) {
                             if (data.hasData) {
-                              if (!firstUpdate) {
-                                context.watch<HomeProvider>().news = data.data!;
-                                firstUpdate = true;
-                              }
+                              context
+                                  .read<HomeProvider>()
+                                  .initArticleData(data.data!);
 
                               return _buildColumnMyPosts(context);
                             }

@@ -1,11 +1,13 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:news_reading/core/token_decode.dart';
 import 'package:news_reading/provider/home_provider.dart';
 import 'package:news_reading/widgets/app_bar/appbar_title.dart';
 import 'package:news_reading/widgets/app_bar/appbar_trailing_image.dart';
+import 'package:news_reading/widgets/button.dart';
 import 'package:news_reading/widgets/custom_text_form_field.dart';
 import '../../core/app_export.dart';
-import '../../widgets/custom_elevated_button.dart';
+import 'package:http/http.dart' as http;
 
 var items = [
   'Author',
@@ -13,17 +15,17 @@ var items = [
   'Reader',
 ];
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key})
+class LoginPage extends StatelessWidget {
+  LoginPage({Key? key})
       : super(
           key: key,
         );
 
-  @override
-  State<LoginScreen> createState() => _MyAppState();
-}
+//   @override
+//   State<LoginScreen> createState() => _MyAppState();
+// }
 
-class _MyAppState extends State<LoginScreen> {
+// class _MyAppState extends State<LoginScreen> {
   TextEditingController userNameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController retypePasswordController = TextEditingController();
@@ -31,58 +33,109 @@ class _MyAppState extends State<LoginScreen> {
   TextEditingController lastnameController = TextEditingController();
   TextEditingController codeController = TextEditingController();
   String roleVal = items[0];
+  String _loginStatus = "";
   bool isCodeSended = false;
-  bool firstUpdate = false;
+  // bool firstUpdate = false;
   bool _buttonEnabled = true;
 
   // late Future<String>? codeFuture;
   // GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    isCodeSended = false;
-    firstUpdate = false;
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  // isCodeSended = false;
+  //   // firstUpdate = false;
+  // }
 
-  @override
-  void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-    super.didChangeDependencies();
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
 
-    if (!firstUpdate) {
-      context.watch<HomeProvider>().forgotpassStatus = "";
+  //   if (!firstUpdate) {
+  //     context.watch<HomeProvider>().forgotpassStatus = "";
+  //   }
+  // }
+
+  // @override
+  // void dispose() {
+  //   userNameController.dispose();
+  //   passwordController.dispose();
+  //   retypePasswordController.dispose();
+  //   firstnameController.dispose();
+  //   lastnameController.dispose();
+  //   codeController.dispose();
+  //   roleVal = items[0];
+  //   super.dispose();
+  // }
+
+  Future<void> postUserInfo(BuildContext context, int id) async {
+    final response = await http.get(
+      Uri.parse('http://$url/api/users/$id'),
+    );
+
+    if (response.statusCode == 200) {
+      final responseData = jsonDecode(response.body);
+
+      context.read<HomeProvider>().setUserModel(
+          responseData['id'],
+          responseData['first_name'],
+          responseData['last_name'],
+          responseData['role']);
+    } else {
+      throw Exception(response.body);
     }
   }
 
-  @override
-  void dispose() {
-    userNameController.dispose();
-    passwordController.dispose();
-    retypePasswordController.dispose();
-    firstnameController.dispose();
-    lastnameController.dispose();
-    codeController.dispose();
-    roleVal = items[0];
-    super.dispose();
+  Future<void> postLogin(
+      BuildContext context, String userName, String password) async {
+    final response = await http.post(
+      Uri.parse('http://$url/api/login/'),
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: json.encode(<String, dynamic>{
+        "username": userName,
+        "password": password,
+      }),
+    );
+
+    final responseData = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      context.read<HomeProvider>().setLoginStatus(true);
+
+      // decode token
+      final userId =
+          TokenDecode().parseJwtPayLoad(responseData['access'])['user_id'];
+
+      //Login Successful
+      context.read<HomeProvider>().setLoginStatus(true);
+      await postUserInfo(context, userId);
+
+      _loginStatus = "Login Successfully";
+    } else {
+      _loginStatus = "Invalid user name or password";
+    }
+  }
+
+  void handleLogin(BuildContext context) async {
+    await postLogin(context, userNameController.text, passwordController.text);
+  }
+
+  void handleGoHomeAndPassLoginStatus() {
+    // go home
   }
 
   @override
   Widget build(BuildContext context) {
     void dropdownCallback(String? selectedVal) {
       if (selectedVal is String) {
-        setState(() {
-          roleVal = selectedVal;
-        });
+        // setState(() {
+        roleVal = selectedVal;
+        // });
       }
     }
-
-    // void compareCode() {
-    //   if (codeController.text == context.watch<HomeProvider>().validateCode) {
-    //     // codeCorrect = true;
-    //   }
-    // }
 
     return SafeArea(
       child: DefaultTabController(
@@ -174,40 +227,15 @@ class _MyAppState extends State<LoginScreen> {
                             _buildPassword(
                                 context, "Password", passwordController),
                             SizedBox(height: 30.v),
-                            CustomElevatedButton(
-                                text: "Login".toUpperCase(),
-                                buttonTextStyle:
-                                    CustomTextStyles.bodyLargeWhiteA700,
-                                onPressed: () {
-                                  setState(() {
-                                    var homeProvider =
-                                        Provider.of<HomeProvider>(context,
-                                            listen: false);
-                                    homeProvider.futureUser =
-                                        homeProvider.postLogin(
-                                            userNameController.text,
-                                            passwordController.text);
-                                  });
-                                }),
+                            MainButton(
+                                btnText: "LOGIN",
+                                onPressedFunc: () => handleLogin(context)),
                             SizedBox(height: 20.v),
-                            Align(
-                                alignment: Alignment.center,
-                                child: Center(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        "Forgot your password? ",
-                                        style: theme.textTheme.bodyMedium,
-                                      ),
-                                      Text(
-                                        "Reset here",
-                                        style:
-                                            CustomTextStyles.bodyMediumPrimary,
-                                      ),
-                                    ],
-                                  ),
-                                )),
+                            MainButton(
+                                btnText: "GO HOME",
+                                onPressedFunc: handleGoHomeAndPassLoginStatus),
+                            SizedBox(height: 20.v),
+                            Center(child: Text(_loginStatus)),
                             SizedBox(height: 32.v),
                             // Center(
                             //   child: Text(
@@ -324,22 +352,20 @@ class _MyAppState extends State<LoginScreen> {
                               onChanged: dropdownCallback,
                             ),
                             SizedBox(height: 30.v),
-                            CustomElevatedButton(
-                                text: "Sign up".toUpperCase(),
-                                buttonTextStyle:
-                                    CustomTextStyles.bodyLargeWhiteA700,
-                                onPressed: () {
-                                  setState(() {
-                                    var homeProvider =
-                                        Provider.of<HomeProvider>(context,
-                                            listen: false);
-                                    homeProvider.postSignUp(
-                                        userNameController.text,
-                                        passwordController.text,
-                                        firstnameController.text,
-                                        lastnameController.text,
-                                        roleVal);
-                                  });
+                            MainButton(
+                                btnText: "Sign up".toUpperCase(),
+                                onPressedFunc: () {
+                                  // setState(() {
+                                  var homeProvider = Provider.of<HomeProvider>(
+                                      context,
+                                      listen: false);
+                                  homeProvider.postSignUp(
+                                      userNameController.text,
+                                      passwordController.text,
+                                      firstnameController.text,
+                                      lastnameController.text,
+                                      roleVal);
+                                  // });
                                 }),
                             Text(context.watch<HomeProvider>().signUpStatus),
                             SizedBox(height: 50.v),
@@ -387,23 +413,22 @@ class _MyAppState extends State<LoginScreen> {
                                           "Type your email here...",
                                           userNameController),
                                       SizedBox(height: 20.v),
-                                      CustomElevatedButton(
-                                          text: "OK".toUpperCase(),
-                                          buttonTextStyle: CustomTextStyles
-                                              .bodyLargeWhiteA700,
-                                          onPressed: () {
-                                            setState(() {
-                                              firstUpdate = true;
-                                              var homeProvider =
-                                                  Provider.of<HomeProvider>(
-                                                      context,
-                                                      listen: false);
+                                      MainButton(
+                                          btnText: "OK",
+                                          onPressedFunc: () {
+                                            // setState(() {
+                                            // firstUpdate = true;
+                                            var homeProvider =
+                                                Provider.of<HomeProvider>(
+                                                    context,
+                                                    listen: false);
 
-                                              homeProvider.codeFuture =
-                                                  homeProvider.getCodeForgot(
-                                                      userNameController.text);
-                                              isCodeSended = true;
-                                            });
+                                            homeProvider.codeFuture =
+                                                homeProvider.getCodeForgot(
+                                                    userNameController.text);
+                                            isCodeSended = true;
+                                            // }
+                                            // );
                                           }),
                                       SizedBox(height: 20.v),
                                     ],
@@ -423,29 +448,23 @@ class _MyAppState extends State<LoginScreen> {
                                           userInput(context, "Code",
                                               "CODE here...", codeController),
                                           SizedBox(height: 30.v),
-                                          CustomElevatedButton(
-                                            text: "OK".toUpperCase(),
-                                            buttonTextStyle: CustomTextStyles
-                                                .bodyLargeWhiteA700,
-                                            onPressed: _buttonEnabled
+                                          MainButton(
+                                            btnText: "OK".toUpperCase(),
+                                            onPressedFunc: _buttonEnabled
                                                 ? () {
-                                                    setState(() {
-                                                      var homeProvider =
-                                                          Provider.of<
-                                                                  HomeProvider>(
-                                                              context,
-                                                              listen: false);
-                                                      homeProvider
-                                                          .resetPassword(
-                                                              userNameController
-                                                                  .text,
-                                                              codeController
-                                                                  .text,
-                                                              passwordController
-                                                                  .text);
-                                                      _buttonEnabled =
-                                                          false; // disable the button
-                                                    });
+                                                    // setState(() {
+                                                    var homeProvider = Provider
+                                                        .of<HomeProvider>(
+                                                            context,
+                                                            listen: false);
+                                                    homeProvider.resetPassword(
+                                                        userNameController.text,
+                                                        codeController.text,
+                                                        passwordController
+                                                            .text);
+                                                    _buttonEnabled =
+                                                        false; // disable the button
+                                                    // });
                                                   }
                                                 : null, // disable the button when _buttonEnabled is false
                                           ),

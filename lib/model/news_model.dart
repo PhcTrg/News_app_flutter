@@ -5,7 +5,7 @@ class NewsModel {
   final String createdAt;
   final String updatedAt;
   final String category;
-  final String image;
+  // final String image;
   final int user;
   final List<CommentsModel>? comments;
 
@@ -22,7 +22,7 @@ class NewsModel {
       required this.category,
       required this.user_id,
       required this.username,
-      required this.image,
+      // required this.image,
       this.comments});
 
   factory NewsModel.fromJson(Map<String, dynamic> json) {
@@ -36,7 +36,7 @@ class NewsModel {
       category: json['category'] as String,
       user_id: json['user_id'] as int,
       username: json['username'] as String,
-      image: json['image'] as String,
+      // image: json['image'] as String,
       comments: json['comments'] != null
           ? (json['comments'] as List<dynamic>)
               .map((item) => CommentsModel.fromJson(item))
@@ -56,7 +56,7 @@ class NewsModel {
     data['user'] = this.user;
     data['user_id'] = this.user_id;
     data['username'] = this.username;
-    data['image'] = this.image;
+    // data['image'] = this.image;
     if (this.comments != null) {
       data['comments'] = this.comments!.map((v) => v.toJson()).toList();
     }

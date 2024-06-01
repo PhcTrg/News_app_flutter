@@ -18,12 +18,12 @@ class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
 
-  static Widget builder(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => HomeProvider(),
-      child: HomePage(),
-    );
-  }
+  // static Widget builder(BuildContext context) {
+  //   return ChangeNotifierProvider(
+  //     create: (context) => HomeProvider(),
+  //     child: HomePage(),
+  //   );
+  // }
 }
 
 class _HomePageState extends State<HomePage> {
@@ -37,10 +37,8 @@ class _HomePageState extends State<HomePage> {
         style: TabStyle.reactCircle,
         items: [
           TabItem(icon: Icons.home, title: "Home"),
-          TabItem(icon: Icons.person, title: "Profile"),
           TabItem(icon: Icons.add, title: "Add"),
-          TabItem(icon: Icons.search, title: "Search"),
-          TabItem(icon: Icons.notifications, title: "Notifications"),
+          TabItem(icon: Icons.person, title: "Profile"),
         ],
         activeColor: Colors.white,
         initialActiveIndex: 0,
@@ -53,16 +51,9 @@ class _HomePageState extends State<HomePage> {
 
       // Pages
       body: <Widget>[
-        HomeScreen(),
-        (context.watch<HomeProvider>().isLogin == false)
-            ? LoginScreen()
-            : ProfileScreen(),
-        (context.watch<HomeProvider>().isLogin == false)
-            ? LoginScreen()
-            : NewArticlePage(),
         SearchPage(),
-        NotificationScreen(),
-        // OnBoarding(),
+        NewArticlePage(),
+        ProfileScreen(),
       ][currentPageIndex],
     );
   }

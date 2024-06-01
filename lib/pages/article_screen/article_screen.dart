@@ -4,6 +4,7 @@ import 'package:news_reading/argumennt/userid_argument.dart';
 import 'package:news_reading/model/news_model.dart';
 import 'package:news_reading/argumennt/article_argument.dart';
 import 'package:news_reading/provider/article_provider.dart';
+import 'package:news_reading/provider/home_provider.dart';
 import 'package:news_reading/provider/profile_provider.dart';
 import 'package:news_reading/widgets/app_bar/appbar_leading_image.dart';
 import 'package:news_reading/widgets/app_bar/appbar_trailing_image.dart';
@@ -31,6 +32,7 @@ class ArticleScreen extends StatefulWidget {
   static Widget builder(BuildContext context, NewsModel news) {
     return ChangeNotifierProvider(
       create: (context) => ArticleProvider(),
+      // create: (context) => HomeProvider(),
       child: ArticleScreen(),
     );
   }
@@ -40,12 +42,12 @@ enum TtsState { playing, stopped, paused, continued }
 
 class ArticleScreenState extends State<ArticleScreen> {
   //text to speech
-  late FlutterTts flutterTts;
+  final FlutterTts flutterTts = FlutterTts();
   String? language;
   String? engine;
   double volume = 1.0;
   double pitch = 1.0;
-  double rate = 1.0;
+  double rate = 0.5;
   bool isCurrentLanguageInstalled = false;
 
   String? _newVoiceText;
@@ -68,16 +70,13 @@ class ArticleScreenState extends State<ArticleScreen> {
   final formKey = GlobalKey<FormState>();
   final TextEditingController _commentController = TextEditingController();
 
-  // bool isFollow = false;
-
   Future<String>? _futureSummarize;
-
-  // Future<Bool>? futureAddFollowers;
 
   @override
   void initState() {
     super.initState();
-    initTts();
+    print('init');
+    // initTts();
 
     context.read<ArticleProvider>().newAddedComment = CommentsModel(
         id: 0,
@@ -88,10 +87,13 @@ class ArticleScreenState extends State<ArticleScreen> {
         // article: 0,
         username: "");
     context.read<ArticleProvider>().createCommentStatus = "";
+
+    // changeSpeechLanguage("", "en-US");
   }
 
   @override
   void didChangeDependencies() {
+    print('didChangeDependencies');
     super.didChangeDependencies();
     args = ModalRoute.of(context)!.settings.arguments as ArticleArguments;
     context.watch<ArticleProvider>().articleContent = args.newsmodel.content;
@@ -105,6 +107,8 @@ class ArticleScreenState extends State<ArticleScreen> {
   void dispose() {
     super.dispose();
     flutterTts.stop();
+
+    print('dispose');
   }
 
   // text to speech
@@ -138,90 +142,99 @@ class ArticleScreenState extends State<ArticleScreen> {
     }
   }
 
-  dynamic initTts() {
-    flutterTts = FlutterTts();
+  // dynamic initTts() {
+  // flutterTts = FlutterTts();
 
-    _setAwaitOptions();
+  // _setAwaitOptions();
 
-    if (isAndroid) {
-      _getDefaultEngine();
-      _getDefaultVoice();
-    }
+  // if (isAndroid) {
+  //   _getDefaultEngine();
+  //   _getDefaultVoice();
+  // }
 
-    flutterTts.setStartHandler(() {
-      setState(() {
-        print("Playing");
-        ttsState = TtsState.playing;
-      });
-    });
+  // flutterTts.setStartHandler(() {
+  //   setState(() {
+  //     print("Playing");
+  //     ttsState = TtsState.playing;
+  //   });
+  // });
 
-    flutterTts.setCompletionHandler(() {
-      setState(() {
-        print("Complete");
-        ttsState = TtsState.stopped;
-      });
-    });
+  // flutterTts.setCompletionHandler(() {
+  //   setState(() {
+  //     print("Complete");
+  //     ttsState = TtsState.stopped;
+  //   });
+  // });
 
-    flutterTts.setCancelHandler(() {
-      setState(() {
-        print("Cancel");
-        ttsState = TtsState.stopped;
-      });
-    });
+  // flutterTts.setCancelHandler(() {
+  //   setState(() {
+  //     print("Cancel");
+  //     ttsState = TtsState.stopped;
+  //   });
+  // });
 
-    flutterTts.setPauseHandler(() {
-      setState(() {
-        print("Paused");
-        ttsState = TtsState.paused;
-      });
-    });
+  // flutterTts.setPauseHandler(() {
+  //   setState(() {
+  //     print("Paused");
+  //     ttsState = TtsState.paused;
+  //   });
+  // });
 
-    flutterTts.setContinueHandler(() {
-      setState(() {
-        print("Continued");
-        ttsState = TtsState.continued;
-      });
-    });
+  // flutterTts.setContinueHandler(() {
+  //   setState(() {
+  //     print("Continued");
+  //     ttsState = TtsState.continued;
+  //   });
+  // });
 
-    flutterTts.setErrorHandler((msg) {
-      setState(() {
-        print("error: $msg");
-        ttsState = TtsState.stopped;
-      });
-    });
+  // flutterTts.setErrorHandler((msg) {
+  //   setState(() {
+  //     print("error: $msg");
+  //     ttsState = TtsState.stopped;
+  //   });
+  // });
 
-    // flutterTts.setLanguage(language)
-  }
+  // _newVoiceText = "loading";
 
-  Future<void> _getDefaultEngine() async {
-    var engine = await flutterTts.getDefaultEngine;
-    if (engine != null) {
-      print(engine);
-    }
-  }
+  // flutterTts.setLanguage("en-US");
+  // }
 
-  Future<void> _getDefaultVoice() async {
-    var voice = await flutterTts.getDefaultVoice;
-    if (voice != null) {
-      print(voice);
-    }
-  }
+  // Future<void> _getDefaultEngine() async {
+  //   var engine = await flutterTts.getDefaultEngine;
+  //   if (engine != null) {
+  //     print(engine);
+  //   }
+  // }
+
+  // Future<void> _getDefaultVoice() async {
+  //   var voice = await flutterTts.getDefaultVoice;
+  //   if (voice != null) {
+  //     print(voice);
+  //   }
+  // }
 
   Future<void> _speak() async {
-    await flutterTts.setVolume(volume);
-    await flutterTts.setSpeechRate(rate);
-    await flutterTts.setPitch(pitch);
+    // await flutterTts.setVolume(volume);
+    // await flutterTts.setSpeechRate(rate);
+    // await flutterTts.setPitch(pitch);
 
-    if (_newVoiceText != null) {
-      if (_newVoiceText!.isNotEmpty) {
-        await flutterTts.speak(_newVoiceText!);
-      }
-    }
+    // if (_newVoiceText != null) {
+    //   if (_newVoiceText!.isNotEmpty) {
+    //     print("do before");
+    //     await flutterTts.speak(_newVoiceText!);
+    //     print("do after");
+    //   }
+    // }
+
+    print(context.watch<ArticleProvider>().contentLanguage);
+
+    await flutterTts.setLanguage('en-US');
+    await flutterTts.speak(context.watch<ArticleProvider>().contentLanguage);
   }
 
-  Future<void> _setAwaitOptions() async {
-    await flutterTts.awaitSpeakCompletion(true);
-  }
+  // Future<void> _setAwaitOptions() async {
+  //   await flutterTts.awaitSpeakCompletion(true);
+  // }
 
   Future<void> _stop() async {
     var result = await flutterTts.stop();
@@ -248,11 +261,9 @@ class ArticleScreenState extends State<ArticleScreen> {
   }
 
   void handleSummarize() {
-    setState(() {
-      _futureSummarize = context
-          .read<ArticleProvider>()
-          .summarizeArticle(context.read<ArticleProvider>().articleContent);
-    });
+    _futureSummarize = context
+        .read<ArticleProvider>()
+        .summarizeArticle(context.read<ArticleProvider>().articleContent);
   }
 
   @override
@@ -319,74 +330,74 @@ class ArticleScreenState extends State<ArticleScreen> {
                         SizedBox(width: 10),
 
                         // this is other widget
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              args.newsmodel.username,
-                              style: CustomTextStyles.bodyLarge16,
-                            ),
-                            SizedBox(height: 5.v),
-                            FutureBuilder<bool>(
-                              future: context
-                                  .read<ProfileProvider>()
-                                  .isFollowingOrNot(
-                                      args.userModel.id, args.newsmodel.user),
-                              builder: (context, data) {
-                                // if fetch data successful and not the owner of that article
-                                if (data.hasData &&
-                                    (args.newsmodel.user !=
-                                        args.userModel.id)) {
-                                  return ElevatedButton(
-                                    style: ButtonStyle(
-                                      // if current login user follow the user writting this article, color is blue
-                                      backgroundColor:
-                                          MaterialStateProperty.all<Color>(
-                                              data.data!
-                                                  ? Colors.blue
-                                                  : Colors.black),
-                                    ),
-                                    onPressed: () {
-                                      // add followers if is not follow yet
-                                      if (!data.data!) {
-                                        // current login user is follower
-                                        // and follow the one that write article
-                                        if (args.userModel.id != 0)
-                                          context
-                                              .read<ArticleProvider>()
-                                              .addFollowers(args.newsmodel.user,
-                                                  args.userModel.id);
-                                      }
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text(
-                                        'Follow',
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                    ),
-                                  );
-                                }
+                        // Column(
+                        //   crossAxisAlignment: CrossAxisAlignment.start,
+                        //   children: [
+                        //     Text(
+                        //       args.newsmodel.username,
+                        //       style: CustomTextStyles.bodyLarge16,
+                        //     ),
+                        //     SizedBox(height: 5.v),
+                        //     FutureBuilder<bool>(
+                        //       future: context
+                        //           .read<ProfileProvider>()
+                        //           .isFollowingOrNot(
+                        //               args.userModel.id, args.newsmodel.user),
+                        //       builder: (context, data) {
+                        //         // if fetch data successful and not the owner of that article
+                        //         if (data.hasData &&
+                        //             (args.newsmodel.user !=
+                        //                 args.userModel.id)) {
+                        //           return ElevatedButton(
+                        //             style: ButtonStyle(
+                        //               // if current login user follow the user writting this article, color is blue
+                        //               backgroundColor:
+                        //                   MaterialStateProperty.all<Color>(
+                        //                       data.data!
+                        //                           ? Colors.blue
+                        //                           : Colors.black),
+                        //             ),
+                        //             onPressed: () {
+                        //               // add followers if is not follow yet
+                        //               if (!data.data!) {
+                        //                 // current login user is follower
+                        //                 // and follow the one that write article
+                        //                 if (args.userModel.id != 0)
+                        //                   context
+                        //                       .read<ArticleProvider>()
+                        //                       .addFollowers(args.newsmodel.user,
+                        //                           args.userModel.id);
+                        //               }
+                        //             },
+                        //             child: Padding(
+                        //               padding: const EdgeInsets.all(8.0),
+                        //               child: Text(
+                        //                 'Follow',
+                        //                 style: TextStyle(color: Colors.white),
+                        //               ),
+                        //             ),
+                        //           );
+                        //         }
 
-                                return OutlinedButton(
-                                  onPressed: null,
-                                  child: Text('Follow'),
-                                );
-                              },
-                            )
-                          ],
-                        ),
-                        // Spacer(),
+                        //         return OutlinedButton(
+                        //           onPressed: null,
+                        //           child: Text('Follow'),
+                        //         );
+                        //       },
+                        //     )
+                        //   ],
+                        // ),
+                        // // Spacer(),
                       ],
                     ),
                   ),
                   SpacePaddingHeight(),
 
                   // image
-                  ClipRRect(
-                      borderRadius: BorderRadius.circular(16.0),
-                      child: Image.memory(base64Decode(args.newsmodel.image))),
-                  SpacePaddingHeight(),
+                  // ClipRRect(
+                  //     borderRadius: BorderRadius.circular(16.0),
+                  //     child: Image.memory(base64Decode(args.newsmodel.image))),
+                  // SpacePaddingHeight(),
 
                   // article
                   ContentCard(
@@ -404,18 +415,13 @@ class ArticleScreenState extends State<ArticleScreen> {
                         ],
                       ),
                       SizedBox(height: 5),
-                      Row(
-                        children: [
-                          Text(
-                            context.read<ArticleProvider>().articleContent,
-                            maxLines: 10,
-                            overflow: TextOverflow.ellipsis,
-                            style:
-                                CustomTextStyles.bodyMediumIndigo800_1.copyWith(
-                              height: 1.43,
-                            ),
-                          ),
-                        ],
+                      Text(
+                        context.read<ArticleProvider>().articleContent,
+                        maxLines: 20,
+                        overflow: TextOverflow.ellipsis,
+                        // style: CustomTextStyles.bodyMediumIndigo800_1.copyWith(
+                        //     // height: 1.43,
+                        //     ),
                       ),
                       SpacePaddingHeight(),
 
@@ -596,24 +602,20 @@ class ArticleScreenState extends State<ArticleScreen> {
         SizedBox(height: 5),
 
         // content
-        Row(
-          children: [
-            (_futureSummarize != null)
-                ? FutureBuilder<String>(
-                    future: _futureSummarize,
-                    builder: (context, data) {
-                      if (data.hasData) {
-                        return Text(data.data!);
-                      }
-                      return Center(
-                          child: const CircularProgressIndicator(
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(Colors.blue)));
-                    },
-                  )
-                : Text("Want a shorter content, try this out!!"),
-          ],
-        ),
+        (_futureSummarize != null)
+            ? FutureBuilder<String>(
+                future: _futureSummarize,
+                builder: (context, data) {
+                  if (data.hasData) {
+                    return Text(data.data!);
+                  }
+                  return Center(
+                      child: const CircularProgressIndicator(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.blue)));
+                },
+              )
+            : Text("Want a shorter content, try this out!!"),
         SpacePaddingHeight(),
 
         // button

@@ -2,13 +2,17 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:news_reading/Services/notifi_service.dart';
-import 'package:news_reading/core/constant.dart';
+import 'package:news_reading/model/news_model.dart';
 import 'package:news_reading/provider/home_provider.dart';
 import 'package:news_reading/util/navigator_page.dart';
 import 'package:news_reading/widgets/button.dart';
 import 'package:news_reading/widgets/custom_text_form_field.dart';
+import 'package:news_reading/widgets/status_text.dart';
 import '../../core/app_export.dart';
+import '../../widgets/app_bar/appbar_title.dart';
+import '../../widgets/app_bar/custom_app_bar.dart';
 import 'package:http/http.dart' as http;
+import 'package:news_reading/core/constant.dart';
 
 var categoris = [
   'Sports',
@@ -19,40 +23,35 @@ var categoris = [
   'Education',
   'Uncategorized'
 ];
+
 String url = ConstValue().URL;
 
-class NewArticlePage extends StatefulWidget {
-  const NewArticlePage({Key? key})
-      : super(
-          key: key,
-        );
-
-  @override
-  NewArticlePageState createState() => NewArticlePageState();
-
-  // static Widget builder(BuildContext context) {
-  //   return ChangeNotifierProvider(
-  //     create: (context) => HomeProvider(),
-  //     child: NewArticlePage(),
-  //   );
-  // }
-}
-
-class NewArticlePageState extends State<NewArticlePage> {
+class UpdateArticlePage extends StatelessWidget {
+  final NewsModel articles;
   TextEditingController articleTitleController =
       TextEditingController(text: '');
   TextEditingController articleContentController =
       TextEditingController(text: '');
-  GlobalKey<NavigatorState> navigatorKey = GlobalKey();
+  String updateStatus = '';
+
+  UpdateArticlePage({
+    super.key,
+    required this.articles,
+  });
 
   String cateVal = categoris[0];
-  String createStatus = "";
 
-  Future<String> addArticle(
-      String title, String content, String category, int userId) async {
+  void initArticleData() {
+    articleTitleController = TextEditingController(text: articles.title);
+    articleContentController = TextEditingController(text: articles.content);
+    cateVal = articles.category;
+  }
+
+  Future<String> updateArticle(String title, String content, int userId,
+      String category, int articleId) async {
     try {
-      final response = await http.post(
-        Uri.parse('http://$url:8000/api/articles/'),
+      final response = await http.put(
+        Uri.parse('http://$url/api/articles/$articleId/'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -64,34 +63,22 @@ class NewArticlePageState extends State<NewArticlePage> {
         }),
       );
 
-      if (response.statusCode == 201) {
+      if (response.statusCode == 200) {
         // final responseData = jsonDecode(response.body);
-        createStatus = "Create article successfully";
+        updateStatus = "update article successfully";
 
         NotificationService().showNotification(
-            title: 'Your article is now live',
-            body: 'Your article: $title upload successfully');
+            title: 'Your article is update successfully',
+            body: 'Your article: $title update successfully');
 
-        return createStatus;
+        return updateStatus;
       } else {
         throw Exception(response.body);
       }
     } catch (e) {
-      createStatus = "Create article fail: $e";
+      updateStatus = "update article fail: $e";
       rethrow;
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    articleTitleController.dispose();
-    articleContentController.dispose();
-    super.dispose();
   }
 
   @override
@@ -99,9 +86,7 @@ class NewArticlePageState extends State<NewArticlePage> {
     // final bottom = MediaQuery.of(context).viewInsets.bottom;
     void dropdownCallback(String? selectedVal) {
       if (selectedVal is String) {
-        setState(() {
-          cateVal = selectedVal;
-        });
+        cateVal = selectedVal;
       }
     }
 
@@ -121,11 +106,10 @@ class NewArticlePageState extends State<NewArticlePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   (!context.watch<HomeProvider>().isLogin)
-                      ? MainButton(
-                          onPressedFunc: () =>
+                      ? ElevatedButton(
+                          onPressed: () =>
                               NavigatorPage().navigateLogin(context),
-                          btnText: "LOGIN",
-                        )
+                          child: Text("Login"))
                       : Column(
                           children: [
                             Text(
@@ -182,19 +166,26 @@ class NewArticlePageState extends State<NewArticlePage> {
                               onChanged: dropdownCallback,
                             ),
                             SizedBox(height: 15.v),
-                            Text(createStatus),
+                            Text(updateStatus),
                             SizedBox(height: 15.v),
-                            MainButton(
-                              btnText: "Submit".toUpperCase(),
-                              onPressedFunc: () {
-                                addArticle(
-                                    articleTitleController.text,
-                                    articleContentController.text,
-                                    cateVal,
-                                    context.watch<HomeProvider>().userModel.id);
-                              },
-                            ),
+                            StatusText(text: updateStatus),
+                            // MainButton(
+                            //   btnText: "Submit".toUpperCase(),
+                            //   onPressedFunc: () {
+                            //     updateArticle(
+                            //         articleTitleController.text,
+                            //         articleContentController.text,
+                            //         context.watch<HomeProvider>().userID,
+                            //         cateVal,
+                            //         articles.id);
+                            //   },
+                            // ),
                             SizedBox(height: 15.v),
+                            ElevatedButton(
+                                child: Text("Go back home"),
+                                onPressed: () {
+                                  // go home
+                                })
                           ],
                         )
                 ],
@@ -203,6 +194,25 @@ class NewArticlePageState extends State<NewArticlePage> {
           ),
         ),
       ),
+    );
+  }
+
+  /// Section Widget
+  PreferredSizeWidget _buildAppBar(BuildContext context) {
+    return CustomAppBar(
+      title: AppbarTitle(
+        text: "Article Manipulation",
+        // margin: EdgeInsets.only(left: 10.h),
+      ),
+      actions: [
+        // AppbarTrailingImage(
+        //   imagePath: ImageConstant.imgDownload,
+        //   margin: EdgeInsets.symmetric(
+        //     horizontal: 40.h,
+        //     vertical: 12.v,
+        //   ),
+        // )
+      ],
     );
   }
 }

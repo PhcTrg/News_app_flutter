@@ -20,8 +20,8 @@ class ProfileProvider extends ChangeNotifier {
   }
 
   Future<List<NewsModel>> getNewsData(int userID) async {
-    final response = await http
-        .get(Uri.parse('http://$url:8000/api/articles/?userID=$userID'));
+    final response =
+        await http.get(Uri.parse('http://$url/api/articles/?userID=$userID'));
 
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);

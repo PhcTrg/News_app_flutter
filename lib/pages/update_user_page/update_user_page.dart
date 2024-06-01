@@ -6,7 +6,7 @@ import 'package:news_reading/core/app_export.dart';
 import 'package:news_reading/provider/home_provider.dart';
 import 'package:news_reading/widgets/app_bar/appbar_trailing_image.dart';
 import 'package:news_reading/widgets/app_bar/custom_app_bar.dart';
-import 'package:news_reading/widgets/custom_elevated_button.dart';
+import 'package:news_reading/widgets/button.dart';
 import 'package:news_reading/widgets/custom_text_form_field.dart';
 
 var items = [
@@ -175,15 +175,13 @@ class _ProfileDetailsState extends State<ProfileDetails> {
                     ),
                   ),
                   SizedBox(height: 10.v),
-                  CustomElevatedButton(
-                      text: "Submit".toUpperCase(),
-                      buttonTextStyle: CustomTextStyles.bodyLargeWhiteA700,
-                      onPressed: () => onSubmit()),
+                  MainButton(
+                      btnText: "Submit".toUpperCase(),
+                      onPressedFunc: () => onSubmit()),
                   Text(context.watch<HomeProvider>().signUpStatus),
-                  CustomElevatedButton(
-                      text: "Go back to home Page".toUpperCase(),
-                      buttonTextStyle: CustomTextStyles.bodyLargeWhiteA700,
-                      onPressed: () {
+                  MainButton(
+                      btnText: "Go back to home Page".toUpperCase(),
+                      onPressedFunc: () {
                         Navigator.of(context).pop();
                       }),
                   Text(context.watch<HomeProvider>().signUpStatus),

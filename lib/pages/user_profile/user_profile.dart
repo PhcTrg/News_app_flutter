@@ -37,7 +37,7 @@ class _UserProfileState extends State<UserProfile> {
   @override
   void didChangeDependencies() {
     args = ModalRoute.of(context)!.settings.arguments as UserIdArgument;
-    futureUser = context.read<HomeProvider>().postUserInfo(args.userId);
+    // futureUser = context.read<HomeProvider>().postUserInfo(args.userId);
 
     futureFollowers = context.read<ProfileProvider>().getFollower(args.userId);
     futureFollowing = context.read<ProfileProvider>().getFollowing(args.userId);
