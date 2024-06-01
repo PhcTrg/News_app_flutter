@@ -1,3 +1,6 @@
+// this page is used to handle login screen
+// Responsibilities: Nguyen Phuoc Truong
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:news_reading/provider/home_provider.dart';
@@ -34,8 +37,6 @@ class _MyAppState extends State<LoginScreen> {
   bool isCodeSended = false;
   bool firstUpdate = false;
   bool _buttonEnabled = true;
-
-  // GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -124,6 +125,8 @@ class _MyAppState extends State<LoginScreen> {
               )
             ],
           ),
+
+          // this widget have 3 tap
           body: TabBarView(
             children: [
               // Login tab
@@ -170,6 +173,8 @@ class _MyAppState extends State<LoginScreen> {
                                 text: "Login".toUpperCase(),
                                 buttonTextStyle:
                                     CustomTextStyles.bodyLargeWhiteA700,
+                                // Call the postLogin method on the HomeProvider instance. This method presumably sends a login request to a server.
+                                // The userNameController.text and passwordController.text are passed as arguments to the postLogin method. These are the username and password entered by the user.
                                 onPressed: () {
                                   setState(() {
                                     var homeProvider =
@@ -278,6 +283,12 @@ class _MyAppState extends State<LoginScreen> {
                                 text: "Sign up".toUpperCase(),
                                 buttonTextStyle:
                                     CustomTextStyles.bodyLargeWhiteA700,
+                                // The setState function is called to notify the framework that the internal state of this object has changed in a way that might impact the user interface in this subtree.
+                                // This causes the framework to schedule a call to the build method.
+
+                                // Get the HomeProvider instance from the context. This is a state management class that provides information about the current state of the home screen.
+                                // Call the postSignUp method on the HomeProvider instance. This method presumably sends a sign-up request to a server.
+                                // The userNameController.text, passwordController.text, firstnameController.text, lastnameController.text, and roleVal are passed as arguments to the postSignUp method. These are the user's input for username, password, first name, last name, and role.
                                 onPressed: () {
                                   setState(() {
                                     var homeProvider =
@@ -327,8 +338,9 @@ class _MyAppState extends State<LoginScreen> {
                             ),
                             SizedBox(height: 14.v),
 
-                            // new pass
+                            // This code is for resetting the password.
                             (!isCodeSended)
+                                // If the code has not been sent yet...
                                 ? (Column(
                                     children: [
                                       userInput(
@@ -338,6 +350,7 @@ class _MyAppState extends State<LoginScreen> {
                                           'email',
                                           userNameController),
                                       SizedBox(height: 20.v),
+                                      // This is a button that, when pressed, sends a code to the user's email.
                                       CustomElevatedButton(
                                           text: "OK".toUpperCase(),
                                           buttonTextStyle: CustomTextStyles
@@ -359,6 +372,8 @@ class _MyAppState extends State<LoginScreen> {
                                       SizedBox(height: 20.v),
                                     ],
                                   ))
+
+                                // This FutureBuilder waits for the code to be fetched.
                                 : (FutureBuilder(
                                     future: context
                                         .watch<HomeProvider>()
@@ -383,6 +398,8 @@ class _MyAppState extends State<LoginScreen> {
                                             text: "OK".toUpperCase(),
                                             buttonTextStyle: CustomTextStyles
                                                 .bodyLargeWhiteA700,
+
+                                            // This is a button that, when pressed, resets the password.
                                             onPressed: _buttonEnabled
                                                 ? () {
                                                     setState(() {
@@ -408,6 +425,7 @@ class _MyAppState extends State<LoginScreen> {
                                         ]);
                                       }
 
+                                      // While waiting for the code to be fetched, show a loading spinner.
                                       return Center(
                                           child:
                                               const CircularProgressIndicator(

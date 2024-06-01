@@ -1,3 +1,6 @@
+// this page is used to json data from back-end api
+// Responsibilities: Nguyen Phuoc Truong
+
 class NotificationModel {
   final String message;
   // final Follower follower;

@@ -22,18 +22,30 @@ class NoThumbScrollBehavior extends ScrollBehavior {
       };
 }
 
+// This is the main function where the app starts execution.
 void main() {
+  // Ensures that widget binding has been done before running the app.
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initializes the notification service.
   NotificationService().initNotification();
+
+  // Waits for preferred screen orientations and preferences to be initialized.
   Future.wait([
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]),
     PrefUtils().init()
   ]).then((value) {
+    // Runs the app after the above operations are done.
     runApp(
+      // MultiProvider is used for multiple providers.
+      // It merges multiple providers into a single linear widget tree.
       MultiProvider(
         providers: [
+          // Provides HomeProvider to the rest of the widgets.
           ChangeNotifierProvider(create: (context) => HomeProvider()),
+          // Provides ArticleProvider to the rest of the widgets.
           ChangeNotifierProvider(create: (context) => ArticleProvider()),
+          // Provides ProfileProvider to the rest of the widgets.
           ChangeNotifierProvider(create: (context) => ProfileProvider()),
         ],
         child: MyApp(),
@@ -42,6 +54,7 @@ void main() {
   });
 }
 
+// MyApp is the root widget of your application.
 class MyApp extends StatefulWidget {
   @override
   State<MyApp> createState() => _MyAppState();
@@ -51,6 +64,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      // Sets the primary color of the theme.
       theme: ThemeData(primaryColor: Colors.blue),
       home: Sizer(
         builder: (context, orientation, deviceType) {
@@ -62,17 +76,23 @@ class _MyAppState extends State<MyApp> {
                   title: 'news_reading',
                   debugShowCheckedModeBanner: false,
                   theme: theme,
+                  // Sets the scroll behavior of the app.
                   scrollBehavior:
                       NoThumbScrollBehavior().copyWith(scrollbars: false),
+                  // Sets the navigator key of the app.
                   navigatorKey: NavigatorService.navigatorKey,
+                  // Sets the localization delegates.
                   localizationsDelegates: [
                     AppLocalizationDelegate(),
                     GlobalMaterialLocalizations.delegate,
                     GlobalWidgetsLocalizations.delegate,
                     GlobalCupertinoLocalizations.delegate
                   ],
+                  // Sets the locales that this app has been localized for.
                   supportedLocales: [Locale('en', '')],
+                  // Sets the initial route of the app.
                   initialRoute: AppRoutes.homeRoute,
+                  // Defines the available named routes and the widgets to build when navigating to those routes.
                   routes: AppRoutes.routes,
                 );
               },

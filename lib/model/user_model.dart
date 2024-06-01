@@ -1,3 +1,5 @@
+// this page is used to json data from back-end api
+// Responsibilities: Nguyen Phuoc Truong
 class UserModel {
   final int id;
   final String firstName;

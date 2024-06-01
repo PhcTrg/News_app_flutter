@@ -1,3 +1,5 @@
+// this page is used to manage theme and color and custom widget
+// Responsibilities: Nguyen Phuoc Truong
 import 'package:flutter/material.dart';
 import '../core/app_export.dart';
 

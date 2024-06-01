@@ -1,3 +1,7 @@
+// this page is used to manage notification bell on android devices
+// this is created by publc lib
+// Responsibilities: Nguyen Phuoc Truong
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NotificationService {

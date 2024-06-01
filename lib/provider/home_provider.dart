@@ -60,6 +60,7 @@ class HomeProvider with ChangeNotifier, DiagnosticableTreeMixin {
   List<NotificationModel> get notification => _notification;
   Future<UserModel>? get futureUser => _futureUser;
 
+  // This method is used to log out a user. It resets the login status and user model, and then notifies any listeners.
   void userLogout() {
     _isLogin = false;
     _userModel = UserModel(id: 0, firstName: "", lastName: "", role: "");
@@ -67,11 +68,13 @@ class HomeProvider with ChangeNotifier, DiagnosticableTreeMixin {
     notifyListeners();
   }
 
+  // This method is used to update the login status and then notifies any listeners.
   void updateLogin(bool v) {
     _isLogin = v;
     notifyListeners();
   }
 
+  // This method is used to search for an article. It filters the news list based on the input and updates the news list with the search result. It then notifies any listeners.
   void searchArticle({required String input}) async {
     final searchResult = news.where((element) {
       final newTitle = element.title.toLowerCase();
@@ -85,6 +88,7 @@ class HomeProvider with ChangeNotifier, DiagnosticableTreeMixin {
     notifyListeners();
   }
 
+  // This method is used to get news data from a server. It sends a GET request to the server and updates the news list with the response data. It then notifies any listeners.
   Future<List<NewsModel>> getNewsData(http.Client client) async {
     final response = await client
         .get(Uri.parse('http://$url:8000/api/articles/?page=$_page'));
@@ -107,11 +111,11 @@ class HomeProvider with ChangeNotifier, DiagnosticableTreeMixin {
 
       return newItem;
     } else {
-      // throw Exception('Failed to load');
       return _news;
     }
   }
 
+  // This method is used to sign up a user. It sends a POST request to the server with the user data. If the response status code is 201, it means the sign up was successful. The method then notifies any listeners and returns the sign up status.
   Future<String> postSignUp(String userName, String password, String firstname,
       String lastname, String role) async {
     try {
@@ -144,6 +148,7 @@ class HomeProvider with ChangeNotifier, DiagnosticableTreeMixin {
     }
   }
 
+  // This method is used to log in a user. It sends a POST request to the server with the username and password. If the response status code is 200, it means the login was successful. The method then decodes the token, retrieves the user data, notifies any listeners, and returns the user model.
   Future<UserModel> postLogin(String userName, String password) async {
     final response = await http.post(
       Uri.parse('http://$url:8000/api/login/'),
@@ -184,6 +189,7 @@ class HomeProvider with ChangeNotifier, DiagnosticableTreeMixin {
     }
   }
 
+  // This method is used to get user info. It sends a GET request to the server with the user id. If the response status code is 200, it means the request was successful. The method then updates the user model with the response data, notifies any listeners, and returns the user model.
   Future<UserModel> postUserInfo(int id) async {
     try {
       final response = await http.get(
@@ -211,6 +217,7 @@ class HomeProvider with ChangeNotifier, DiagnosticableTreeMixin {
     }
   }
 
+  // This method is used to get notifications for a user. It sends a GET request to the server with the user id. If the response status code is 200, it means the request was successful. The method then returns the notifications.
   Future<List<NotificationModel>> getNotifications(int userID) async {
     final response = await http.get(
         Uri.parse('http://$url:8000/api/user_notifications/?user_id=$userID'));
@@ -231,6 +238,7 @@ class HomeProvider with ChangeNotifier, DiagnosticableTreeMixin {
     }
   }
 
+  // This method is used to update a user. It sends a PUT request to the server with the user data. If the response status code is 200, it means the update was successful. The method then notifies any listeners and returns the update status.
   Future<String> updateUser(
       String firstname, String lastname, String role, int userId) async {
     final response = await http.put(
@@ -256,6 +264,7 @@ class HomeProvider with ChangeNotifier, DiagnosticableTreeMixin {
     }
   }
 
+  // This method is used to get a code for forgot password. It sends a POST request to the server with the username. If the response status code is 200, it means the request was successful. The method then updates the validate code and forgot password status, notifies any listeners, and returns the forgot password status.
   Future<String> getCodeForgot(String username) async {
     final response = await http.post(
       Uri.parse('http://$url:8000/api/forgot-password/'),
@@ -281,6 +290,7 @@ class HomeProvider with ChangeNotifier, DiagnosticableTreeMixin {
     }
   }
 
+  // This method is used to reset password. It sends a POST request to the server with the username, reset code, and new password. If the response status code is 200, it means the password reset was successful. The method then updates the forgot password status, notifies any listeners, and returns the forgot password status.
   Future<String> resetPassword(
       String username, String reset_code, String new_password) async {
     print(username + " " + reset_code + " " + new_password);
@@ -296,9 +306,7 @@ class HomeProvider with ChangeNotifier, DiagnosticableTreeMixin {
       }),
     );
 
-    // final responseData = json.decode(response.body);
     if (response.statusCode == 200) {
-      // _validateCode = responseData['reset_code'];
       _forgotpassStatus = "Password reset successfully";
       notifyListeners();
 

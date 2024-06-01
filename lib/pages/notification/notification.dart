@@ -1,3 +1,6 @@
+// this page is used to handle notification view screen
+// Responsibilities: Nguyen Phuoc Truong
+
 import 'package:flutter/material.dart';
 import 'package:news_reading/core/app_export.dart';
 import 'package:news_reading/model/notification_model.dart';
@@ -25,6 +28,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
+    // the notfication on fetch when user is login
     if (context.watch<HomeProvider>().isLogin)
       futureNotify = context
           .read<HomeProvider>()

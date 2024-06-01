@@ -1,3 +1,6 @@
+// this page is used to manage theme and color and custom widget
+// Responsibilities: Nguyen Phuoc Truong
+
 import 'package:flutter/material.dart';
 
 /// A class that offers pre-defined button styles for customizing button appearance.

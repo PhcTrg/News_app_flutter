@@ -1,3 +1,6 @@
+// this page is used to update user information
+// Responsibilities: Nguyen Phuoc Truong
+
 import 'package:flutter/material.dart';
 import 'package:news_reading/argumennt/user_argument.dart';
 import 'package:news_reading/core/app_export.dart';
@@ -29,7 +32,6 @@ class _ProfileDetailsState extends State<ProfileDetails> {
   var args;
   @override
   void initState() {
-    // args = ModalRoute.of(context)!.settings.arguments as UserArgument;
     super.initState();
     isFirstTime = true;
   }
@@ -52,7 +54,6 @@ class _ProfileDetailsState extends State<ProfileDetails> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
   }
 

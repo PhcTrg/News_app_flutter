@@ -1,3 +1,5 @@
+// this page is used to manage theme and color and custom widget
+// Responsibilities: Nguyen Phuoc Truong
 import 'package:flutter/material.dart';
 import 'package:news_reading/core/app_export.dart';
 import 'package:news_reading/model/news_model.dart';
@@ -20,6 +22,7 @@ class ListNewsUpdate extends StatelessWidget {
         itemCount: news.length,
         itemBuilder: (context, index) {
           return GestureDetector(
+            // navigate to artticle screen
             onTap: () {
               Navigator.pushNamed(context, AppRoutes.newArticlePage,
                   arguments:

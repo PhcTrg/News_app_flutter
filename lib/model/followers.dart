@@ -1,3 +1,6 @@
+// this page is used to json data from back-end api
+// Responsibilities: Nguyen Phuoc Truong
+
 import 'package:news_reading/model/user_model.dart';
 
 class FollowersModel {

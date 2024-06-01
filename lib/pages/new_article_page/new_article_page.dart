@@ -1,6 +1,8 @@
+// this page is used to handle add and update article screen
+// Responsibilities: Nguyen Phuoc Truong
+
 import 'dart:async';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:news_reading/provider/article_provider.dart';
@@ -63,6 +65,7 @@ class NewArticlePageState extends State<NewArticlePage> {
     super.didChangeDependencies();
     args = ModalRoute.of(context)!.settings.arguments;
 
+    // change value when the page refresh
     if (args != null &&
         articleTitleController.text == '' &&
         articleContentController.text == '') {
@@ -84,7 +87,7 @@ class NewArticlePageState extends State<NewArticlePage> {
 
   @override
   Widget build(BuildContext context) {
-    // final bottom = MediaQuery.of(context).viewInsets.bottom;
+    // change dropdown option
     void dropdownCallback(String? selectedVal) {
       if (selectedVal is String) {
         setState(() {
@@ -181,6 +184,7 @@ class NewArticlePageState extends State<NewArticlePage> {
                     text: "Submit".toUpperCase(),
                     buttonTextStyle: CustomTextStyles.bodyLargeWhiteA700,
                     onPressed: () {
+                      // Add a new article
                       if (!isUpdate) {
                         var articleProvider = Provider.of<ArticleProvider>(
                             context,
@@ -195,6 +199,7 @@ class NewArticlePageState extends State<NewArticlePage> {
                             homeProvider.userModel.id,
                             _selectImage);
                       } else {
+                        // Add a new article
                         var articleProvider = Provider.of<ArticleProvider>(
                             context,
                             listen: false);

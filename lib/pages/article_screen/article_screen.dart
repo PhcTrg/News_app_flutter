@@ -1,3 +1,6 @@
+// this page is used to handle home screen
+// Responsibilities: Nguyen Phuoc Truong
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:news_reading/argumennt/userid_argument.dart';
@@ -109,6 +112,7 @@ class ArticleScreenState extends State<ArticleScreen> {
   }
 
   // text to speech
+  // This method changes the language of the text-to-speech engine.
   void changeSpeechLanguage(String textVal, String language) {
     setState(() {
       _newVoiceText = textVal;
@@ -116,6 +120,7 @@ class ArticleScreenState extends State<ArticleScreen> {
     flutterTts.setLanguage(language);
   }
 
+  // This method translates the article content to a specified language and changes the speech language.
   void translate(String to) {
     translator
         .translate(context.read<ArticleProvider>().articleContent, to: to)
@@ -129,6 +134,7 @@ class ArticleScreenState extends State<ArticleScreen> {
     });
   }
 
+  // This method changes the language between English and Vietnamese when clicked.
   void onClickChangeLanguage() {
     if (context.read<ArticleProvider>().contentLanguage == "en-US") {
       context.read<ArticleProvider>().contentLanguage = "vi-VN";
@@ -139,6 +145,7 @@ class ArticleScreenState extends State<ArticleScreen> {
     }
   }
 
+  // This method initializes the text-to-speech engine and sets up various handlers.
   dynamic initTts() {
     flutterTts = FlutterTts();
 
@@ -194,6 +201,7 @@ class ArticleScreenState extends State<ArticleScreen> {
     // flutterTts.setLanguage(language)
   }
 
+  // This method gets the default engine of the text-to-speech engine.
   Future<void> _getDefaultEngine() async {
     var engine = await flutterTts.getDefaultEngine;
     if (engine != null) {
@@ -201,6 +209,7 @@ class ArticleScreenState extends State<ArticleScreen> {
     }
   }
 
+  // This method gets the default voice of the text-to-speech engine.
   Future<void> _getDefaultVoice() async {
     var voice = await flutterTts.getDefaultVoice;
     if (voice != null) {
@@ -208,6 +217,7 @@ class ArticleScreenState extends State<ArticleScreen> {
     }
   }
 
+  // This method speaks the new voice text.
   Future<void> _speak() async {
     await flutterTts.setVolume(volume);
     await flutterTts.setSpeechRate(rate);
@@ -220,15 +230,18 @@ class ArticleScreenState extends State<ArticleScreen> {
     }
   }
 
+  // This method sets the await options of the text-to-speech engine.
   Future<void> _setAwaitOptions() async {
     await flutterTts.awaitSpeakCompletion(true);
   }
 
+  // This method stops the text-to-speech engine.
   Future<void> _stop() async {
     var result = await flutterTts.stop();
     if (result == 1) setState(() => ttsState = TtsState.stopped);
   }
 
+  // This method pauses the text-to-speech engine.
   Future<void> _pause() async {
     if (isPlaying) {
       var result = await flutterTts.pause();
@@ -236,6 +249,7 @@ class ArticleScreenState extends State<ArticleScreen> {
     }
   }
 
+  // This method handles the submission of a comment.
   void _handleSubmittedComment() {
     setState(() {
       // handle submit
@@ -248,6 +262,7 @@ class ArticleScreenState extends State<ArticleScreen> {
     });
   }
 
+  // This method handles the summarization of an article.
   void handleSummarize() {
     setState(() {
       _futureSummarize = context
@@ -256,6 +271,7 @@ class ArticleScreenState extends State<ArticleScreen> {
     });
   }
 
+  // This method checks if a base64 string is a valid image.
   bool isValidImage(String base64Image) {
     try {
       final bytes = base64Decode(base64Image);
@@ -391,19 +407,6 @@ class ArticleScreenState extends State<ArticleScreen> {
                     ),
                   ),
 
-                  // image
-                  // if (args.newsmodel.image != null &&
-                  //     isValidImage(args.newsmodel.image))
-                  //   Column(
-                  //     children: [
-                  //       ClipRRect(
-                  //           borderRadius: BorderRadius.circular(16.0),
-                  //           child: Image.memory(
-                  //               base64Decode(args.newsmodel.image))),
-                  //       SpacePaddingHeight(),
-                  //     ],
-                  //   ),
-
                   // article
                   ContentCard(
                     widget: Column(children: [
@@ -482,16 +485,6 @@ class ArticleScreenState extends State<ArticleScreen> {
             ),
           ),
         ),
-        // floatingActionButton: Container(
-        //   decoration: BoxDecoration(
-        //       color: Colors.blue,
-        //       borderRadius: BorderRadius.all(const Radius.circular(10))),
-        //   child: IconButton(
-        //     icon: Icon(Icons.translate),
-        //     onPressed: onClickChangeLanguage,
-        //     color: Colors.white,
-        //   ),
-        // ),
       ),
     );
   }
@@ -508,10 +501,6 @@ class ArticleScreenState extends State<ArticleScreen> {
                 decoration: InputDecoration(
                   hintText: 'Add a comment...',
                 ),
-                onChanged: (newComment) {
-                  // Handle user input here (optional)
-                  // Store the new comment in a variable (if needed)
-                },
               ),
             ),
             Container(

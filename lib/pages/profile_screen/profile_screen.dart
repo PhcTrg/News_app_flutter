@@ -1,3 +1,6 @@
+// this page is used to handle profile view screen
+// Responsibilities: Nguyen Phuoc Truong
+
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:news_reading/argumennt/user_argument.dart';
@@ -39,6 +42,7 @@ class ProfileScreenState extends State<ProfileScreen> {
     fetchData();
   }
 
+  // this is used to call api and fetch news data
   void fetchData() {
     futureUser = context
         .read<HomeProvider>()
@@ -325,12 +329,15 @@ class ProfileScreenState extends State<ProfileScreen> {
               )
             ],
           ),
+
+          // this will pass a list of articles to display on screen
           ListNewsUpdate(news: newsList)
         ],
       ),
     );
   }
 
+  // this display number of followers and follwoing
   Widget _buildFollowers(
     BuildContext context, {
     required Future<String> future,
@@ -360,7 +367,7 @@ class ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  /// Section Widget
+  // this is the app bar
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
       title: AppbarTitle(
@@ -370,6 +377,8 @@ class ProfileScreenState extends State<ProfileScreen> {
       actions: [
         Padding(
           padding: const EdgeInsets.only(right: 20),
+
+          // this drop down to show logout and user update screen
           child: DropdownButtonHideUnderline(
             child: DropdownButton2(
               customButton: const Icon(
@@ -433,12 +442,9 @@ class MenuItem {
 }
 
 abstract class MenuItems {
-  // static const List<MenuItem> firstItems = [home, share, settings];
   static const List<MenuItem> firstItems = [profileDetails];
   static const List<MenuItem> secondItems = [logout];
 
-  // static const home = MenuItem(text: 'Home', icon: Icons.home);
-  // static const share = MenuItem(text: 'Share', icon: Icons.share);
   static const profileDetails =
       MenuItem(text: 'Profile Edit', icon: Icons.person);
   static const logout = MenuItem(text: 'Log Out', icon: Icons.logout);

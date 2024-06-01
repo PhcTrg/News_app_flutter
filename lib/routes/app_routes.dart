@@ -1,3 +1,6 @@
+// this page is used to manage router
+// Responsibilities: Nguyen Phuoc Truong
+
 import 'package:flutter/material.dart';
 import 'package:news_reading/pages/home_page/home_page.dart';
 import 'package:news_reading/pages/new_article_page/new_article_page.dart';

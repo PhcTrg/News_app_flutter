@@ -1,3 +1,6 @@
+// this page is used to json data from back-end api
+// Responsibilities: Nguyen Phuoc Truong
+
 class NewsModel {
   final int id;
   final String title;

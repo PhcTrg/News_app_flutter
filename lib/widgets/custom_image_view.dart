@@ -1,3 +1,5 @@
+// this page is used to manage theme and color and custom widget
+// Responsibilities: Nguyen Phuoc Truong
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';

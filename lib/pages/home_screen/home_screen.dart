@@ -1,3 +1,6 @@
+// this page is used to handle home screen
+// Responsibilities: Nguyen Phuoc Truong
+
 import 'package:flutter/material.dart';
 import 'package:news_reading/argumennt/article_argument.dart';
 import 'package:news_reading/core/utils/date_time_utils.dart';
@@ -36,16 +39,19 @@ class _MyAppState extends State<HomeScreen> {
     super.dispose();
   }
 
+  // lazy loading
+  // This is a scroll listener function. It checks if the scroll position has reached the maximum scroll extent (i.e., the bottom of the scrollable area).
   void _scrollListener() {
+    // If the current scroll position in pixels is equal to the maximum scroll extent, then load data
     if (_scrollController.position.pixels ==
         _scrollController.position.maxScrollExtent) {
       fetchData();
     }
   }
 
+  // This is an asynchronous function that fetches data.
   Future<void> fetchData() async {
     await context.read<HomeProvider>().getNewsData(http.Client());
-    // setState(() {});
   }
 
   @override
@@ -61,23 +67,27 @@ class _MyAppState extends State<HomeScreen> {
             padding: const EdgeInsets.all(20.0),
             child: Column(
               children: [
+                // refresh page when user hold down
                 RefreshIndicator(
                   onRefresh: () async {
                     setState(() {
                       fetchData();
                     });
                   },
+
+                  // main layout
                   child: FutureBuilder<List<NewsModel>>(
                       future: futureNews,
                       builder: (context, data) {
                         if (data.hasData) {
-                          //  data.data!
                           return Column(
                             children: [
                               ...homeProvider.news.asMap().entries.map((e) {
                                 int index = e.key;
                                 NewsModel item = e.value;
 
+                                // lazy loading logic
+                                // when user scroll to bottom, load new articles
                                 if (index < homeProvider.news.length - 1) {
                                   return GestureDetector(
                                     onTap: () {

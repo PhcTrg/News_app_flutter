@@ -1,3 +1,6 @@
+// this page is used to handle search screen
+// Responsibilities: Nguyen Phuoc Truong
+
 import 'package:flutter/material.dart';
 import 'package:news_reading/core/app_export.dart';
 import 'package:news_reading/model/news_model.dart';
@@ -30,6 +33,7 @@ class _SearchPageState extends State<SearchPage> {
     fetchData();
   }
 
+  // fetch new article data
   void fetchData() {
     futureNews = context.read<HomeProvider>().getNewsData(http.Client());
     firstUpdate = false;
@@ -76,6 +80,8 @@ class _SearchPageState extends State<SearchPage> {
                 decoration: InputDecoration(
                   prefixIcon: IconButton(
                     icon: Icon(Icons.search),
+
+                    // when user press search, this will call search func to display result
                     onPressed: () {
                       context
                           .read<HomeProvider>()

@@ -34,6 +34,7 @@ class _UserProfileState extends State<UserProfile> {
 
   @override
   void didChangeDependencies() {
+    // get data from previous screen
     args = ModalRoute.of(context)!.settings.arguments as UserIdArgument;
     futureUser = context.read<HomeProvider>().postUserInfo(args.userId);
 
@@ -43,6 +44,7 @@ class _UserProfileState extends State<UserProfile> {
     super.didChangeDependencies();
   }
 
+  // this will just display data
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<UserModel>(
